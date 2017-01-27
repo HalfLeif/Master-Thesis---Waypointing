@@ -1,0 +1,102 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{csquotes}
+\usepackage{hyperref} % For hyperlinks in the PDF
+\usepackage{url}
+
+\usepackage[toc,page]{appendix}
+ 
+%\usepackage[backend=biber]{biblatex}
+\usepackage[style=authoryear-icomp,
+            backend=biber,
+            urldate=iso8601,
+            maxbibnames=99,
+            maxcitenames=3,
+            backend=biber]{biblatex}
+
+\addbibresource{bibs/classic_htr.bib}
+\addbibresource{bibs/deep_learning.bib}
+\addbibresource{bibs/familysearch.bib}
+\addbibresource{bibs/references.bib}
+
+\usepackage{graphicx}
+\graphicspath{ {pictures/} }
+
+\renewcommand{\cite}{\parencite}
+
+
+\title{
+{\bf Master Thesis -  \\
+Waypointing of Historical Documents by Deep Learning}\\
+%	\vspace{0.2cm}
+%	\normalsize The Computer Scientist in Society, DAT315 \\
+	\vspace{0.4cm}
+	\normalsize Chalmers University of Technology
+}
+
+
+\author{\normalsize Leif Schelin \\
+	\normalsize 911016-3574 \\
+	\normalsize scleif@student.chalmers.se}
+%\date{November 2016}
+
+\begin{document}
+
+\maketitle
+
+\vspace{4cm}
+
+%\subsection*{Keywords}
+%Deep learning, convolutional neural nets, attention models, handwriting recognition, genealogy.
+
+% \subsection*{Relevant completed courses}
+% \begin{itemize}
+% \item Algorithms for Machine Learning, TDA231
+% \item Artificial Neural Networks, FFR135
+% \item Stochastic Optimization Algorithms, FFR105
+% \item Artificial Intelligence, TIN172
+% \item Advanced Algorithms, TDA251
+% end{itemize}
+
+\newpage
+
+%------------------------------
+
+% TODO: perhaps make a Glossary? HTR, CNN, indexing etc.
+
+
+% Motivation for the thesis
+\input{abstract.tex}
+\input{introduction.tex}
+\input{ethics.tex}
+
+% What to achieve
+\input{goals.tex}
+\input{delimitation.tex}
+
+% Technical details, perhaps add more sections here
+\input{background.tex}
+\input{method.tex}
+
+% Outcome
+\input{results.tex}
+\input{conclusion.tex}
+
+
+%------------------------------
+
+%\newpage
+%\addcontentsline{toc}{section}{References}
+
+\printbibliography
+
+
+\newpage
+
+% \begin{appendix}
+% \input{ethics.tex}
+% \end{appendix}
+
+
+\end{document}

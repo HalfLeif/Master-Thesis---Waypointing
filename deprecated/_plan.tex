@@ -1,0 +1,127 @@
+
+% About 1-2 pages
+
+\section{Introduction}
+
+FamilySearch is a large non-profit genealogy organization \cite{FamilySearchAbout}. They have been photographing handwritten historical population records in many countries for many years.
+
+In 2006, the Indexing project started where volunteers manually extract relevant information from the photographed pages \cite{Indexing}. The extracted information is quality-checked and then published on the organization's website FamilySearch.org. In 2013, over 1 billion data posts for births, deaths and marriages had been extracted (\textbf{indexed}) by volunteers \cite{Billion}.
+
+The number of photographed records grow faster than what the available pool of volunteers can process. Thus, there is a need for automating as much of the indexing work as possible. This is a difficult task because the records come from a vast array of locations and periods in time in different languages, not to mention variations in both spelling and page structure. Although the handwriting style might be similar in the same time period, there is considerable variance between different scribes.
+
+If the images were correctly transcribed by a handwritten text recognition (HTR) system, it would still take considerable natural language processing to extract the information. Especially since there is little training data for languages during different time periods.
+
+An easier problem to solve than extracting all relevant information in the images is grouping the images by year, record type and location. This task is called \textbf{waypointing} \cite{Waypointing} and it currently requires considerable manual labor by genealogy experts.
+Waypointing is an easier problem than handwriting recognition because it only needs to consider information which belongs to a small domain compared to the full vocabulary of a natural language and all possible names.
+
+\section{Goals}
+
+The goal of the thesis is to make an open-source prototype that automatically extracts high-level information for each photographed page of historical population records. The information under consideration is 1. year, 2. page number and 3. record type, where the record type is one of \{blank, birth, death, marriage\}.
+If time permits, extracting location (such as parish) will also be considered.
+
+The system should learn from the currently indexed and waypointed data in a fully autonomous manner without explicit feature engineering.
+% However, standard pre-processing techniques such as median filtering and gray level normalization may be necessary.
+
+%A perfect classification is unrealistic so the resulting groupings of images will need some manual inspection before publication. However, it should be sufficient to check some of the pages in a group instead of going through every page. Thus the manual workload should be significantly decreased. If the precision of the system is too low, correcting errors would be equally troublesome as doing the waypointing manually. Thus, the precision of the classification should be as high as possible.
+
+% While maximizing the precision, the system should have a reasonable throughput. Processing millions of photographed pages should be viable.
+
+\section{Delimitation}
+
+Although there are images in many languages from many places, the thesis will only consider images of text in a single language from a single country but over a longer period of time, possibly up to three hundred years.
+However, the techniques applied should be general enough to handle many different languages, at least for extracting year and page number.
+
+We will primarily consider deep learning techniques for solving the problem in contrast to conventional methods of HTR.
+
+\section{Technical background}
+
+Here, we discuss the field of two problems related to waypointing: HTR and image classification.
+
+\subsection{Handwritten text recognition}
+
+HTR has been solved for recognizing postal addresses on letters and reading bank cheques. This has been possible because 1. the text is in a very small domain and 2. these applications have high market value \cite{40_years_HWR}. However, transcribing natural languages in general is still an unsolved problem.
+
+\paragraph{}
+HTR solutions can typically be described by these four steps: \cite{offline_HWR_CNN}:
+\begin{enumerate}
+    \item Pre-processing - each pixel in the image is mapped to either 0 or 1, skew is corrected and noise is removed.
+    \item Segmentation - the image is cut into small segments, so that each segment contains a handwritten word.
+    \item Feature extraction - each image segment is encoded into some vector of features.
+    \item Classification - the feature vector is interpreted as a word from a known vocabulary.
+\end{enumerate}
+
+A comprehensible survey of common techniques for the different steps can be found here \cite{HWR_survey}.
+Previous work include \textbf{Hidden markov models} (HMMs) in combination with neural networks \cite{Offline_HWR_HMM_ANN}.
+More recent approaches include multi-stream HMMs \cite{HWR_multi_stream_HMM_arabic}, HMMs with \textbf{recurrent neural networks} (RNNs) \cite{Offline_HWR_RNN} and deep \textbf{convolutional neural networks} (CNNs) \cite{offline_HWR_CNN}.
+
+
+\subsection{Attention models}
+
+% Since waypointing only needs high-level information in a limited domain, complete transcription is unnessecary. Instead we can use recent advances in image classification.
+
+\textbf{Convolutional neural networks} (CNNs) learn to recognize simple shapes in small overlapping regions of the input image and combines that information in higher layers to successfully detect complex objects without feature engineering \cite{DeepMindAttention}.
+However, CNNs require considerable computation power to train.
+
+In contrast to CNNs, the human eye doesn't process the entire scene with equal precision but focuses on the most relevant parts \cite{DeepMindAttention}.
+Similarly, we can let the system pay \textbf{attention} to a small part of the image at a time and successively increase the system's understanding of the image.
+By choosing good locations for our attention, the important parts of the image are captured while ignoring irrelevant parts.
+This reduces the computation time for training and also increases the precision of the network. The process of how to select a location to focus on is called an \textbf{attention model} and is often implemented using a \textbf{recurrent neural network} (RNN). Besides image classification, attention models have also been highly successful for image captioning \cite{AttendAndTell} and machine translation \cite{machine_translation_attention}.
+
+
+\section{Method}
+
+Complete transcription of the records is difficult because it requires expensive transcriptions as training data. Furthermore, the vocabulary must include alternative spellings and many personal names.
+However, complete transcription is not necessary since waypointing only needs high-level information in a limited domain.
+% Instead we can use recent advances in image classification.
+Therefore, we approach the problem from the perspective of image classification. We have relevant labels (year, page number, record type) for the images that have been indexed manually. For validation, we can also use images that have been waypointed but not yet indexed.
+
+\subsection{Deep learning with attention models}
+
+As we have seen, deep neural networks with attention models are very successful at understanding images, both in image classification \cite{DeepMindAttention} and image captioning \cite{AttendAndTell}. The latter used CNNs, which are very good at identifying objects and shapes and have recently been suggested for HTR \cite{offline_HWR_CNN}.
+
+Thus, a promising approach is using a CNN for automatic feature extraction. This network can be trained with an attention model that chooses which part(s) of the image to focus on.
+We classify each image in three categories: page number, year and record type by using one softmax output layer per category. This means that years are represented as disjoint labels instead of actual numbers.
+Because we want the system to recognize digits well,
+part of the CNN can be pre-trained on open digit recognition corpora like MNIST \cite{MNIST}.
+
+% We will also consider reducing training time by down-sampling and cropping the images.
+
+\subsection{Pre-processing}
+
+In order to increase speed, the images can be down-sampled, either before feeding them to the network or in so called \textbf{pooling layers} inside the CNN. Perhaps the precision can be increased by applying the conventional pre-processing methods to remove spots, increase contrast and normalize the gray level.
+
+\section{Time plan}
+
+As early as possible, we should have some running code which detects numbers in the images. We also need to get a good data set as early as possible. Later in the project, the data set can be extended and the code can be improved. In order to get something running, we will focus on only extracting the year from each page first and later extend to other relevant fields.
+
+\newpage
+
+The report will be written concurrently while building the prototype:
+
+% \subsection{Mile stones}
+
+\begin{itemize}
+    \item 3 Feb: Initial data set established
+    \item 10 Feb: Background and Ethics sections drafts
+    \item 22 Feb: Writing seminar I
+    \item 24 Feb: Goals and Delimitation drafts
+    \item 3 Mar: Deep learning system can extract year
+    \item 10 Mar: Introduction and Method drafts
+    \item 17 Mar: Half time report
+    \item 14 Apr: System can extract one additional field, like page number or document type
+    \item 25 Apr: Results, Conclusions and Abstract drafts
+    \item 1 May: Report complete draft + begin peer review
+    \item 9 May: Writing seminar II
+    \item 19 May: Code finalized
+    \item 23 May: Oral presentation
+    \item 9 Jun: Report finalized
+\end{itemize}
+
+\subsection{Risk analysis}
+% Dependencies between mile stones
+
+In case the intended data is not accessible in time, we would need to gather alternative data such as the Esposalles corpus \cite{esposalles}.
+
+It is unclear how much effort it will take to extract year from the images. Since the domain is limited to 1600-1999, it can be compared with extracting handwritten addresses from letters which is solvable.
+% On the other hand, the text in our records is more degraded and
+Extracting year is however critical for a minimum working product.

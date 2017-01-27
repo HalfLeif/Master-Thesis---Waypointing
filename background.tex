@@ -1,0 +1,46 @@
+
+\section{Related work}
+
+%% Rewrite this part, add more recent work, especially in deep learning and CNNs: spatial transformations, visual-semantic alignment etc.
+
+Here, we discuss the field of two problems related to waypointing: HTR and image classification.
+
+\subsection{Handwritten text recognition}
+
+HTR has been solved for recognizing postal addresses on letters and reading bank cheques. This has been possible because 1. the text is in a very small domain and 2. these applications have high market value \cite{40_years_HWR}. However, transcribing natural languages in general is still an unsolved problem.
+
+\paragraph{}
+HTR solutions can typically be described by these four steps: \cite{offline_HWR_CNN}:
+\begin{enumerate}
+    \item Pre-processing - each pixel in the image is mapped to either 0 or 1, skew is corrected and noise is removed.
+    \item Segmentation - the image is cut into small segments, so that each segment contains a handwritten word.
+    \item Feature extraction - each image segment is encoded into some vector of features.
+    \item Classification - the feature vector is interpreted as a word from a known vocabulary.
+\end{enumerate}
+
+A comprehensible survey of common techniques for the different steps can be found here \cite{HWR_survey}.
+Previous work include \textbf{Hidden markov models} (HMMs) in combination with neural networks \cite{Offline_HWR_HMM_ANN}.
+More recent approaches include multi-stream HMMs \cite{HWR_multi_stream_HMM_arabic}, HMMs with \textbf{recurrent neural networks} (RNNs) \cite{Offline_HWR_RNN} and deep \textbf{convolutional neural networks} (CNNs) \cite{offline_HWR_CNN}.
+
+
+% \subsection{Convolutional neural networks}
+
+\subsection{Deep learning}
+
+% Mention machine translation etc.
+
+\textbf{Convolutional neural networks} (CNNs) learn to recognize simple shapes in small overlapping regions of the input image and combines that information in higher layers to successfully detect complex objects without feature engineering \cite{DeepMindAttention}.
+
+% However, CNNs require considerable computation power to train.
+
+\subsection{Attention models}
+
+% Since waypointing only needs high-level information in a limited domain, complete transcription is unnessecary. Instead we can use recent advances in image classification.
+
+
+
+In contrast to CNNs, the human eye doesn't process the entire scene with equal precision but focuses on the most relevant parts \cite{DeepMindAttention}.
+Similarly, we can let the system pay \textbf{attention} to a small part of the image at a time and successively increase the system's understanding of the image.
+By choosing good locations for our attention, the important parts of the image are captured while ignoring irrelevant parts.
+This reduces the computation time for training and also increases the precision of the network. The process of how to select a location to focus on is called an \textbf{attention model} and is often implemented using a \textbf{recurrent neural network} (RNN). Besides image classification, attention models have also been highly successful for image captioning \cite{AttendAndTell} and machine translation \cite{machine_translation_attention}.
+
