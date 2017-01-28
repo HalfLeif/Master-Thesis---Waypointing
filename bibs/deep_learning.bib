@@ -1,4 +1,69 @@
 
+%% CNNs
+
+% Fornes:
+%
+% General field: DIAR = Document image analysis and recognition
+% HWR needs optical model + linguistic model.
+% For extraction also need NER by grammars/NLP etc.
+%
+% Use CNN directly on word images to categorize into 6 categories.
+% Spatial pyramid pooling so input images can have different sizes without distorting the input.
+%
+% Better to use 3x3 filters and ReLU to avoid vanishing gradient.
+% Need Dropout in fully connected layer to avoid overfitting.
+@inproceedings{FornesCnnCategorization,
+  title={Handwritten Word Image Categorization with Convolutional Neural Networks and Spatial Pyramid Pooling},
+  author={Toledo, J Ignacio and Sudholt, Sebastian and Forn{\'e}s, Alicia and Cucurull, Jordi and Fink, Gernot A and Llad{\'o}s, Josep},
+  booktitle={Joint IAPR International Workshops on Statistical Techniques in Pattern Recognition (SPR) and Structural and Syntactic Pattern Recognition (SSPR)},
+  pages={543--552},
+  year={2016},
+  organization={Springer}
+}
+
+% Spark of interest for CNNs.
+% ReLU activation good against vanishing gradient problem.
+@inproceedings{AlexNet,
+  title={Imagenet classification with deep convolutional neural networks},
+  author={Krizhevsky, Alex and Sutskever, Ilya and Hinton, Geoffrey E},
+  booktitle={Advances in neural information processing systems},
+  pages={1097--1105},
+  year={2012}
+}
+
+% CNNs much attention since AlexNet 2012.
+% Becoming deeper and deeper in 2014.
+%
+% Better to use several 3x3 than single 5x5 or larger filters.
+% Suggest refactorizations to avoid representation bottlenecks while still reducing computation speed due to fewer parameters.
+@inproceedings{InceptionV3,
+  title={Rethinking the inception architecture for computer vision},
+  author={Szegedy, Christian and Vanhoucke, Vincent and Ioffe, Sergey and Shlens, Jon and Wojna, Zbigniew},
+  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+  pages={2818--2826},
+  year={2016}
+}
+
+% Optimize input image to maximize filter activation.
+% Saliency maps
+@article{VisualizeCnn,
+  title={Deep inside convolutional networks: Visualising image classification models and saliency maps},
+  author={Simonyan, Karen and Vedaldi, Andrea and Zisserman, Andrew},
+  journal={arXiv preprint arXiv:1312.6034},
+  year={2013}
+}
+
+% Machine translation from subproblems to RNN encoder/decoder approach
+% Reuse same architecture but CNN for encoder.
+% Source code uses Inception v3 for CNN network pretrained on image classification.
+@inproceedings{ShowAndTell,
+  title={Show and tell: A neural image caption generator},
+  author={Vinyals, Oriol and Toshev, Alexander and Bengio, Samy and Erhan, Dumitru},
+  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+  pages={3156--3164},
+  year={2015}
+}
+
 %% Attention models
 
 @article{DeepMindAttention,
@@ -16,9 +81,9 @@ archivePrefix = "arXiv",
 %   adsnote = {Provided by the SAO/NASA Astrophysics Data System}
 }
 
-
+% Based on ShowAndTell above but with attention model.
 @article{AttendAndTell,
-   author = {{Xu}, K. and {Ba}, J. and {Kiros}, R. and {Cho}, K. and {Courville}, A. and 
+   author = {{Xu}, K. and {Ba}, J. and {Kiros}, R. and {Cho}, K. and {Courville}, A. and
 	{Salakhutdinov}, R. and {Zemel}, R. and {Bengio}, Y.},
     title = "{Show, Attend and Tell: Neural Image Caption Generation with Visual Attention}",
   journal = {ArXiv e-prints},
@@ -32,6 +97,7 @@ archivePrefix = "arXiv",
 %   adsnote = {Provided by the SAO/NASA Astrophysics Data System}
 }
 
+% Neural machine traslations often use encoder/decoder. However they often have a fixed length intermediate representation which can't accurately represent long sentences. Instead, encode input as sequence of vectors and use attention model to select which one.
 @article{machine_translation_attention,
    author = {{Bahdanau}, D. and {Cho}, K. and {Bengio}, Y.},
     title = "{Neural Machine Translation by Jointly Learning to Align and Translate}",
