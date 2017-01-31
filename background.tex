@@ -33,6 +33,8 @@ Both machine translation and image captioning used to be solved by solving each 
 
 Since the publication of the AlexNet in 2012 \cite{AlexNet}, CNNs have gained large attention in computer vision for achieving state-of-the-art in various tasks such as object-detection, segmentation, video classification and object tracking \cite{InceptionV3}.
 
+% TODO add picture of 3x3 filters and 2x2 max pooling
+
 In CNNs, each layer of neurons has a width, height and depth. The width and height correspond to that of the input image while the depth depends on the number of \textbf{filters} applied to the previous layer.
 % TODO add citation
 Each filter performs a weighted sum over a small region in the previous layer, e.g. 3x3 neurons using the full depth. The sum is then passed to a non-linear activation function such as $\tanh$ and serves as input for the next layer.
@@ -46,11 +48,13 @@ Pooling simply combines a region of neurons (e.g. 2x2) into a single neuron, typ
 
 At the end of the network, there are often a few fully connected layers (MLP) where the last layer represent the output of the network, for example pseudo-probabilities for different categories.
 
-\subsubsection{Network architecture}
+\subsubsection{Network architecture for faster computation}
 
 The performance of CNNs typically increases with greater width and depth but it comes at a higher computational cost \cite{InceptionV3}. However, by choosing a good network architecture the same performance can be achieved but at a substantially lower cost, for example by refactoring large filters (5x5, 7x7) into consecutive small filters (3x3) and extensive use of pooling layers to reduce dimensionality. The authors also suggest a balance between depth and width of the network.
 
-\subsubsection{Activation function}
+
+%TODO move this subsubsection to Deep learning. Not specific to CNNs?
+\subsubsection{Rectified linear activation}
 
 Very deep networks suffer from the \textbf{vanishing gradient} problem. Because $\tanh$ has a very small derivative for large activations, the training can become very slow \cite{AlexNet}. This can largely be solved by using the \textbf{rectified linear} (ReLU) function for activation: $f(x) = \max{0, x}$.
 
@@ -83,6 +87,6 @@ Similarly, we can let the system pay \textbf{attention} to a small part of the i
 By choosing good locations for our attention, the important parts of the image are captured while ignoring irrelevant parts.
 This reduces the computation time for training and also increases the precision of the network. The process of how to select a location to focus on is called an \textbf{attention model} and is often implemented using a \textbf{recurrent neural network} (RNN). Besides image classification, attention models have also been highly successful for image captioning \cite{AttendAndTell} and machine translation \cite{machine_translation_attention}.
 
-\subsubsection{Visual semantic alignment}
+\subsubsection{Visual-semantic alignment}
 
 % TODO describe alignment and what it is are good for.
