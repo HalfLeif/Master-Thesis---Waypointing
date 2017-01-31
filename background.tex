@@ -46,21 +46,31 @@ Pooling simply combines a region of neurons (e.g. 2x2) into a single neuron, typ
 
 At the end of the network, there are often a few fully connected layers (MLP) where the last layer represent the output of the network, for example pseudo-probabilities for different categories.
 
-\subsubsection{Problems}
+\subsubsection{Network architecture}
 
 The performance of CNNs typically increases with greater width and depth but it comes at a higher computational cost \cite{InceptionV3}. However, by choosing a good network architecture the same performance can be achieved but at a substantially lower cost, for example by refactoring large filters (5x5, 7x7) into consecutive small filters (3x3) and extensive use of pooling layers to reduce dimensionality. The authors also suggest a balance between depth and width of the network.
 
+\subsubsection{Activation function}
+
 Very deep networks suffer from the \textbf{vanishing gradient} problem. Because $\tanh$ has a very small derivative for large activations, the training can become very slow \cite{AlexNet}. This can largely be solved by using the \textbf{rectified linear} (ReLU) function for activation: $f(x) = \max{0, x}$.
+
+\subsubsection{Dropout}
 
 Another problem with large networks is overfitting which means that the network learns the training set by heart instead of learning to recognize the general patterns \cite{AlexNet, FornesCnnCategorization}. The \textbf{dropout} method introduces a probability of setting each neuron's activation to $0$ during training, often with 50\% probability. This forces the network to learn multiple paths for recognizing different features and hence creating a more robust representation. Dropout also reduces the computational cost because fewer neurons participate in each training step.
 
+\subsubsection{Zero padding}
+
 Applying a 3x3 filter to an input image of size 10x10 will output an image of size 8x8 since there are only 8 positions in a single row where the filter can fit. For deep networks, this shrinking might cause the final representation to become too narrow. To counter this shrinking one can apply \textbf{zero padding}, that is to recreate the outer layer with zeroes after each filter in order to maintain the same size.
+
+\subsubsection{Spatial pyramid pooling}
 
 Convolutional layers and pooling layers can handle input images of changing sizes since the filters just slide over the entire image, so the size of the output matches the input.
 However, because the last layers are fully connected, they can only handle input of a fix size. A common solution to this is to rescale or crop the input \cite{FornesCnnCategorization}. If the input consists of segmented images of handwritten words then cropping will cut away critical information while rescaling risk distorting the handwriting beyond recognition. A proposed solution to this is using a layer of \textbf{spatial pyramid pooling} (SPP).
-% TODO describe SPP in more detail in another section if relevant
+% TODO describe SPP in more detail if relevant
 
-% TODO describe Spatial transformer networks.
+\subsubsection{Spatial transformer networks}
+
+% TODO describe Spatial transformer networks and what they are good for.
 
 \subsubsection{Attention models}
 
@@ -72,3 +82,7 @@ In contrast to CNNs, the human eye doesn't process the entire scene with equal p
 Similarly, we can let the system pay \textbf{attention} to a small part of the image at a time and successively increase the system's understanding of the image.
 By choosing good locations for our attention, the important parts of the image are captured while ignoring irrelevant parts.
 This reduces the computation time for training and also increases the precision of the network. The process of how to select a location to focus on is called an \textbf{attention model} and is often implemented using a \textbf{recurrent neural network} (RNN). Besides image classification, attention models have also been highly successful for image captioning \cite{AttendAndTell} and machine translation \cite{machine_translation_attention}.
+
+\subsubsection{Visual semantic alignment}
+
+% TODO describe alignment and what it is are good for.
