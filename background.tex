@@ -27,9 +27,7 @@ More recent approaches include multi-stream HMMs \cite{HWR_multi_stream_HMM_arab
 
 \subsection{Deep learning}
 
-Both machine translation and image captioning used to be solved by solving each subproblem separately but this kind of approach has been outperformed by end-to-end systems using deep learning \cite{ShowAndTell}. One neural network \textbf{encoded} the input to a fixed-length vector representation which was \textbf{decoded} by another network. In the case of machine translation both the encoder and decoder was implemented by an RNN which are
-excellent  % TODO: replace adjective?
-for processing sequences like sentences. The image captioning system was implemented in a similar manner but using a \textbf{convolutional neural network} (CNN) as encoder.
+Both machine translation and image captioning used to be solved by solving each subproblem separately but this kind of approach has been outperformed by end-to-end systems using deep learning \cite{ShowAndTell}. One neural network \textbf{encoded} the input to a fixed-length vector representation which was \textbf{decoded} by another network. In the case of machine translation both the encoder and decoder was implemented by an RNN which are highly suitable for processing sequences like sentences. The image captioning system was implemented in a similar manner but using a \textbf{convolutional neural network} (CNN) as encoder.
 
 \subsection{Convolutional neural networks}
 
@@ -37,20 +35,29 @@ Since the publication of the AlexNet in 2012 \cite{AlexNet}, CNNs have gained la
 
 In CNNs, each layer of neurons has a width, height and depth. The width and height correspond to that of the input image while the depth depends on the number of \textbf{filters} applied to the previous layer.
 % TODO add citation
-Each filter looks at a small region in the previous layer, e.g. 3x3 neurons, and performs a weighted sum and non-linear activation. Because the same weights are reused for all parts of the image, the number of parameters are reduced compared with a fully connected layer as in a standard Multi-layer perceptron.
+Each filter performs a weighted sum over a small region in the previous layer, e.g. 3x3 neurons using the full depth. The sum is then passed to a non-linear activation function such as $\tanh$ and serves as input for the next layer.
+Because the same weights are reused for all parts of the image, the number of parameters are reduced compared with a fully connected layer as in a standard \textbf{multi-layered perceptron} (MLP).
 
-A trained filter's function can be detected by synthesizing an input image that maximizes the filter's activation \cite{VisualizeCnn}.
-% For example, a CNN trained on image captioning can have a filter that detects faces.
+Neurons in higher layers in the CNN receive information from a larger \textbf{receptive field} in the input image. Therefore, the filters in lower layers typically learn to detect low-level features like edges and curves while higher layers can detect more complex objects like cats or faces.
+By synthesizing the input image to maximize a specific filter's activation, it is possible to get an idea of what the filter has learned to recognize \cite{VisualizeCnn}.
 
-Neurons in higher layers in the CNN receive information from a larger \textbf{receptive field} in the input image. Therefore, the filters in lower layers typically learn to detect low-level features like edges and curves while higher layers can detect more complex objects like faces.
+Besides filters, that is \textbf{convolutional layers}, CNNs also use \textbf{pooling layers} in order to increase the receptive field without increasing the number of parameters in the model.
+Pooling simply combines a region of neurons (e.g. 2x2) into a single neuron, typically by taking the maximum value.
 
-\textbf{Pooling layers} are often used to increase the receptive field and reduce the number of parameters.
-% TODO cite
-Pooling simply combines a region of neurons (e.g. 2x2) into a single neuron, for example by taking the maximum value.
+At the end of the network, there are often a few fully connected layers (MLP) where the last layer represent the output of the network, for example pseudo-probabilities for different categories.
 
-The performance of an CNN typically increases with greater width and depth but it comes with a higher computational cost \cite{InceptionV3}. However, by choosing a good network architecture the same performance can be achieved but at a substantially lower cost, for example by refactoring large filters (5x5, 7x7) into consecutive small filters (3x3) and extensive use of pooling layers.
+\subsubsection{Problems}
 
-Another problem with deep networks is vanishing gradients which can largely be resolved by using the \textbf{rectified linear} (ReLU) activation function $f(x) = \max{0, x}$ \cite{AlexNet}.
+The performance of CNNs typically increases with greater width and depth but it comes at a higher computational cost \cite{InceptionV3}. However, by choosing a good network architecture the same performance can be achieved but at a substantially lower cost, for example by refactoring large filters (5x5, 7x7) into consecutive small filters (3x3) and extensive use of pooling layers to reduce dimensionality. The authors also suggest a balance between depth and width of the network.
+
+Very deep networks suffer from the \textbf{vanishing gradient} problem. Because $\tanh$ has a very small derivative for large activations, the training can become very slow \cite{AlexNet}. This can largely be solved by using the \textbf{rectified linear} (ReLU) function for activation: $f(x) = \max{0, x}$.
+
+Another problem with large networks is overfitting which means that the network learns the training set by heart instead of learning to recognize the general patterns \cite{AlexNet, FornesCnnCategorization}. The \textbf{dropout} method introduces a probability of setting each neuron's activation to $0$ during training, often with 50\% probability. This forces the network to learn multiple paths for recognizing different features and hence creating a more robust representation. Dropout also reduces the computational cost because fewer neurons participate in each training step.
+
+Applying a 3x3 filter to an input image of size 10x10 will output an image of size 8x8 since there are only 8 positions in a single row that the filter can fit. To counter this shrinking one can apply \textbf{zero-padding}, that is to recreate the outer layer with zeroes after each filter in order to maintain the same size.
+
+Convolutional layers and pooling layers can handle input images of changing sizes since the filters can just slide over the entire image.
+, however the last fully connected layers have a fix size. Thus in order to handle input images of changing sizes
 
 \subsubsection{Attention models}
 
