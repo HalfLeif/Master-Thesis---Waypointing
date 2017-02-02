@@ -23,11 +23,17 @@ Previous work include \textbf{Hidden markov models} (HMMs) in combination with n
 More recent approaches include multi-stream HMMs \cite{HWR_multi_stream_HMM_arabic}, HMMs with \textbf{recurrent neural networks} (RNNs) \cite{Offline_HWR_RNN} and deep \textbf{convolutional neural networks} (CNNs) \cite{offline_HWR_CNN}.
 
 
-% \subsection{Convolutional neural networks}
+\subsection{Word spotting}
 
-\subsection{Deep learning}
+% TODO mention alternative approach to aid waypointing by using segmentation free word spotting to compile word image clouds. However, does not help towards automated indexing. Cite Uppsala.
+
+\subsection{Deep learning in computer vision}
 
 Both machine translation and image captioning used to be solved by solving each subproblem separately but this kind of approach has been outperformed by end-to-end systems using deep learning \cite{ShowAndTell}. One neural network \textbf{encoded} the input to a fixed-length vector representation which was \textbf{decoded} by another network. In the case of machine translation both the encoder and decoder was implemented by an RNN which are highly suitable for processing sequences like sentences. The image captioning system was implemented in a similar manner but using a \textbf{convolutional neural network} (CNN) as encoder.
+
+\subsubsection{Residual networks}
+
+% TODO cite Microsoft ResNet for architecture of Residual modules. There are also residual networks of residual networks.
 
 \subsection{Convolutional neural networks}
 
@@ -88,5 +94,14 @@ By choosing good locations for our attention, the important parts of the image a
 This reduces the computation time for training and also increases the precision of the network. The process of how to select a location to focus on is called an \textbf{attention model} and is often implemented using a \textbf{recurrent neural network} (RNN). Besides image classification, attention models have also been highly successful for image captioning \cite{AttendAndTell} and machine translation \cite{machine_translation_attention}.
 
 \subsubsection{Visual-semantic alignment}
+
+% Another way to model regions in the input is by using a R-CNN which have also been very successful at image captioning
+
+Another successful approach to image captioning uses a \textbf{region convolutional neural network} (R-CNN) as encoder \cite{VisualSemanticAlignment}.
+The original R-CNN method works by proposing 2000 regions in the image that are the most likely to contain an object \cite{RCNN}. Each region is then fed to a regular CNN for encoding before classification.
+%Computing the convolutions for all regions independently is redundant
+It is redundant to compute the convolutions for all regions independently since they often have much overlap, thus a computationally more efficient method is to process the entire input with the CNN first and propose the interesting regions after the convolutional layers \cite{FastRCNN}.
+By using a neural network for region selection after the convolutional layers further improves the speed \cite{FasterRCNN}.
+
 
 % TODO describe alignment and what it is are good for.
