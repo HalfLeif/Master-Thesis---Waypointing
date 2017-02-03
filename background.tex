@@ -43,7 +43,7 @@ Since the publication of the AlexNet in 2012 \cite{AlexNet}, CNNs have gained la
 
 In CNNs, each layer of neurons has a width, height and depth. The width and height correspond to that of the input image while the depth depends on the number of \textbf{filters} applied to the previous layer.
 % TODO add citation
-Each filter performs a weighted sum over a small region in the previous layer, e.g. 3x3 neurons using the full depth. The sum is then passed to a non-linear activation function such as $\tanh$ and serves as input for the next layer.
+Each filter performs a weighted sum over a small region in the previous layer, e.g. 3x3 neurons using the full depth. The sum is then passed to a non-linear activation function such as $\tanh$ and serves as input for the next layer. The output of each layer is known as an \textbf{activation map}.
 Because the same weights are reused for all parts of the image, the number of parameters are reduced compared with a fully connected layer as in a standard \textbf{multilayer perceptron} (MLP).
 
 Neurons in higher layers in the CNN receive information from a larger \textbf{receptive field} in the input image. Therefore, the filters in lower layers typically learn to detect low-level features like edges and curves while higher layers can detect more complex objects like cats or faces.
@@ -99,9 +99,7 @@ This reduces the computation time for training and also increases the precision 
 
 Another successful approach to image captioning uses a \textbf{region convolutional neural network} (R-CNN) as encoder \cite{VisualSemanticAlignment}.
 The original R-CNN method works by proposing 2000 regions in the image that are the most likely to contain an object \cite{RCNN}. Each region is then fed to a regular CNN for encoding before classification.
-%Computing the convolutions for all regions independently is redundant
-It is redundant to compute the convolutions for all regions independently since they often have much overlap, thus a computationally more efficient method is to process the entire input with the CNN first and propose the interesting regions after the convolutional layers \cite{FastRCNN}.
-By using a neural network for region selection after the convolutional layers further improves the speed \cite{FasterRCNN}.
 
+Since many regions overlap, it is unnecessary to compute the convolutions for them independently \cite{FastRCNN}. Instead the entire input image is processed through the CNN once and the feature vector of each region is extracted from the resulting activation map. After this improvement, the bottleneck is selecting the regions \cite{FasterRCNN}. By making a neural network to select regions from the activation map instead of from the image, the computation speed can be significantly reduced. However, this requires the training data to contain bounding boxes for the objects to detect.
 
-% TODO describe alignment and what it is are good for.
+In the case of image captioning, the correspondences between words and regions in the image is unknown so this relationship is modeled by latent variables \cite{VisualSemanticAlignment}.
