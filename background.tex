@@ -22,6 +22,44 @@ A comprehensible survey of common techniques for the different steps can be foun
 Previous work include \textbf{Hidden markov models} (HMMs) in combination with neural networks \cite{Offline_HWR_HMM_ANN}.
 More recent approaches include multi-stream HMMs \cite{HWR_multi_stream_HMM_arabic}, HMMs with \textbf{recurrent neural networks} (RNNs) \cite{Offline_HWR_RNN} and deep \textbf{convolutional neural networks} (CNNs) \cite{offline_HWR_CNN}.
 
+\subsubsection{Pre-processing}
+
+Pre-processing are commonly used to improve the quality of the input \cite{HWR_survey}. However, successful attempts have been made without pre-processing \cite{FornesCnnCategorization}.
+
+\paragraph{Binarization}
+
+First, the pixels are mapped to 0 or 1 depending on whether the gray-scale value of the pixel is above or below some threshold. The simplest is to use a global threshold, often calculated by Otsu's method. Otsu's method looks at the intensity histogram of the image. Assuming that there are two peaks in the histogram, one for background and one for foreground, it attempts to find a balanced threshold between the peaks. If the lighting was uneven at the time of photography, global thresholding does not work very well.
+
+Another approach is to use local or adaptive thresholds which calculates different thresholds for each pixel depending on the surrounding area. Local thresholds are more successful than global thresholding on low quality images, especially in the presence of noise. There are extensions to Otsu's method to produce local thresholds.
+
+Neural networks have also been used to combine global and local thresholds for binarization.
+
+\paragraph{Skew detection}
+
+Skew, or rotation, in images of text can be detected by computing the horizontal projection for different angles. The horizontal projection counts the number of black pixels per row. The amplitude of the projection is maximized when the image rotation is aligned with the text.
+
+\paragraph{Noise reduction}
+
+% TODO write something about this after studying about it?
+
+\subsubsection{Segmentation}
+
+Segmentation produces bounding boxes around detected words in the input image to be transcribed. The resulting word images can then be used as input for feature extraction.
+
+There are many suggested that have been proposed for word image segmentation \cite{HWR_survey, Waterflow2011, Waterflow2015}. The simplest group of methods are based on projections of the image. For example, pixel counting which cuts the image into line segments where the number of black pixels are below a threshold. However, this approach assumes the text to be written on straight lines which is typically not true for free-form handwriting. Another problem is if there are multiple lines in the image which are not aligned.
+
+Smearing is another group of methods which grows a boundary from each black pixel and groups the black pixels whose boundaries overlap. The water flow algorithm seems promising from this group of methods since it can handle curved text quite well.
+
+Recursive methods attempts to find a sequence of segments so that they match a library of word images within a certain error threshold.
+
+Stochastic methods utilize HMMs to ...
+% TODO study about stochastic segmentation?
+
+
+\subsubsection{Water flow algorithm}
+
+% TODO write here about water flow.
+
 
 \subsection{Word spotting}
 
