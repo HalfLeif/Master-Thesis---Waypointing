@@ -44,11 +44,24 @@ Skew, or rotation, in images of text can be detected by computing the horizontal
 
 \subsubsection{Segmentation}
 
-Segmentation produces bounding boxes around detected words in the input image to be transcribed. The resulting word images can then be used as input for feature extraction.
+Segmentation produces bounding boxes around detected words in the input image to be transcribed. The resulting word images can then be used as input for feature extraction. In order to produce word segments, most methods first segment the text lines.
 
-There are many suggested that have been proposed for word image segmentation \cite{HWR_survey, Waterflow2011, Waterflow2015}. The simplest group of methods are based on projections of the image. For example, pixel counting which cuts the image into line segments where the number of black pixels are below a threshold. However, this approach assumes the text to be written on straight lines which is typically not true for free-form handwriting. Another problem is if there are multiple lines in the image which are not aligned.
+There are many suggested that have been proposed for word image segmentation \cite{HWR_survey, Waterflow2011, Waterflow2015}.
+
+\paragraph{Projections}
+
+The simplest group of methods are based on projections of the image. For example, pixel counting which cuts the image into line segments where the number of black pixels are below a threshold. However, this approach assumes the text to be written on straight lines which is typically not true for free-form handwriting. Another problem is if there are multiple lines in the image which are not aligned.
+
+\paragraph{Smearing}
 
 Smearing is another group of methods which grows a boundary from each black pixel and groups the black pixels whose boundaries overlap. The water flow algorithm seems promising from this group of methods since it can handle curved text quite well.
+
+\paragraph{Graphs}
+
+Another successful approach is to represent the connected components in the binarized image as vertices in a graph \cite{GraphSegmentation}. The edges of the graph use a connectivity metric for weight. It is based on the closest euclidian distance between the connected components.
+The minimum spanning tree for the graph can be computed and cut into subgraphs which become segments. The cutting can be done by using a pre-determined threshold for the connectivity metric.
+
+\paragraph{Other}
 
 Recursive methods attempts to find a sequence of segments so that they match a library of word images within a certain error threshold.
 
