@@ -42,6 +42,12 @@ Skew, or rotation, in images of text can be detected by computing the horizontal
 
 % TODO write something about this after studying about it?
 
+Median filtering...
+
+\paragraph{Line detection}
+
+% TODO
+
 \subsubsection{Segmentation}
 
 Segmentation produces bounding boxes around detected words in the input image to be transcribed. The resulting word images can then be used as input for feature extraction. In order to produce word segments, most methods first segment the text lines.
@@ -54,7 +60,7 @@ The simplest group of methods are based on projections of the image. For example
 
 \paragraph{Smearing}
 
-Smearing is another group of methods which grows a boundary from each black pixel and groups the black pixels whose boundaries overlap. The water flow algorithm seems promising from this group of methods since it can handle curved text quite well.
+Smearing is another group of methods which grows a boundary from each black pixel and groups the black pixels whose boundaries overlap. The water flow algorithm seems promising from this group of methods since it can handle curved text quite well \cite{Waterflow2011, Waterflow2015}.
 
 \paragraph{Graphs}
 
@@ -69,10 +75,14 @@ Stochastic methods utilize HMMs to ...
 % TODO study about stochastic segmentation?
 
 
-\subsubsection{Water flow algorithm}
+\subsection{Multi-digit recognition}
 
-% TODO write here about water flow.
+Digit recognition has been studied extensively, especially for recognition of zip-codes in the US postal service \cite{lecun_1989, lecun_1990}. Originally, the digits were segmented manually and linearly transformed to a fix input size of 16x16 pixels.
+Each digit image was then classified using a CNN with 3 or 4 hidden layers, with 2x2 pooling between each convolutional layer.
 
+A complete zip-code recognition system locates the place of the zip-code and segments the zip-code into digit images \cite{zipcode_system}. The segmentation is performed by finding \textbf{connected components} (CC) in the image. If the CC has a high confidence in classification it is removed, otherwise it is either split or combined with adjacent CCs until a segmentation has been found where each classification has a high enough confidence. This is done by building a directed acyclic graph where each proposed segment is a node. The length of a path is defined as the product of the classification confidence for each node in the path. The best segmentation is then the path of greatest length in the graph. In order to avoid redundant computations, the segmentation can be done indirectly after the convolutional layers instead of on the input image \cite{lecun_multidigit}.
+
+More recently, deep neural networks have achieved state-of-the-art in multi-digit recognition in street view images \cite{multidigit_streetview}. Instead of handling localization, segmentation and classification as separate tasks, they solve all of them using a single CNN with 11 layers. The output is modeled as a sequence $S$ of digits with a maximum length $N$. The sequence $S$ consists of a random variable $L=n$ for the length of the sequence and $n$ variables $S_i$, one for each digit. In order to handle images without numbers $L$ is allowed to have the value zero and in order to handle longer sequences than $N$, $L$ has a special value "greater than $N$". For an input image $X$, the system can be trained by maximizing $\log P(S \vert X)$. Classification is similarly done by $\text{argmax}_S P(S \vert X)$.
 
 \subsection{Word spotting}
 
