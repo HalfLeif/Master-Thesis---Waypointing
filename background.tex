@@ -156,7 +156,30 @@ However, because the last layers are fully connected, they can only handle input
 In contrast to CNNs, the human eye doesn't process the entire scene with equal precision but focuses on the most relevant parts \cite{DeepMindAttention}.
 Similarly, we can let the system pay \textbf{attention} to a small part of the image at a time and successively increase the system's understanding of the image.
 By choosing good locations for our attention, the important parts of the image are captured while ignoring irrelevant parts.
-This reduces the computation time for training and also increases the precision of the network. The process of how to select a location to focus on is called an \textbf{attention model} and is often implemented using a \textbf{recurrent neural network} (RNN). Besides image classification, attention models have also been highly successful for image captioning \cite{AttendAndTell} and machine translation \cite{machine_translation_attention}.
+This reduces the computation time for training and also increases the precision of the network.
+% The process of how to select a location to focus on is called an \textbf{attention model} and is often implemented using a \textbf{recurrent neural network} (RNN).
+Besides image classification, attention models have also been highly successful for image captioning \cite{AttendAndTell} and machine translation \cite{machine_translation_attention}.
+
+We now describe how attention works in more technical detail.
+The goal of the attention model is to produce a vector $z \in \matbb{R}^D$ that represents the entire input image by weighing different parts of the activation map from the encoder CNN.
+The activation map contains $L$ units $a_i \in \matbb{R}^D$.
+Each unit $a_i$ is a feature vector for a specific location in the input image. We feed each $a_i$ to an MLP which produces a single number $e_i$. If the decoder uses an RNN, its hidden state is also used as input to the MLP besides the feature vector $a_i$.
+The attention weight $\alpha_i$ for each unit can then be computed by taking the softmax of $e_i$ over all units:
+
+\[
+\alpha_i = \frac{ \exp(e_i) }{ \sum_{k=1}^L \exp(e_i) }
+\]
+
+\paragraph{soft attention}
+By definition, the attention weights sum to one. A \textbf{soft attention} model computes the representative vector $z$ by summing over the feature vectors $a_i$, using attention as weights:
+
+\[
+z = \sum_{k=1}^L \alpha_i a_i
+\]
+
+\paragraph{hard attention}
+In contrast, a \textbf{hard attention} model interprets the $\alpha_i$ as a probability distribution over $a_i$. By sampling this distribution, $z$ is chosen to be the sampled unit $a_i$, ignoring the rest of the image.
+
 
 \subsubsection{Visual-semantic alignment}
 
