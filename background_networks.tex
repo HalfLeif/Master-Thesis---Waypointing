@@ -34,7 +34,8 @@ p_i = \frac{ \exp(o_i) }{ \sum_k \exp(o_k) }
 
 \subsubsection{Backpropagation}
 
-In order to correctly classify new input, we need to \textbf{train} the network on some existing data set $D$ which consists of pairs of correct classifications $(\mathbf{x}^{(\mu)}, y^{(\mu)}$). The cross-entropy $H$ is a metric of how different the network pseudo-probabilities $\mathbf{p}^{(\mu)}$ are from the correct classification $\mathbf{y}^{(\mu)}$. Here we let $\mathbf{y}^{(\mu)}$ be a \texbf{onehot} vector, that is a all elements are zero except the indicated class whose associated element has the value $1$:
+In order to correctly classify new input, we need to \textbf{train} the network on some existing data set $D$ which consists of pairs of correct classifications $(\mathbf{x}^{(\mu)}, y^{(\mu)}$).
+We introduce a metric $H$ for how different the network pseudo-probabilities $\mathbf{p}^{(\mu)}$ are from the correct classification $\mathbf{y}^{(\mu)}$. Here we let $\mathbf{y}^{(\mu)}$ be a \texbf{onehot} vector, that is a all elements are zero except the indicated class whose associated element has the value $1$:
 
 \[
 H = \frac{1}{2} \sum_{\mu \in D} \Vert
@@ -42,23 +43,38 @@ H = \frac{1}{2} \sum_{\mu \in D} \Vert
 \Vert ^2
 \]
 
-When $H$ is minimized, the network associates each input $\mathbf{x}^{(\mu)} \in D$ with the correct class. Since $H$ is differentiable, we can use standard gradient descent to optimize the network parameters, that is the weights $w_{ij}$ and the biases $b_i$. In order to get avoid getting stuck in local minima, it is common to apply \textbf{stochastic gradient descent} instead by summing over a small subset of $D$ instead of the entire data set.
+When $H$ is minimized, the network associates each input $\mathbf{x}^{(\mu)} \in D$ with the correct class. Since $H$ is differentiable, we can use standard gradient descent to optimize the network parameters, that is the weights $w_{ij}$ and the biases $b_i$. In order to get avoid getting stuck in local minima, it is common to apply \textbf{stochastic gradient descent} instead. This is achieved by summing over a small subset of $D$ instead of the entire data set.
 
 \subsubsection{Testing}
 
-Because neural networks have many parameters, they risk memorizing the training data and hence fail to learn the general patterns that we actually want them to recognize. This phenomenon is knows as \textbf{overfitting} and can constitute a large problem for small data sets. In order to estimate overfitting, we divide the original data set into one part for training and one for testing. The training data is used for backpropagation while the test data is exclusively used for evaluation. If the network begins to overfit on the training data, the accuracy on the test data decreases.
+Because neural networks have many parameters, they risk memorizing the training data and hence fail to learn the general patterns that we actually want them to recognize.
+% \cite{AlexNet, FornesCnnCategorization}.
+This phenomenon is knows as \textbf{overfitting} and can constitute a large problem for small data sets. In order to estimate overfitting, we divide the original data set into one part for training and one for testing. The training data is used for backpropagation while the test data is exclusively used for evaluation. If the network begins to overfit on the training data, the accuracy on the test data decreases.
+
 
 \subsection{Deep neural networks}
 % Very powerful, see for example AlphaGo
 % Many parameters, needs lot of data
 
-\subsubsection{Rectified linear activation}
+One of the reasons why neural networks have recently achieved state-of-the-art in so many tasks is the use of very deep networks, that is networks with many layers.
+% TODO add citation
+The more layers, the more complex tasks can be learned. To the surprise of many, computers recently even outperformed humans in the complex game of Go \cite{AlphaGo, AlphaGoTuringTest}.
 
-Very deep networks suffer from the \textbf{vanishing gradient} problem. Because $\tanh$ has a very small derivative for large activations, the training can become very slow \cite{AlexNet}. This can largely be solved by using the \textbf{rectified linear} (ReLU) function for activation: $f(x) = \max{0, x}$.
+The large number of parameters in deep networks is both a strength and a weakness since it requires a large amount of training data as well as considerable computation power. More parameters can also memorize more and thus makes the network more prone to overfitting \cite{AlexNet}.
 
 \subsubsection{Dropout}
 
-Another problem with large networks is overfitting which means that the network learns the training set by heart instead of learning to recognize the general patterns \cite{AlexNet, FornesCnnCategorization}. The \textbf{dropout} method introduces a probability of setting each neuron's activation to $0$ during training, often with 50\% probability. This forces the network to learn multiple paths for recognizing different features and hence creating a more robust representation. Dropout also reduces the computational cost because fewer neurons participate in each training step.
+One way to reduce the risk of overfitting is by applying \textbf{dropout}  \cite{AlexNet, FornesCnnCategorization}.
+%Another problem with large networks is overfitting which means that the network learns the training set by heart instead of learning to recognize the general patterns \cite{AlexNet, FornesCnnCategorization}.
+The dropout method introduces a probability of setting each neuron's activation to $0$ during training, often with $50\%$ probability. This forces the network to learn multiple paths for recognizing different features and hence creating a more robust representation. Dropout also reduces the computational cost because fewer neurons participate in each training step.
+
+\subsubsection{Rectified linear activation}
+
+Very deep networks suffer from the \textbf{vanishing gradient} problem.
+Backpropagation updates each parameter according to its gradient but if the gradient is very small, it will take a long time before the network converges.
+Such small gradients can occur when using the traditional activation functions, hyperbolic tangent and the logistic function, because they have very small gradients for large activations \cite{AlexNet}.
+This can largely be solved by using the \textbf{rectified linear} (ReLU) function for activation: $f(x) = \max{0, x}$.
+
 
 
 \subsection{Deep learning in computer vision}
