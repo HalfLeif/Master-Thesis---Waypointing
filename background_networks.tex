@@ -73,7 +73,7 @@ The dropout method introduces a probability of setting each neuron's activation 
 Very deep networks suffer from the \textbf{vanishing gradient} problem.
 Backpropagation updates each parameter according to its gradient but if the gradient is very small, it will take a long time before the network converges.
 Such small gradients can occur when using the traditional activation functions, hyperbolic tangent and the logistic function, because they have very small gradients for large activations \cite{AlexNet}.
-This can largely be solved by using the \textbf{rectified linear} (ReLU) function for activation: $f(x) = \max{0, x}$.
+This can largely be solved by using the \textbf{rectified linear} (ReLU) function for activation: $g(x) = \max{0, x}$.
 
 
 
