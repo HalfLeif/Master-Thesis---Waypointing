@@ -2,11 +2,55 @@
 % Provide some background on neural networks
 
 \section{Neural networks}
+In this section, we give a brief introduction to how neural networks function and describe recent research in applying neural networks to tasks in computer vision.
 
 \subsection{Introduction to neural networks}
-% Describe about FFNN, activation functions, backpropagation
+% Describe about FFNN, non-linear activation functions, classification and supervised learning, backpropagation, softmax and numerical stability
+% TODO find good source about NNs
+
+Neural networks have recently become increasingly popular in many diverse fields.
+% TODO add citation
+% They have been observed to be quite flexible in being able to classify data, find clusters and
+% Neural networks can find meaningful information in a sea of data by clustering,
+Neural networks can be utilized to find the top principal components and find meaningful clusters in a sea of data. They can also be used to generate new information, for example in machine translation \cite{machine_translation_attention}. Here, we will focus on the task of \textbf{classification} which refers to choosing the correct class $y$ for some given input $\mathbf{x}$. This can be to correctly recognize objects in an image or select a strategic action to take in a game.
+
+\subsubsection{Multilayer perceptron}
+
+A \textbf{multilayer perceptron} (MLP) is organized in several \textbf{layers}. Each layer consists of a number of \textbf{neurons}.
+%, the first layer has the same number as elements in the input vector $\mathbf{x}$.
+Each element in the input vector $\mathbf{x}$ becomes a neuron in the first layer. Each neuron $v_i$ in the following layers gets its value by computing a weighted sum over the neurons $u_j$ in the previous layer using weights  $w_{ij}$, a bias term $b_i$ and an \textbf{activation function} $g$:
+
+\[
+v_i = g\left( b_i + \sum_j w_{ij} u_j \right)
+\]
+
+In order for the network to utilize the power of several layers, the activation function must be non-linear. If $g$ would be linear, then the entire network is a series of linear transformations which can be rewritten as a single linear transformation. Traditional choices of $g$ include the hyperbolic tangent and the logistic function (which is sometimes referred to as the sigmoid function).
+
+The final layer is called the \textbf{readout layer} and has as many neurons as there are classes. The input $\mathbf{x}$ is classified as the class $y$ which has the greatest value in the readout layer. In order to estimate the certainty, we can compute pseudo-probabilities $p_i$ of the classes by taking the \textbf{softmax} of the readout values $o_i$:
+
+\[
+p_i = \frac{ \exp(o_i) }{ \sum_k \exp(o_k) }
+\]
+
+\subsubsection{Backpropagation}
+
+In order to correctly classify new input, we need to \textbf{train} the network on some existing data set $D$ which consists of pairs of correct classifications $(\mathbf{x}^{(\mu)}, y^{(\mu)}$). The cross-entropy $H$ is a metric of how different the network pseudo-probabilities $\mathbf{p}^{(\mu)}$ are from the correct classification $\mathbf{y}^{(\mu)}$. Here we let $\mathbf{y}^{(\mu)}$ be a \texbf{onehot} vector, that is a all elements are zero except the indicated class whose associated element has the value $1$:
+
+\[
+H = \frac{1}{2} \sum_{\mu \in D} \Vert
+  \mathbf{y}^{(\mu)} - \mathbf{p}^{(\mu)}
+\Vert ^2
+\]
+
+When $H$ is minimized, the network associates each input $\mathbf{x}^{(\mu)} \in D$ with the correct class. Since $H$ is differentiable, we can use standard gradient descent to optimize the network parameters, that is the weights $w_{ij}$ and the biases $b_i$. In order to get avoid getting stuck in local minima, it is common to apply \textbf{stochastic gradient descent} instead by summing over a small subset of $D$ instead of the entire data set.
+
+\subsubsection{Testing}
+
+Because neural networks have many parameters, they risk memorizing the training data and hence fail to learn the general patterns that we actually want them to recognize. This phenomenon is knows as \textbf{overfitting} and can constitute a large problem for small data sets. In order to estimate overfitting, we divide the original data set into one part for training and one for testing. The training data is used for backpropagation while the test data is exclusively used for evaluation. If the network begins to overfit on the training data, the accuracy on the test data decreases.
 
 \subsection{Deep neural networks}
+% Very powerful, see for example AlphaGo
+% Many parameters, needs lot of data
 
 \subsubsection{Rectified linear activation}
 
@@ -31,7 +75,7 @@ Since the publication of the AlexNet in 2012 \cite{AlexNet}, CNNs have gained la
 In CNNs, each layer of neurons has a width, height and depth. The width and height correspond to that of the input image while the depth depends on the number of \textbf{filters} applied to the previous layer.
 % TODO add citation
 Each filter performs a weighted sum over a small region in the previous layer, e.g. 3x3 neurons using the full depth. The sum is then passed to a non-linear activation function such as $\tanh$ and serves as input for the next layer. The output of each layer is known as an \textbf{activation map}.
-Because the same weights are reused for all parts of the image, the number of parameters are reduced compared with a fully connected layer as in a standard \textbf{multilayer perceptron} (MLP).
+Because the same weights are reused for all parts of the image, the number of parameters are reduced compared with a fully connected layer as in a standard multilayer perceptron.
 
 Neurons in higher layers in the CNN receive information from a larger \textbf{receptive field} in the input image. Therefore, the filters in lower layers typically learn to detect low-level features like edges and curves while higher layers can detect more complex objects like cats or faces.
 By synthesizing the input image to maximize a specific filter's activation, it is possible to get an idea of what the filter has learned to recognize \cite{VisualizeCnn}.
