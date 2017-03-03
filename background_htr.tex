@@ -1,0 +1,81 @@
+
+\section{Related work}
+
+%% Rewrite this part, add more recent work, especially in deep learning and CNNs: spatial transformations, visual-semantic alignment etc.
+
+% Here, we discuss the field of two problems related to waypointing: HTR and image classification.
+
+\subsection{Handwritten text recognition}
+
+HTR has been solved for recognizing postal addresses on letters \cite{lecun_1989, zipcode_system} and reading bank cheques. This has been possible because 1. the text is in a very small domain and 2. these applications have high market value \cite{40_years_HWR}. However, transcribing natural languages in general is still an unsolved problem.
+
+\paragraph{}
+HTR solutions can typically be described by these four steps: \cite{offline_HWR_CNN}:
+\begin{enumerate}
+    \item Pre-processing - each pixel in the image is mapped to either 0 or 1, skew is corrected and noise is removed.
+    \item Segmentation - the image is cut into small segments, so that each segment contains a handwritten word.
+    \item Feature extraction - each image segment is encoded into some vector of features.
+    \item Classification - the feature vector is interpreted as a word from a known vocabulary.
+\end{enumerate}
+
+A comprehensible survey of common techniques for the different steps can be found here \cite{HWR_survey}.
+Previous work include \textbf{Hidden markov models} (HMMs) in combination with neural networks \cite{Offline_HWR_HMM_ANN}.
+More recent approaches include multi-stream HMMs \cite{HWR_multi_stream_HMM_arabic}, HMMs with \textbf{recurrent neural networks} (RNNs) \cite{Offline_HWR_RNN} and deep \textbf{convolutional neural networks} (CNNs) \cite{offline_HWR_CNN}.
+
+\subsubsection{Pre-processing}
+
+Pre-processing are commonly used to improve the quality of the input \cite{HWR_survey}. However, successful attempts have been made without pre-processing \cite{FornesCnnCategorization}.
+
+\paragraph{Binarization}
+
+First, the pixels are mapped to 0 or 1 depending on whether the gray-scale value of the pixel is above or below some threshold. The simplest is to use a global threshold, often calculated by Otsu's method. Otsu's method looks at the intensity histogram of the image. Assuming that there are two peaks in the histogram, one for background and one for foreground, it attempts to find a balanced threshold between the peaks. If the lighting was uneven at the time of photography, global thresholding does not work very well.
+
+Another approach is to use local or adaptive thresholds which calculates different thresholds for each pixel depending on the surrounding area. Local thresholds are more successful than global thresholding on low quality images, especially in the presence of noise. There are extensions to Otsu's method to produce local thresholds.
+
+Neural networks have also been used to combine global and local thresholds for binarization.
+
+\paragraph{Skew detection}
+
+Skew, or rotation, in images of text can be detected by computing the horizontal projection for different angles. The horizontal projection counts the number of black pixels per row. The amplitude of the projection is maximized when the image rotation is aligned with the text.
+
+\paragraph{Noise reduction}
+
+% TODO write something about this after studying about it?
+
+Median filtering...
+
+\paragraph{Line detection}
+
+% TODO
+
+\subsubsection{Segmentation}
+
+Segmentation produces bounding boxes around detected words in the input image to be transcribed. The resulting word images can then be used as input for feature extraction. In order to produce word segments, most methods first segment the text lines.
+
+There are many suggested that have been proposed for word image segmentation \cite{HWR_survey, Waterflow2011, Waterflow2015}.
+
+\paragraph{Projections}
+
+The simplest group of methods are based on projections of the image. For example, pixel counting which cuts the image into line segments where the number of black pixels are below a threshold. However, this approach assumes the text to be written on straight lines which is typically not true for free-form handwriting. Another problem is if there are multiple lines in the image which are not aligned.
+
+\paragraph{Smearing}
+
+Smearing is another group of methods which grows a boundary from each black pixel and groups the black pixels whose boundaries overlap. The water flow algorithm seems promising from this group of methods since it can handle curved text quite well \cite{Waterflow2011, Waterflow2015}.
+
+\paragraph{Graphs}
+
+Another successful approach is to represent the connected components in the binarized image as vertices in a graph \cite{GraphSegmentation}. The edges of the graph use a connectivity metric for weight. It is based on the closest euclidian distance between the connected components.
+The minimum spanning tree for the graph can be computed and cut into subgraphs which become segments. The cutting can be done by using a pre-determined threshold for the connectivity metric.
+
+\paragraph{Other}
+
+Recursive methods attempts to find a sequence of segments so that they match a library of word images within a certain error threshold.
+
+Stochastic methods utilize HMMs to ...
+% TODO study about stochastic segmentation?
+
+
+
+\subsection{Word spotting}
+
+% TODO mention alternative approach to aid waypointing by using segmentation free word spotting to compile word image clouds. However, does not help towards automated indexing. Cite Uppsala.

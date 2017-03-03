@@ -1,0 +1,131 @@
+
+% Provide some background on neural networks
+
+\section{Neural networks}
+
+\subsection{Introduction to neural networks}
+% Describe about FFNN, activation functions, backpropagation
+
+\subsection{Deep neural networks}
+
+\subsubsection{Rectified linear activation}
+
+Very deep networks suffer from the \textbf{vanishing gradient} problem. Because $\tanh$ has a very small derivative for large activations, the training can become very slow \cite{AlexNet}. This can largely be solved by using the \textbf{rectified linear} (ReLU) function for activation: $f(x) = \max{0, x}$.
+
+\subsubsection{Dropout}
+
+Another problem with large networks is overfitting which means that the network learns the training set by heart instead of learning to recognize the general patterns \cite{AlexNet, FornesCnnCategorization}. The \textbf{dropout} method introduces a probability of setting each neuron's activation to $0$ during training, often with 50\% probability. This forces the network to learn multiple paths for recognizing different features and hence creating a more robust representation. Dropout also reduces the computational cost because fewer neurons participate in each training step.
+
+
+\subsection{Deep learning in computer vision}
+
+Both machine translation and image captioning used to be solved by solving each subproblem separately but this kind of approach has been outperformed by end-to-end systems using deep learning \cite{ShowAndTell}. One neural network \textbf{encoded} the input to a fixed-length vector representation which was \textbf{decoded} by another network. In the case of machine translation both the encoder and decoder was implemented by an RNN which are highly suitable for processing sequences like sentences. The image captioning system was implemented in a similar manner but using a \textbf{convolutional neural network} (CNN) as encoder.
+
+
+\subsection{Convolutional neural networks}
+
+Since the publication of the AlexNet in 2012 \cite{AlexNet}, CNNs have gained large attention in computer vision for achieving state-of-the-art in various tasks such as object-detection, segmentation, video classification and object tracking \cite{InceptionV3}.
+
+% TODO add picture of 3x3 filters and 2x2 max pooling
+
+In CNNs, each layer of neurons has a width, height and depth. The width and height correspond to that of the input image while the depth depends on the number of \textbf{filters} applied to the previous layer.
+% TODO add citation
+Each filter performs a weighted sum over a small region in the previous layer, e.g. 3x3 neurons using the full depth. The sum is then passed to a non-linear activation function such as $\tanh$ and serves as input for the next layer. The output of each layer is known as an \textbf{activation map}.
+Because the same weights are reused for all parts of the image, the number of parameters are reduced compared with a fully connected layer as in a standard \textbf{multilayer perceptron} (MLP).
+
+Neurons in higher layers in the CNN receive information from a larger \textbf{receptive field} in the input image. Therefore, the filters in lower layers typically learn to detect low-level features like edges and curves while higher layers can detect more complex objects like cats or faces.
+By synthesizing the input image to maximize a specific filter's activation, it is possible to get an idea of what the filter has learned to recognize \cite{VisualizeCnn}.
+
+Besides filters, that is \textbf{convolutional layers}, CNNs also use \textbf{pooling layers} in order to increase the receptive field without increasing the number of parameters in the model.
+Pooling simply combines a region of neurons (e.g. 2x2) into a single neuron, typically by taking the maximum value.
+
+At the end of the network, there are often a few fully connected layers (MLP) where the last layer represent the output of the network, for example pseudo-probabilities for different categories.
+
+\subsubsection{Network architecture for faster computation}
+
+The performance of CNNs typically increases with greater width and depth but it comes at a higher computational cost \cite{InceptionV3}. However, by choosing a good network architecture the same performance can be achieved but at a substantially lower cost, for example by refactoring large filters (5x5, 7x7) into consecutive small filters (3x3) and extensive use of pooling layers to reduce dimensionality. The authors also suggest a balance between depth and width of the network.
+
+\subsubsection{Zero padding}
+
+Applying a 3x3 filter to an input image of size 10x10 will output an image of size 8x8 since there are only 8 positions in a single row where the filter can fit. For deep networks, this shrinking might cause the final representation to become too narrow. To counter this shrinking one can apply \textbf{zero padding}, that is to recreate the outer layer with zeroes after each filter in order to maintain the same size.
+
+
+\subsection{Attention models}
+
+% Since waypointing only needs high-level information in a limited domain, complete transcription is unnecessary. Instead we can use recent advances in image classification.
+
+% TODO write this part again in more detail, especially after spending more time with the literature here.
+
+In contrast to CNNs, the human eye doesn't process the entire scene with equal precision but focuses on the most relevant parts \cite{DeepMindAttention}.
+Similarly, we can let the system pay \textbf{attention} to a small part of the image at a time and successively increase the system's understanding of the image.
+By choosing good locations for our attention, the important parts of the image are captured while ignoring irrelevant parts.
+This reduces the computation time for training and also increases the precision of the network.
+% The process of how to select a location to focus on is called an \textbf{attention model} and is often implemented using a \textbf{recurrent neural network} (RNN).
+Besides image classification, attention models have also been highly successful for image captioning \cite{AttendAndTell} and machine translation \cite{machine_translation_attention}.
+
+\subsubsection{Details}
+We now describe how the attention model in \cite{AttendAndTell} works in more detail.
+The goal of the attention model is to produce a vector $z \in \mathbb{R}^D$ that represents the entire input image by weighing different parts of the activation map from the encoder CNN.
+
+The activation map contains $L$ units $a_i \in \mathbb{R}^D$.
+Each unit $a_i$ is a feature vector for a specific location in the input image. We feed each $a_i$ to an MLP which produces a single number $e_i$. In the paper, the decoder uses an RNN whose hidden state is also used as input to the MLP besides the feature vector $a_i$.
+The attention weight $\alpha_i$ for each unit can then be computed by taking the softmax of $e_i$ over all units:
+
+\[
+\alpha_i = \frac{ \exp(e_i) }{ \sum_{k=1}^L \exp(e_i) }
+\]
+
+\paragraph{soft attention}
+By definition, the attention weights sum to one. A \textbf{soft attention} model computes the representative vector $z$ by summing over the feature vectors $a_i$, using attention as weights:
+
+\[
+z = \sum_{k=1}^L \alpha_i a_i
+\]
+
+\paragraph{hard attention}
+In contrast, a \textbf{hard attention} model interprets the $\alpha_i$ as a probability distribution over $a_i$. By sampling this distribution, $z$ is chosen to be the sampled unit $a_i$, ignoring the rest of the image.
+
+
+\subsection{CNNs in multi-digit recognition}
+
+Digit recognition has been studied extensively, especially for recognition of zip-codes in the US postal service \cite{lecun_1989, lecun_1990}. Originally, the digits were segmented manually and linearly transformed to a fix input size of 16x16 pixels.
+Each digit image was then classified using a CNN with 3 or 4 hidden layers, with 2x2 pooling between each convolutional layer.
+
+A complete zip-code recognition system locates the place of the zip-code and segments the zip-code into digit images \cite{zipcode_system}. The segmentation is performed by finding \textbf{connected components} (CC) in the image. If the CC has a high confidence in classification it is removed, otherwise it is either split or combined with adjacent CCs until a segmentation has been found where each classification has a high enough confidence. This is done by building a directed acyclic graph where each proposed segment is a node. The length of a path is defined as the product of the classification confidence for each node in the path. The best segmentation is then the path of greatest length in the graph. In order to avoid redundant computations, the segmentation can be done indirectly after the convolutional layers instead of on the input image \cite{lecun_multidigit}.
+
+More recently, deep neural networks have achieved state-of-the-art in multi-digit recognition in street view images \cite{multidigit_streetview}. Instead of handling localization, segmentation and classification as separate tasks, they solve all of them using a single CNN with 11 layers. The output is modeled as a sequence $S$ of digits with a maximum length $N$. The sequence $S$ consists of a random variable $L=n$ for the length of the sequence and $n$ variables $S_i$, one for each digit. In order to handle images without numbers $L$ is allowed to have the value zero and in order to handle longer sequences than $N$, $L$ has a special value "greater than $N$". For an input image $X$, the system can be trained by maximizing $\log P(S \vert X)$. Classification is similarly done by $\text{argmax}_S P(S \vert X)$.
+Because each variable has a very small domain, they can be implemented with independent softmax outputs.
+Although this model works well for digit recognition of short sequences $N \leq 5$ as well as OCR in CAPTCHAs, the authors speculate that the method is not suitable for long or unbounded sequences.
+
+Another suggested approach to digit recognition in street view is to combine CNNs with HMMs \cite{multidigit_streetview_CNN_HMM}. They use a sliding window to extract multiple overlapping frames on the input image, classify each frame using a CNN to either a digit or null and then feed the sequence of frame labels to an HMM.
+
+
+
+\subsection{Additional topics}
+
+Here we list some additional recent progress in the field of neural networks in computer vision which is not used in the thesis.
+
+\subsubsection{Visual-semantic alignment}
+
+% Another way to model regions in the input is by using a R-CNN which have also been very successful at image captioning
+
+Another successful approach to image captioning uses a \textbf{region convolutional neural network} (R-CNN) as encoder \cite{VisualSemanticAlignment}.
+The original R-CNN method works by proposing 2000 regions in the image that are the most likely to contain an object \cite{RCNN}. Each region is then fed to a regular CNN for encoding before classification.
+
+Since many regions overlap, it is unnecessary to compute the convolutions for them independently \cite{FastRCNN}. Instead the entire input image is processed through the CNN once and the feature vector of each region is extracted from the resulting activation map. After this improvement, the bottleneck is selecting the regions \cite{FasterRCNN}. By making a neural network to select regions from the activation map instead of from the image, the computation speed can be significantly reduced. However, this requires the training data to contain bounding boxes for the objects to detect.
+
+In the case of image captioning, the correspondences between words and regions in the image is unknown so this relationship is modeled by latent variables \cite{VisualSemanticAlignment}.
+
+\subsubsection{Spatial pyramid pooling}
+
+Convolutional layers and pooling layers can handle input images of changing sizes since the filters just slide over the entire image, so the size of the output matches the input.
+However, because the last layers are fully connected, they can only handle input of a fix size. A common solution to this is to rescale or crop the input \cite{FornesCnnCategorization}. If the input consists of segmented images of handwritten words then cropping will cut away critical information while rescaling risk distorting the handwriting beyond recognition. A proposed solution to this is using a layer of \textbf{spatial pyramid pooling} (SPP).
+% TODO describe SPP in more detail if relevant
+
+\subsubsection{Spatial transformer networks}
+
+% TODO describe Spatial transformer networks and what they are good for.
+
+\subsubsection{Residual networks}
+
+% TODO cite Microsoft ResNet for architecture of Residual modules. There are also residual networks of residual networks.
