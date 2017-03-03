@@ -35,7 +35,7 @@ p_i = \frac{ \exp(o_i) }{ \sum_k \exp(o_k) }
 \subsubsection{Backpropagation}
 
 In order to correctly classify new input, we need to \textbf{train} the network on some existing data set $D$ which consists of pairs of correct classifications $(\mathbf{x}^{(\mu)}, y^{(\mu)}$).
-We introduce a metric $H$ for how different the network pseudo-probabilities $\mathbf{p}^{(\mu)}$ are from the correct classification $\mathbf{y}^{(\mu)}$. Here we let $\mathbf{y}^{(\mu)}$ be a \texbf{onehot} vector, that is a all elements are zero except the indicated class whose associated element has the value $1$:
+We introduce a metric $H$ for how different the network pseudo-probabilities $\mathbf{p}^{(\mu)}$ are from the correct classification $\mathbf{y}^{(\mu)}$. Here we let $\mathbf{y}^{(\mu)}$ be a \textbf{onehot} vector, that is a all elements are zero except the indicated class whose associated element has the value $1$:
 
 \[
 H = \frac{1}{2} \sum_{\mu \in D} \Vert
