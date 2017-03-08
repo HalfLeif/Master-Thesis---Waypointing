@@ -26,6 +26,7 @@
 \usepackage{graphicx}
 \graphicspath{ {pictures/} }
 
+% http://tex.stackexchange.com/questions/285578/how-to-draw-parallelepiped-and-cube-with-latex
 \usetikzlibrary{quotes,arrows.meta}
 \tikzset{
   annotated cuboid/.pic={
@@ -40,8 +41,8 @@
     (o) -- (a) -- ++(0,0,-\cubescale*\cubez) coordinate (f) edge (g) -- (d) -- cycle;
     \path [every edge/.append style={pic actions, |-|}]
     (b) +(0,-5pt) coordinate (b1) edge ["\cubex \cubeunits"'] (b1 -| c)
-    (b) +(-5pt,0) coordinate (b2) edge ["\cubey \cubeunits"] (b2 |- a)
-    (c) +(3.5pt,-3.5pt) coordinate (c2) edge ["\cubez \cubeunits"'] ([xshift=3.5pt,yshift=-3.5pt]e)
+    % (b) +(-5pt,0) coordinate (b2) edge ["\cubey \cubeunits"] (b2 |- a)
+    % (c) +(3.5pt,-3.5pt) coordinate (c2) edge ["\cubez \cubeunits"'] ([xshift=3.5pt,yshift=-3.5pt]e)
     ;
   },
   /cuboid/.search also={/tikz},
@@ -54,8 +55,8 @@
   width=10,
   height=10,
   depth=10,
-  units=cm,
-  scale=.1,
+  units=,
+  scale=.005,
 }
 
 \renewcommand{\cite}{\parencite}
