@@ -157,6 +157,25 @@ Since the publication of the AlexNet in 2012 \cite{AlexNet}, CNNs have gained la
 
 % TODO add picture of 3x3 filters and 2x2 max pooling
 
+\begin{figure}
+\centering
+\begin{tikzpicture}
+
+\draw (0,0) rectangle (1,1) node[pos=0.5] {$0.81$};
+\draw (0,1) rectangle (1,1);
+\draw (1,0) rectangle (1,1);
+\draw (1,1) rectangle (1,1);
+
+\draw (3,0.5) rectangle (1,1);
+
+% draw[step=1cm] (0,0) grid (2,2)
+% draw[step=1cm] (0,0) grid (1,1)
+
+\end{tikzpicture}
+
+\caption{A 2x2 max pool operation.}
+\end{figure}
+
 In CNNs, each layer of neurons has a width, height and depth. The width and height correspond to that of the input image while the depth depends on the number of \textbf{filters} applied to the previous layer.
 % TODO add citation
 Each filter performs a weighted sum over a small region in the previous layer, e.g. 3x3 neurons using the full depth. The sum is then passed to a non-linear activation function such as $\tanh$ and serves as input for the next layer. The output of each layer is known as an \textbf{activation map}.
