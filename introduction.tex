@@ -3,11 +3,14 @@
 
 FamilySearch is a large non-profit genealogy organization \cite{FamilySearchAbout}. They have been photographing handwritten historical population records in many countries for many years.
 
-In 2006, the Indexing project started where volunteers manually extract relevant information from the photographed pages \cite{Indexing}. The extracted information is quality-checked and then published on the organization's website FamilySearch.org. In 2013, over 1 billion data posts for births, deaths and marriages had been extracted (\textbf{indexed}) by volunteers \cite{Billion}.
+In 2006, the \textbf{Indexing} project started where volunteers manually extract relevant information from the photographed pages \cite{Indexing}. The extracted (\textbf{indexed}) information is quality-checked and then published on the organization's website FamilySearch.org where users can search for information about their ancestors.
+In 2013, over 1 billion data posts for births, deaths and marriages had been indexed by volunteers \cite{Billion}.
 
-The number of photographed records grow faster than what the available pool of volunteers can process. Thus, there is a need for automating as much of the indexing work as possible. This is a difficult task because the records come from a vast array of locations and periods in time in different languages, not to mention variations in both spelling and page structure. Although the handwriting style might be similar in the same time period, there is considerable variance between different scribes.
+The number of photographed pages grow faster than what the available pool of volunteers can process. Thus, there is a need for automating as much of the indexing work as possible. This is a difficult task because the records come from a vast array of locations and periods in time in different languages, not to mention variations in both spelling and page structure. Although the handwriting style may be similar in the same time period, there is considerable variance between different scribes.
 
-If the images were correctly transcribed by a handwritten text recognition (HTR) system, it would still take considerable natural language processing to extract the information. Especially since there is little training data for languages during different time periods.
+If the images were correctly transcribed by a handwritten text recognition (HTR) system, it would still take considerable natural language processing to extract the information. Especially since there is little training data for languages over different time periods.
 
 An easier problem to solve than extracting all relevant information in the images is grouping the images by year, record type and location. This task is called \textbf{waypointing} \cite{Waypointing} and it currently requires considerable manual labor by genealogy experts.
-Waypointing is an easier problem than handwriting recognition because it only needs to consider information which belongs to a small domain compared to the full vocabulary of a natural language and all possible names.
+
+Annotating each image with year, record type and location would solve waypointing as well as constituting a stepping stone towards fully or partially automated indexing.
+Image annotation is an easier problem than handwriting recognition because it only needs to consider information which belongs to a small domain compared to the full vocabulary of a natural language and all possible names.
