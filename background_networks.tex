@@ -160,12 +160,33 @@ Both machine translation and image captioning used to be solved by solving each 
 
 Since the publication of the AlexNet in 2012 \cite{AlexNet}, CNNs have gained large attention in computer vision for achieving state-of-the-art in various tasks such as object-detection, segmentation, video classification and object tracking \cite{InceptionV3}.
 
-% TODO add picture of 3x3 filters
+\begin{figure}
+\centering
+
+\begin{tikzpicture}
+%  , fill=black!20!white
+\draw [draw=black, fill=cyan] (0,1) rectangle (3,4);
+\draw [draw=black, ultra thick] (1,1) rectangle (4,3);
+\draw [draw=black] (0,0) grid  (5,4);
+
+\draw [draw=black, fill=cyan] (7,2) rectangle (8,3);
+\draw [draw=black, ultra thick] (7,1) rectangle (10,3);
+\draw [draw=black] (7,1) grid  (10,3);
+
+% ,very thick
+\draw [->] (1.5, 2.5) -- (7.5, 2.5) ;
+
+\end{tikzpicture}
+
+\caption{Applying a 3x3 filter to a layer of size 4x5x1. Note how the 3x3 region is reduced to a single unit and how the size of the activation map is decreased after the operation.}
+\label{fig:filter}
+\end{figure}
+
 % TODO add citations
 
 In CNNs, each layer has a width, height and depth. Like in MLPs, the input layer has the width and height of the input image while the depth correspond to the number of color channels (1 for gray scale, 3 for RGB and 4 for RGBA). We now refer to each number in the network as a \textbf{unit} instead of a neuron.
 
-As indicated by the name, CNNs mainly consist of \textbf{convolutional layers}. The depth of a convolutional layer is determined by how many filters it has. Each filter produces a 2-dimensional \textbf{activation map}. Each unit in the activation map comes from a weighted sum over a 3-dimensional region in the previous layer over its full depth. For example a 3x3 filter applied to a 32 depth layer has $3*3*32=288$ weights and one bias term.
+As indicated by the name, CNNs mainly consist of \textbf{convolutional layers}. The depth of a convolutional layer is determined by how many filters it has. Each filter produces a 2-dimensional \textbf{activation map}, see Figure \ref{fig:filter}. Each unit in the activation map comes from a weighted sum over a 3-dimensional region in the previous layer over its full depth. For example a 3x3 filter applied to a 32 depth layer has $3 \cdot 3 \cdot 32=288$ weights and one bias term.
 Like with MLP, the sum is passed to to a non-linear activation function such as $\tanh$. The 3x3 regions for each unit are overlapping.
 The activation maps for all filters are stacked together to form a 3-dimensional output, which is passed to the next layer.
 
@@ -189,12 +210,12 @@ By synthesizing the input image to maximize a specific filter's activation, it i
 
 \end{tikzpicture}
 
-\label{fig:maxpool}
 \caption{Example of a 2x2 max pool operation. In a 2x2 region, the largest value is chosen while the other values are ignored.}
+\label{fig:maxpool}
 \end{figure}
 
 Besides filters, CNNs also use \textbf{pooling layers} in order to increase the receptive field without increasing the number of parameters in the model.
-Separately for each activation map, pooling aggregates a 2 dimensional region of units (e.g. 2x2) into a single unit, typically by taking the maximum value. These regions are non-overlapping so a 2x2 pooling layer decreases the representational size by 4. Thus another benefit of pooling layers is reduced computation time.
+Separately for each activation map, pooling aggregates a 2 dimensional region of units (e.g. 2x2) into a single unit, typically by taking the maximum value; see Figure \ref{fig:maxpool}. These regions are non-overlapping so a 2x2 pooling layer decreases the representational size by 4. Thus another benefit of pooling layers is reduced computation time.
 
 At the end of the network, there are often a few fully connected layers (MLP) where the last layer represent the output of the network, for example pseudo-probabilities for different categories using softmax like discussed previously.
 
