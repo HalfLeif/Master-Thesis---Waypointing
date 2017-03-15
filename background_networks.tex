@@ -2,6 +2,7 @@
 % Provide some background on neural networks
 
 \section{Neural networks}
+\label{sec:networks}
 In this section, we give a brief introduction to how neural networks function and describe recent research in applying neural networks to tasks in computer vision.
 
 \subsection{Introduction to neural networks}
@@ -223,14 +224,14 @@ The attention weight $\alpha_i$ for each unit can then be computed by taking the
 \alpha_i = \frac{ \exp(e_i) }{ \sum_{k=1}^L \exp(e_i) }
 \]
 
-\paragraph{soft attention}
+\paragraph{Soft attention}
 By definition, the attention weights sum to one. A \textbf{soft attention} model computes the representative vector $z$ by summing over the feature vectors $a_i$, using attention as weights:
 
 \[
 z = \sum_{k=1}^L \alpha_i a_i
 \]
 
-\paragraph{hard attention}
+\paragraph{Hard attention}
 In contrast, a \textbf{hard attention} model interprets the $\alpha_i$ as a probability distribution over $a_i$. By sampling this distribution, $z$ is chosen to be the sampled unit $a_i$, ignoring the rest of the image.
 
 
