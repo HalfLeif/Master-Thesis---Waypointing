@@ -25,17 +25,17 @@ The number of pooling layers, number of convolutional layers and depth per layer
 
 \subsubsection{Attention model}
 
-Another major difference between our work and \cite{FornesCnnCategorization} is that although we both use variable input size, they use \textbf{Spatial pyramid pooling} while we apply a soft attention model as presented in \cite{AttendAndTell}. Like we discussed previously in \ref{ssec:attention}, the encoder output can be seen as a list of feature vectors $\matbf{a_i}$ which correspond to different but overlapping locations.
+Another major difference between our work and \cite{FornesCnnCategorization} is that although we both use variable input size, they use \textbf{Spatial pyramid pooling} while we apply a soft attention model as presented in \cite{AttendAndTell}. Like we discussed previously in \ref{ssec:attention}, the encoder output can be seen as a list of feature vectors $\mathbf{a_i}$ which correspond to different but overlapping locations.
 
-The attention model consists of a multi layer perceptron which for each feature vector computes a salience score $e_i$:
+The attention model consists of a multilayer perceptron which for each feature vector $\mathbf{a_i}$ computes a salience score $e_i$:
 
 \[
 e_i = f_\text{MLP}(\mathbf{a_i})
 \]
 
-Note that this MLP does not have access to any information about the location of $a_i$, thus the network must learn to recognize important parts by looking at the encoded features alone instead of learning to always look at a certain position in the input image. This is especially important for population records where the relevant information can be in different locations depending on scribe and time period.
+Note that this MLP does not have access to any information about the corresponding location of $\mathbf{a_i}$, thus the network must learn to recognize important parts by looking at the encoded features alone instead of learning to always look at a certain position in the input image. This is especially important for population records where the relevant information can be in different locations depending on scribe and time period.
 
-As discussed, we normalize the $e_i$ into $\alpha_i$ by computing the softmax. Then we use the attentions ${\alpha_i}$ as weights over the feature vectors:
+As discussed, we normalize the $e_i$ into $\alpha_i$ by computing the softmax. Then we use the attentions $\{\alpha_i\}$ as weights over the feature vectors:
 
 \[
 \mathbf{z} = \sum_{k=1}^L \alpha_i \mathbf{a_i}
