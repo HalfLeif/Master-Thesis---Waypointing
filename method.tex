@@ -2,13 +2,46 @@
 
 \subsection{Network architecture}
 
+\subsubsection{Experiments}
+% TODO: write here or somewhere completely different?
+
 \subsubsection{Encoder}
 
 \input{figures/encoder.tex}
 
-See figure \ref{fig:encoder}
+For encoder, we use a CNN with 7 convolutional layers with additional pooling layers, see figure \ref{fig:encoder}.
+% We experimented with several different variations in number of convolution layers, pooling layers and layer depths before choosing this model.
+Two consecutive 3x3 convolutional layers is a refactoring of a single 5x5 layer as suggested by \cite{InceptionV3}. Thus, the first four convolutional layers correspond to two 5x5 convolutional layers with pooling, similar to the original single digit CNN classifier \cite{lecun_1989} but with greater depth.
+
+The number of pooling layers, number of convolutional layers and depth per layer were determined experimentally. The final encoder design, as in figure \ref{fig:encoder}, is somewhat similar to the encoder used in \cite{FornesCnnCategorization} except that we use more aggressive pooling. This is necessary because in our work, we input images of entire pages while \cite{FornesCnnCategorization} classify word images which presumably are much smaller.
+
+%The first four layers correspond closely to the original single digit classifier CNN \cite{lecun_1989} with the exception
+
+% The number of layers and their depth was determined experimentally on the synthesized dataset using previous work as starting point \cite{FornesCnnCategorization}.
+
+% TODO describe experiments.
+
+
 
 \subsubsection{Attention model}
+
+Another major difference between our work and \cite{FornesCnnCategorization} is that although we both use variable input size, they use \textbf{Spatial pyramid pooling} while we apply a soft attention model as presented in \cite{AttendAndTell}. Like we discussed previously in \ref{ssec:attention}, the encoder output can be seen as a list of feature vectors $\matbf{a_i}$ which correspond to different but overlapping locations.
+
+The attention model consists of a multi layer perceptron which for each feature vector computes a salience score $e_i$:
+
+\[
+e_i = f_\text{MLP}(\mathbf{a_i})
+\]
+
+Note that this MLP does not have access to any information about the location of $a_i$, thus the network must learn to recognize important parts by looking at the encoded features alone instead of learning to always look at a certain position in the input image. This is especially important for population records where the relevant information can be in different locations depending on scribe and time period.
+
+As discussed, we normalize the $e_i$ into $\alpha_i$ by computing the softmax. Then we use the attentions ${\alpha_i}$ as weights over the feature vectors:
+
+\[
+\mathbf{z} = \sum_{k=1}^L \alpha_i \mathbf{a_i}
+\]
+
+Note that the spatial information about where in the image $\mathbf{z}$ comes from is lost in this sum. So just like the attention MLP, the decoder also becomes invariant to the object's position in the input image.
 
 \subsubsection{Decoder}
 
