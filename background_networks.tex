@@ -127,7 +127,7 @@ Applying a 3x3 filter to an input image of size 10x10 will output an image of si
 One can pad each activation map with zeroes to instead maintain the same size.
 
 \subsection{Attention models}
-
+\label{ssec:attention}
 % Since waypointing only needs high-level information in a limited domain, complete transcription is unnecessary. Instead we can use recent advances in image classification.
 
 % TODO write this part again in more detail, especially after spending more time with the literature here.
@@ -141,25 +141,24 @@ Besides image classification, attention models have also been highly successful 
 
 \subsubsection{Details}
 We now describe how the attention model in \cite{AttendAndTell} works in more detail.
-The goal of the attention model is to produce a vector $z \in \mathbb{R}^D$ that represents the entire input image by weighing different parts of the activation map from the encoder CNN.
+The goal of the attention model is to produce a vector $\mathbf{z} \in \mathbb{R}^D$ that represents the entire input image by weighing different parts of the output from the encoder CNN.
 
-The activation map contains $L$ units $a_i \in \mathbb{R}^D$.
-Each unit $a_i$ is a feature vector for a specific location in the input image. We feed each $a_i$ to an MLP which produces a single number $e_i$. In the paper, the decoder uses an RNN whose hidden state is also used as input to the MLP besides the feature vector $a_i$.
-The attention weight $\alpha_i$ for each unit can then be computed by taking the softmax of $e_i$ over all units:
+The encoder output is 3-dimensional but can be seen as a grid of $L$ feature vectors. Each feature vector $\mathbf{a_i} \in \mathbb{R}^D$ corresponds to a specific location in the input image. We feed each $\mathbf{a_i}$ to an MLP which produces a scalar $e_i$. In the paper, the decoder uses an RNN whose hidden state is also used as input to the MLP besides the feature vector $\mathbf{a_i}$.
+The scalar attention weight $\alpha_i$ for each location can then be computed by taking the softmax of $e_i$ over all units:
 
 \[
 \alpha_i = \frac{ \exp(e_i) }{ \sum_{k=1}^L \exp(e_i) }
 \]
 
 \paragraph{Soft attention}
-By definition, the attention weights sum to one. A \textbf{soft attention} model computes the representative vector $z$ by summing over the feature vectors $a_i$, using attention as weights:
+By definition, the attention weights sum to one. A \textbf{soft attention} model computes the representative vector $\mathbf{z}$ by summing over the feature vectors $\mathbf{a_i}$, using attention as weights:
 
 \[
-z = \sum_{k=1}^L \alpha_i a_i
+\mathbf{z} = \sum_{k=1}^L \alpha_i \mathbf{a_i}
 \]
 
 \paragraph{Hard attention}
-In contrast, a \textbf{hard attention} model interprets the $\alpha_i$ as a probability distribution over $a_i$. By sampling this distribution, $z$ is chosen to be the sampled unit $a_i$, ignoring the rest of the image.
+In contrast, a \textbf{hard attention} model interprets the ${\alpha_i}$ as a probability distribution over locations $i$. By sampling this distribution, $\mathbf{z}$ is chosen to be the sampled unit $\mathbf{a_i}$, ignoring the rest of the image.
 
 
 \subsection{CNNs in multi-digit recognition}
