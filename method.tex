@@ -6,9 +6,6 @@
 
 We now describe the different parts of the proposed network. See figure \ref{fig:sys_overview} for an overview of how the different parts of the network interact.
 
-\subsubsection{Experiments}
-% TODO: write here or somewhere completely different?
-
 \subsubsection{Encoder}
 
 \input{figures/encoder.tex}
@@ -22,8 +19,6 @@ The number of pooling layers, number of convolutional layers and depth per layer
 %The first four layers correspond closely to the original single digit classifier CNN \cite{lecun_1989} with the exception
 
 % The number of layers and their depth was determined experimentally on the synthesized dataset using previous work as starting point \cite{FornesCnnCategorization}.
-
-% TODO describe experiments.
 
 
 
@@ -52,20 +47,49 @@ Note that the spatial information about where in the image $\mathbf{z}$ comes fr
 The decoder employs an MLP for classifying the aggregated feature vector $\mathbf{z}$ from the attention model.
 If $\mathbf{z}$ had a variable length, then we would need a different number of weights in the MLP for each different input size. Since the attention model produces a fixed size output independent of input size we avoid the problem of variable number of parameters.
 
-The proposed MLP consist of one fully connected layer of $1024$ neurons with dropout as well as three parallel readout layers, each with a size of $10$ neurons. The three separate outputs correspond to one digit each.
+The proposed MLP consist of one fully connected layer of $1024$ neurons with dropout as well as three parallel readout layers $\mathbf{d}_1$, $\mathbf{d}_2$ and $\mathbf{d}_3$. Each of these three readout layers has a size of $10$ neurons and thus correspond to a single digit.
+Because the years we will extract are all in the range 1627--1890, $3$ digits is more than enough to classify year.
 
-To compute the probability for a 3-digit sequence we take the cartesian product of the three readouts: (0,0,0) -- (9,9,9) and remap them to 000 -- 999, or in the case of years, to 1000--1999.
+% TODO motivate combined digit training instead of independent...
 
-\subsection{Pre-training}
+
+%To compute the probability for a 3-digit sequence we take the cartesian product $c_{ijk}$ of the three readouts $c_i$, $c_j$, $c_k$.
+
+ %of the three readouts: (0,0,0) -- (9,9,9) and remap them to 000 -- 999, or in the case of years, to 1000--1999.
+
+\subsection{Pre-training on synthetic data}
+
+The network was pre-trained on a synthetic dataset created from MNIST \cite{MNIST}. Using synthetic data allowed us to quickly discard inefficient network architectures and we believe that pre-training helped faster learning on the real data.
+
+The synthetic dataset was created by putting together 4 independently randomly selected digit images side by side, where the first digit was always a $1$. This 4 digit image was then placed in a random position in a larger blank image. Finally, we applied dot-noise to the image pixel by pixel by multiplying its grayscale value with a random number drawn uniformly from $0.6$ -- $1.0$.
+
+% TODO insert picture with pretraining image.
+
+\subsubsection{Experiments}
+
+
+
 \subsection{Labeling}
-\subsection{Training}
+
+% How to label multi-year images.
+
+\subsection{Training procedure}
+
+\subsubsection{Cross entropy}
+
+% cross entropy
+% smoothing error
+
 \subsection{Evaluation}
 
+% How to properly evaluate multi-year?
 
+
+\subsection{Tensorflow}
 % TODO should technologies/implementation be described in a different section?
 % Is it at all relevant to discuss about Tensorflow?
-\subsection{Tensorflow}
-% TODO Mention GPU acceleration here or in section about neural networks?
+
+% TODO Mention GPU acceleration here or in section about neural networks or Hardware?
 
 \subsection{Hardware}
 % TODO Mention hardware and training time .
