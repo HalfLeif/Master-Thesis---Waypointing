@@ -54,6 +54,7 @@ If $\mathbf{z}$ had a variable length, then we would need a different number of 
 
 The proposed MLP consist of one fully connected layer of $1024$ neurons with dropout as well as three parallel readout layers, each with a size of $10$ neurons. The three separate outputs correspond to one digit each.
 
+To compute the probability for a 3-digit sequence we take the cartesian product of the three readouts: (0,0,0) -- (9,9,9) and remap them to 000 -- 999, or in the case of years, to 1000--1999.
 
 \subsection{Pre-training}
 \subsection{Labeling}
