@@ -29,7 +29,7 @@ The number of pooling layers, number of convolutional layers and depth per layer
 
 \subsubsection{Attention model}
 
-Another major difference between our work and \cite{FornesCnnCategorization} is that although we both use variable input size, they use \textbf{Spatial pyramid pooling} while we apply a soft attention model as presented in \cite{AttendAndTell}. Like we discussed previously in \ref{ssec:attention}, the encoder output can be seen as a list of feature vectors $\mathbf{a_i}$ which correspond to different but overlapping locations.
+Another major difference between our work and \cite{FornesCnnCategorization} is that although we both use variable input size, they use \textbf{Spatial pyramid pooling} while we apply a soft attention model as presented in \cite{AttendAndTell}. Like we discussed previously in \ref{ssec:attention}, the encoder output can be seen as a list of feature vectors $\mathbf{a_i} \in \mathbb{R}^D$ which correspond to different but overlapping locations. The number of produced feature vectors depends on the size of the input image. We will see that this attention model aggregates all feature vectors $\mathbf{a_i}$ into a single fixed size vector $\mathbf{z} \in \mathbb{R}^D$.
 
 The attention model consists of a multilayer perceptron which for each feature vector $\mathbf{a_i}$ computes a salience score $e_i$:
 
@@ -49,9 +49,10 @@ Note that the spatial information about where in the image $\mathbf{z}$ comes fr
 
 \subsubsection{Decoder}
 
+The decoder employs an MLP for classifying the aggregated feature vector $\mathbf{z}$ from the attention model.
+If $\mathbf{z}$ had a variable length, then we would need a different number of weights in the MLP for each different input size. Since the attention model produces a fixed size output independent of input size we avoid the problem of variable number of parameters.
 
-
-% Dropout
+The proposed MLP consist of one fully connected layer of $1024$ neurons with dropout as well as three parallel readout layers, each with a size of $10$ neurons. The three separate outputs correspond to one digit each.
 
 
 \subsection{Pre-training}
