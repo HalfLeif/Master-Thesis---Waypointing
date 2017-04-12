@@ -1,15 +1,19 @@
 \section{Goals}
 
-% The thesis aspires to explore
+The goal of the thesis is to explore different possible approaches to automatically extract genealogical information from historical population records, for waypointing or indexing. Specifically, we investigate how to extract the written year(s) in each photographed page by learning from previously indexed data.
+Preferably, the method should also suggest which part of the image that contains the year.
 
-The goal of the thesis is to make a platform independent open-source prototype that automatically extracts high-level information for each photographed page of historical population records. The information under consideration is 1. year, 2. page number and 3. record type, where the record type is one of \{blank, birth, death, marriage\}. Preferably, the system should also suggest which part of the image that contains the year and page number for example by providing a bounding box.
+In order to evaluate the proposed methods, we build a platform independent open-source prototype. The prototype system trains machine learning models which are evaluated by their accuracy.
+Although accuracy is the primary metric, the trained model should be fast enough to classify hundreds of thousands of images within reasonable time.
+% Although human accuracy is unrealistic, the accuracy should be as high as possible. However, the model should preferably also be fast enough to classify hundreds of thousands of images within reasonable time.
+
+% that automatically extracts high-level information for each photographed page of historical population records. The information under consideration is 1. year, 2. page number and 3. record type, where the record type is one of \{blank, birth, death, marriage\}. Preferably, the system should also suggest which part of the image that contains the year and page number for example by providing a bounding box.
 % If time permits, extracting location (such as parish) will also be considered.
 
-Although conventional methods are also considered, we specifically investigate applying deep learning methods to the task.
-Thus, the system should learn from the currently indexed and waypointed data in a fully autonomous manner without explicit feature engineering.
+% Although conventional methods are also considered, we specifically investigate applying segmentation-free deep learning methods to the task. Thus, the system should learn from the currently indexed and waypointed data in a fully autonomous manner without explicit feature engineering.
 % However, standard pre-processing techniques such as median filtering and gray level normalization may be necessary.
 
-The trained model should have as high precision as possible although human precision is unrealistic. The system should also be fast enough that annotating millions of images should be viable within reasonable time on a high-end computer.
+% The trained model should have as high precision as possible although human precision is unrealistic. The system should also be fast enough that annotating millions of images should be viable within reasonable time on a high-end computer.
 
 %A perfect classification is unrealistic so the resulting groupings of images will need some manual inspection before publication. However, it should be sufficient to check some of the pages in a group instead of going through every page. Thus the manual workload should be significantly decreased. If the precision of the system is too low, correcting errors would be equally troublesome as doing the waypointing manually. Thus, the precision of the classification should be as high as possible.
 
@@ -17,6 +21,6 @@ The trained model should have as high precision as possible although human preci
 We experiment with how well learning from one dataset generalizes to other datasets, for example other regions and languages.
 
 % TODO verify that this promise is fulfilled!
-We also consider how the model could be extended to extract more information and speculate how and whether full automation of indexing can be achieved.
+Finally, we consider how the model could be extended to extract more information and speculate how and whether full automation of indexing can be achieved.
 
 % Even if the trained model does not achieve wanted precision, the thesis is still valuable as an exploration of different techniques for approaching the long-term goal of automated indexing.
