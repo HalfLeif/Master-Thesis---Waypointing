@@ -4,26 +4,36 @@
 
 % TODO add citations for each mentioned data set?
 
-\subsection{Datasets for handwriting recognition}
-
+\subsection{Datasets for historical handwriting recognition}
 Several collections of historical documents have been line segmented and transcribed for public use \cite{esposalles}: George Washington, Parzival, Saint Gall, RODRIGO and GERMANA. However, they consist of prose written by one or two scribes and not civil population records which are typically written by many different scribes.
 
-The Esposalles dataset contains Marriage licences from 202 pages \cite{esposalles}. Experts have manually segmented and transcribed each word.
+\subsection{Esposalles}
+In contrast, the Esposalles dataset consists of book indices and historical marriage licenses from the Cathedral of Barcelona \cite{esposalles}. Experts have manually segmented and transcribed each word exactly as they occur in the image.
 
-% This dataset is useful for segmentation techniques
+Although the Cathedral of Barcelona holds 291 books containing approximately 600 000 marriage licenses between 1451 and 1905, only a tiny fraction of this collection has been transcribed for the Esposalles dataset. The dataset consists of 173 pages from a single book written by a single scribe, containing 1747 marriage licenses between 1617 and 1619. Additionally, the dataset contains 29 pages of book indices.
 
-% The Esposalles dataset was created to accelerate research in information extraction from population records \cite{esposalles}.
+The Esposalles dataset was used as ground truth for named entity recognition in the Robust reading competition at the International Conference on Document Analysis and Recognition (ICDAR) 2017 \cite{EsposallesCompetition}. For the competition, the words have been annotated with semantic categories such as surname of husband and surname of wife.
 
-% The Esposalles data set consists of manually segmented and transcribed words from 202 pages of Spanish marriage licenses from the Cathedral of Barcelona \cite{esposalles}. Making this dataset is naturally a very slow process since it requires
+We think that the exact transcriptions, bounding boxes and annotations make the dataset useful for segmentation-based methods in tasks like word segmentation, handwriting recognition and named entity recognition.
+Specifically for this thesis, we intend to classify years in a much larger range than 1617 to 1619 so the Esposalles dataset is simply too small. Furthermore, we are interested in exploring segmentation-free methods so we would not take advantage of the bounding boxes present in this dataset.
 
+% TODO perhaps argue about slow and expensive process?
+% We argue that creating a dataset of exact transcriptions and annotations by using paleographical experts is too slow and expensive to make a sufficiently large
 
-% Although there are many thousand pages of marriage records in the Archives of the Cathedral of Barcelone, only 202 of them have been segmented and transcribed as part of the Esposalles data set.
+%Furthermore, we believe that in order to make a system for fully automated indexing, the dataset needs to cover many more examples. Since using paleographical experts to transcribe and annotate each word is a slow and expensive process we do not expect the dataset to grow quickly.
+% Thus, we assume that in order to create a sufficiently large dataset for training
+%Thus we argue that for a dataset to grow sufficiently large it should
+%1. not require the transcriber to be an expert and 2.
+%only contain the most vital coarse information instead of every single word.
+
 
 \subsection{IRIS}
 
-While the Esposalles dataset focus on individual words transcribed by experts, the IRIS dataset contain record information extracted by volunteers in FamilySearch's indexing program \cite{Iris}. Thus the transcriptions are not a complete representation of the text but of the semantic content.
+While the Esposalles dataset focus on individual words transcribed by experts, the IRIS dataset contain record information extracted by volunteers in FamilySearch's indexing program \cite{Iris}. Thus the transcriptions are not a complete representation of the text but of the semantic content. The indexer may also have written implied information such as expanding abbreviations and replacing "dito" with the value of the previous record. Furthermore, while in Esposalles each transcribed word has a manually created bounding box, in IRIS the indexer do not write any indication about what part of the image the information was extracted from.
 
-The IRIS dataset consist of four collections of population records totaling nearly $50000$ images. Two collections are the 1930 population census in the US and Mexico. These images consist of big tables with names and occupations in the cells. Another collection contain marriage licenses between 1837-1944 in Arkansas, these pages consist of printed license templates with handwritten text in the blanks. The last collection contains more than 10000 pages of free form written records from French parishes between 1533-1906.
+% Another difference is that in Esposalles, the individual words have manually created bounding boxes while in IRIS there is no indication of where in the image the information was extracted from.
+
+The IRIS dataset consist of four collections of population records, totaling nearly $50000$ images. Two collections are the 1930 population census in the US and Mexico. These images consist of big tables with names and occupations in the cells. Another collection contain marriage licenses between 1837-1944 in Arkansas, these pages consist of printed license templates with handwritten text in the blanks. The last collection contains more than 10000 pages of free form written records from French parishes between 1533-1906.
 
 \subsection{Swedish population records}
 
