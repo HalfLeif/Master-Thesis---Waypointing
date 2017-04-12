@@ -29,11 +29,14 @@ Specifically for this thesis, we intend to classify years in a much larger range
 
 \subsection{IRIS}
 
-While the Esposalles dataset focus on individual words transcribed by experts, the IRIS dataset contain record information extracted by volunteers in FamilySearch's indexing program \cite{Iris}. Thus the transcriptions are not a complete representation of the text but of the semantic content. The indexer may also have written implied information such as expanding abbreviations and replacing "dito" with the value of the previous record. Furthermore, while in Esposalles each transcribed word has a manually created bounding box, in IRIS the indexer do not write any indication about what part of the image the information was extracted from.
-
-% Another difference is that in Esposalles, the individual words have manually created bounding boxes while in IRIS there is no indication of where in the image the information was extracted from.
+While the Esposalles dataset focus on individual words transcribed by experts, the IRIS dataset contain record information extracted by volunteers in FamilySearch's indexing program \cite{Iris}.
+Thus the extracted information does not contain exact transcriptions of the text but rather the most important semantic contents.
+For example, abbreviations may have been expanded, dittos replaced by their intended values and information that was deemed genealogically irrelevant has been ignored.
+Furthermore, while in Esposalles each transcribed word has a manually created bounding box, in IRIS there is no indication about what part of the image the information was extracted from.
 
 The IRIS dataset consist of four collections of population records, totaling nearly $50000$ images. Two collections are the 1930 population census in the US and Mexico. These images consist of big tables with names and occupations in the cells. Another collection contain marriage licenses between 1837-1944 in Arkansas, these pages consist of printed license templates with handwritten text in the blanks. The last collection contains more than 10000 pages of free form written records from French parishes between 1533-1906.
+
+% This dataset is quite large, however for extracting year the first two datasets are
 
 \subsection{Swedish population records}
 
