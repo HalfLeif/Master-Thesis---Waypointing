@@ -1,7 +1,10 @@
 \section{Goals}
 
 The goal of the thesis is to explore different possible approaches to automatically extract genealogical information from historical population records, for waypointing or indexing. Specifically, we investigate how to extract the written year(s) in each photographed page by learning from previously indexed data.
-Preferably, the method should also suggest which part of the image that contains the year.
+
+We believe that of all genealogical information in a historical document, the year should be the easiest to extract. Hence it forms a suitable task to start with on the road to the long-term goal of a fully automated indexing system.
+
+% If possible, the method should also suggest which part of the image that contains the year.
 
 In order to evaluate the proposed methods, we build a platform independent open-source prototype. The prototype system trains machine learning models which are evaluated by their accuracy.
 Although accuracy is the primary metric, the trained model should be fast enough to classify hundreds of thousands of images within reasonable time.
@@ -18,7 +21,8 @@ Although accuracy is the primary metric, the trained model should be fast enough
 %A perfect classification is unrealistic so the resulting groupings of images will need some manual inspection before publication. However, it should be sufficient to check some of the pages in a group instead of going through every page. Thus the manual workload should be significantly decreased. If the precision of the system is too low, correcting errors would be equally troublesome as doing the waypointing manually. Thus, the precision of the classification should be as high as possible.
 
 % TODO verify that this promise is fulfilled!
-We experiment with how well learning from one dataset generalizes to other datasets, for example other regions and languages.
+An essential property of the wanted automated system is to learn from fully indexed collections in order to extract information in other related collections that have not yet been indexed.
+Therefore, we evaluate with how well learning from one dataset generalizes to other datasets, for example other regions and languages.
 
 % TODO verify that this promise is fulfilled!
 Finally, we consider how the model could be extended to extract more information and speculate how and whether full automation of indexing can be achieved.
