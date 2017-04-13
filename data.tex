@@ -1,4 +1,7 @@
 \section{Datasets}
+
+Here we describe some existing datasets for historical handwriting recognition and information extraction. We also consider their usefulness in regard to the thesis.
+
 % TODO add some pictures here?
 % Describe data sets MNIST, IRIS, SWE as well as other unused ones.
 
@@ -34,9 +37,21 @@ Thus the extracted information does not contain exact transcriptions of the text
 For example, abbreviations may have been expanded, dittos replaced by their intended values and information that was deemed genealogically irrelevant has been ignored.
 Furthermore, while in Esposalles each transcribed word has a manually created bounding box, in IRIS there is no indication about what part of the image the information was extracted from.
 
-The IRIS dataset consist of four collections of population records, totaling nearly $50000$ images. Two collections are the 1930 population census in the US and Mexico. These images consist of big tables with names and occupations in the cells. Another collection contain marriage licenses between 1837-1944 in Arkansas, these pages consist of printed license templates with handwritten text in the blanks. The last collection contains more than 10000 pages of free form written records from French parishes between 1533-1906.
+The IRIS dataset consist of four collections of population records, totaling nearly $50000$ images:
 
-% This dataset is quite large, however for extracting year the first two datasets are
+\paragraph{1, 2}
+The first two collections in the IRIS dataset are the 1930 population census in the US and Mexico. The images consist of big tables with names and occupations in the cells.
+For the purpose of this thesis where we extract the written year for each page, the 1930 censuses are not directly useful since they only contains records from a single year. Furthermore, it is not clear that if a system can learn from this collection that it would by useful for any other collection.
+However because the 1930 censuses are written on printed tables, word segmentation should be considerably simpler than for the free-form writing as in other collections.
+
+\paragraph{3}
+The third collection contains marriage licenses between 1837-1944 in Arkansas. The marriage licenses are printed templates with handwritten text in the blanks.
+It is likely that the system would learn to recognize the printed template and hence it would not be able to generalize to other collections that use different templates or free-form writing. If many collections were using the same template it would be useful to learn but then one might as well hard-code the positions of the blanks in the template. Thus, it is not very useful as training-data for models in this thesis.
+
+\paragraph{4}
+The last collection contains more than 10000 pages with records of baptisms, burials and marriages from French parishes between 1533-1906. Some of the pages contain printed templates but the majority seems to be free-form handwriting.
+From manually inspecting these images, we conclude that many of them do not contain a written year anywhere on the page. These are problems that a future automated extraction system would need to handle, for this thesis however we settle for another dataset that seems somewhat easier.
+
 
 \subsection{Swedish population records}
 
