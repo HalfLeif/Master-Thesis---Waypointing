@@ -63,4 +63,30 @@ From manually inspecting these images, we conclude that many of them do not cont
 
 \input{figures/collections}
 
-In cooperation with FamilySearch for making this thesis, we have been granted access to manually indexed images from six Swedish collections, see Table \ref{tab:collections}. They contain records of births, deaths and marriages between 1627 and 1890. Like with the IRIS dataset, the images are not completely transcribed but the relevant genealogical information is extracted.
+In cooperation with FamilySearch for making this thesis, we have been granted access to images and the corresponding extracted information from six collections of Swedish population records.
+These collections contain records of baptisms, burials and marriages in six regions between 1627 and 1890, see Table \ref{tab:collections}. They are the Swedish counterpart of the French IRIS collection mentioned above.
+
+\subsubsection{The indexing process}
+
+Just like with the IRIS dataset, the indexers have not provided us with bounding boxes or exact transcriptions but with extracted genealogical information. An indexed baptism record typically contains the name of the newborn child, the names of the parents, the date of birth, the date of baptism and location of the parents' home. The ecclesiastical records typically contain the names of witnesses to the baptism but this is ignored in the indexing process.
+
+Each page is indexed by two independent volunteers. Any conflicts between the two versions is resolved by a third volunteer before submission.
+The double work and review process increases the quality and consistency of the extracted information.
+% Duplicating the indexing work and quality-checking increases the quality of the indexed data.
+% Thus, the indexed information maintains a high quality even though it is not performed by professionals.
+
+The extracted information is stored in the compressed GedcomX\footnote{\url{http://www.gedcomx.org/About.html}} format which has been developed specifically for genealogical information.
+Each event of baptism, burial or marriage is stored as a record organized in the above mentioned six collections. Within a collection, the records do not seem to be stored in any particular order. Each record however contains information about which image it belongs to as well as some meta-information about the book the record comes from.
+
+
+\subsubsection{Years}
+
+For most of the Swedish records, the year is written near the top of the page either to the left or in the middle. % Additionally, when the year changed the scribe often indicated so by writing the new year in big letters before the block of new records.
+Typically, the scribes did not use a new page for every new year but indicated the change of year by writing the new year in big letters before continuing to write the new records.
+Thus, written years can be found in virtually any part of the page. Another consequence is that a page can contain several years in a sequence like $1771, 1772, 1773, 1774$. This is especially true for small parishes where there may not have been so many burials per year. Out of the $43068$ indexed images, $16074$ or $37.3\%$ have more than one year in the extracted information.
+
+Some images however do not contain a written year, the year is simply implied from previous pages. For such instances, indexers are instructed to search the previous and following image for an indication of the year. If the implied year is found, it is noted in the extracted information, otherwise it is indicated as unknown.
+If the year is unknown or the image is blank, we ignore the image because we do not have a label for it and we expect that the year is anyway not indicated in the image. Of the indexed images, $471$ or $1\%$ have no year label.
+
+However, in the extracted information there is no way to distinguish whether the extracted year came from the same image or if it was implied from a neighboring image. Thus, it is inevitable that some images in the dataset have labels although the year is actually not written in the image. One way to counter this problem would be to only train on images that are labeled with more than one year, expecting an indicated year change somewhere in the image. Doing so would however reduce the dataset to $37.3\%$.
+Although we have no way to calculate how often the label implies a year that is missing from the image without manually inspecting every image, we assume that it is relatively rare and thus negligible.
