@@ -2,13 +2,19 @@
 
 Here we describe some existing datasets for historical handwriting recognition and information extraction. We also consider their usefulness in regard to the thesis.
 
-% TODO add some pictures here?
-% Describe data sets MNIST, IRIS, SWE as well as other unused ones.
+% TODO add pictures for some of the datasets?
 
-% TODO add citations for each mentioned data set?
 
-\subsection{Datasets for historical handwriting recognition}
+\subsection{MNIST}
+
+The MNIST database contains $70000$ normalized images of handwritten digits \cite{MNIST_orig}. All images have the fix size $28 \times 28$ pixels. The dataset is very popular for testing new algorithms and machine learning models \cite{MNIST}.
+% It is even used for the introductory tutorial of Tensorflow \cite{}.
+% https://www.tensorflow.org/get_started/mnist/pros
+Although we can not use MNIST to evaluate the proposed models in this thesis, the dataset is useful for quick experimentation and pre-training. We discuss this further in section \ref{ssec:pretrain}.
+
+\subsection{Historical documents}
 Several collections of historical documents have been line segmented and transcribed for public use \cite{esposalles}: George Washington, Parzival, Saint Gall, RODRIGO and GERMANA. However, they consist of prose written by one or two scribes and not civil population records which are typically written by many different scribes.
+% TODO add citations for each mentioned data set?
 
 \subsection{Esposalles}
 In contrast, the Esposalles dataset consists of book indices and historical marriage licenses from the Cathedral of Barcelona \cite{esposalles}. Experts have manually segmented and transcribed each word exactly as they occur in the image.
