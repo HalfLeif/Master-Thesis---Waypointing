@@ -7,11 +7,8 @@ In this section, we give a brief introduction to how neural networks function an
 For a more detailed description of neural networks and deep learning we refer the reader to a textbook in the field such as \cite{GoodfellowBook}.
 
 \subsection{Introduction to neural networks}
-% Describe about FFNN, non-linear activation functions, classification and supervised learning, backpropagation, softmax and numerical stability
-% TODO find good source about NNs
 
 Neural networks have recently become increasingly popular in many diverse fields.
-% TODO add citation
 % They have been observed to be quite flexible in being able to classify data, find clusters and
 % Neural networks can find meaningful information in a sea of data by clustering,
 Neural networks can be utilized to find the top principal components and find meaningful clusters in a sea of data. They can also be used to generate new information, for example in machine translation \cite{machine_translation_attention}. Here, we will focus on the task of \textbf{classification} which refers to choosing the correct class $y$ for some given input $\mathbf{x}$. This can be to correctly recognize objects in an image or select a strategic action to take in a game.
@@ -47,7 +44,31 @@ H = \frac{1}{2} \sum_{\mu \in D} \Vert
 \Vert ^2
 \]
 
-When $H$ is minimized, the network associates each input $\mathbf{x}^{(\mu)} \in D$ with the correct class. Since $H$ is differentiable, we can use standard gradient descent to optimize the network parameters, that is the weights $w_{ij}$ and the biases $b_i$. In order to get avoid getting stuck in local minima, it is common to apply \textbf{stochastic gradient descent} instead. This is achieved by summing over a small subset of $D$ instead of the entire data set.
+When $H$ is minimized, the network associates each input $\mathbf{x}^{(\mu)} \in D$ with the correct class. Since $H$ is differentiable, we can use standard \textbf{gradient descent} to optimize the network parameters, that is the weights $w_{ij}$ and the biases $b_i$.
+
+\subsubsection{Stochastic gradient descent}
+
+Since gradient descent is susceptible to local minima, it is common to use other optimization techniques such as \textbf{stochastic gradient descent} (SGD).
+We see that in gradient descent, we let $H$ sum over all data points in $D$ in every iteration. In contrast SGD draws a new random subset $B \subset D$ in each iteration. We then compute the gradients of $\hat{H}$ which is computed as a sum over $B$:
+
+\[
+\hat{H} = \frac{1}{2} \sum_{\mu \in B} \Vert
+  \mathbf{y}^{(\mu)} - \mathbf{p}^{(\mu)}
+\Vert ^2
+\]
+
+It is common to randomly partition $D$ into mini-batches so that all mini-batches are disjoint. Iterating over the entire dataset is then referred to as an \textbf{epoch}.
+To achieve the wanted accuracy, it is often necessary to train over many such epochs.
+The random partition of $D$ should be different for each new epoch.
+
+% In SGD we do not calculate $H$ exactly as a sum over $D$, but as a sum over a random subset $B$
+%but in each iteration draw a random sample $B$ from $D$ of a fixed size. The sample $B$ is called a \textbf{mini-batch}.
+% instead sum over a random sample of $D$ called a \textbf{mini-batch}.
+% It is common to randomly partition the dataset $D$ into mini-batches so that no datapoint is repeated.
+
+% It is common to divide the dataset into mini-batches before training so that all mini-batches are disjoint.
+
+% In order to get avoid getting stuck in local minima, it is common to apply \textbf{stochastic gradient descent} instead. This is achieved by summing over a small subset of $D$ instead of the entire data set.
 
 \subsubsection{Testing}
 
@@ -75,6 +96,30 @@ The large number of parameters in deep networks is both a strength and a weaknes
 One way to reduce the risk of overfitting is by applying \textbf{dropout}  \cite{AlexNet, FornesCnnCategorization}.
 %Another problem with large networks is overfitting which means that the network learns the training set by heart instead of learning to recognize the general patterns \cite{AlexNet, FornesCnnCategorization}.
 The dropout method introduces a probability of setting each neuron's activation to $0$ during training, often with $50\%$ probability. This forces the network to learn multiple paths for recognizing different features and hence creating a more robust representation. Dropout also reduces the computational cost because fewer neurons participate in each training step.
+
+\subsubsection{Batch normalization}
+
+An alternative to Dropout was suggested by \cite{BatchNormalization}. Besides reducing the risk for overfitting, the authors also suggest that it allows for a higher learning rate in deep networks and thus faster convergence.
+
+For some network layer $\mathbf{x} = {x_1, \ldots, x_d}$, we normalize each $x_i$ to zero mean and unit variance over the current mini-batch:
+
+\[
+\hat{x_i} = \frac{x_i - E[x_i]}{ \sqrt{\text{Var} [x_i]} }
+\]
+
+We then use two learned parameters $\gamma$ and $\beta$ to instead output $z_i$:
+
+\[
+z_i = \gamma \hat{x_i} + \beta
+\]
+
+The batch normalization can thus be summarized as $\mathbf{z} = f_{BN}(\mathbf{x}; \gamma, \beta)$.
+
+The batch normalization can either be applied before or after the activation function. The authors suggest that the best result is achieved by applying the batch normalization before the non-liner activation $g$ but after the weights $w_{ij}$ and bias $b_i$:
+
+\[
+v_i = g\left( f_{BN}\left( b_i + \sum_j w_{ij} u_j; \gamma, \beta \right) \right)
+\]
 
 \subsubsection{Rectified linear activation}
 
