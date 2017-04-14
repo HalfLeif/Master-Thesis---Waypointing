@@ -66,6 +66,8 @@ From manually inspecting these images, we conclude that many of them do not cont
 In cooperation with FamilySearch for making this thesis, we have been granted access to images and the corresponding extracted information from six collections of Swedish population records.
 These collections contain records of baptisms, burials and marriages in six regions between 1627 and 1890, see Table \ref{tab:collections}. They are the Swedish counterpart of the French IRIS collection mentioned above.
 
+\input{figures/page.tex}
+
 \subsubsection{The indexing process}
 
 Just like with the IRIS dataset, the indexers have not provided us with bounding boxes or exact transcriptions but with extracted genealogical information. An indexed baptism record typically contains the name of the newborn child, the names of the parents, the date of birth, the date of baptism and location of the parents' home. The ecclesiastical records typically contain the names of witnesses to the baptism but this is ignored in the indexing process.
@@ -81,10 +83,8 @@ Each event of baptism, burial or marriage is stored as a record organized in the
 
 \subsubsection{Page structure}
 
-% TODO insert figure
-
 Each image consist of two pages. The pages are always handwritten. Sometimes the pages have pre-printed headers and vertical lines for columns, other times they are entirely free-form.
-The year can often be found near the top of the page either to the left or in the middle.
+The year can often be found near the top of the page either to the left or in the middle, see Figure \ref{fig:page} for an example.
 
 \input{figures/aar.tex}
 
@@ -94,7 +94,7 @@ Although the general structure is the same for all six collections, the exact pa
 \subsubsection{Multiple years per page}
 
  % Additionally, when the year changed the scribe often indicated so by writing the new year in big letters before the block of new records.
-Typically, the scribes did not use a new page for every new year but indicated the change of year by writing the new year in big letters before continuing to write the new records.
+Typically, the scribes did not use a new page for every new year but indicated the change of year by writing the new year in big letters before continuing to write the new records; an example of this can be seen in Figure \ref{fig:page}.
 Thus besides at the top, written years can be found in virtually any part of the page. Another consequence is that a page can contain several years in a sequence like $1771, 1772, 1773, 1774$. This is especially true for small parishes where there may not have been so many burials per year. Out of the $43068$ indexed images, $16074$ or $37.3\%$ have more than one year in the extracted information.
 
 Some images however do not contain a written year, the year is simply implied from previous pages. For such instances, indexers are instructed to search the previous and following image for an indication of the year. If the implied year is found, it is noted in the extracted information, otherwise it is indicated as unknown.
