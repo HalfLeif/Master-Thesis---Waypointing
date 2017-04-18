@@ -36,39 +36,49 @@ p_i = \frac{ \exp(o_i) }{ \sum_k \exp(o_k) }
 \subsubsection{Backpropagation}
 
 In order to correctly classify new input, we need to \textbf{train} the network on some existing data set $D$ which consists of pairs of correct classifications $(\mathbf{x}^{(\mu)}, y^{(\mu)}$).
-We introduce a metric $H$ for how different the network pseudo-probabilities $\mathbf{p}^{(\mu)}$ are from the correct classification $\mathbf{y}^{(\mu)}$. Here we let $\mathbf{y}^{(\mu)}$ be a \textbf{onehot} vector, that is a all elements are zero except the indicated class whose associated element has the value $1$.
+We let $\mathbf{y}^{(\mu)}$ denote a \textbf{onehot} vector, that is a all elements are zero except the indicated class whose associated element has the value $1$.
+We then introduce a loss function $L$ to measure how different one network prediction $\mathbf{p}^{(\mu)}$ is from its correct classification $\mathbf{y}^{(\mu)}$:
+% For each example $\mu \in D$, we
+% We introduce a metric $H$ for how different the network pseudo-probabilities $\mathbf{p}^{(\mu)}$ are from the correct classification $\mathbf{y}^{(\mu)}$.
 
 \[
-H = \frac{1}{2} \sum_{\mu \in D} \Vert
+L(\mu) = \Vert
   \mathbf{y}^{(\mu)} - \mathbf{p}^{(\mu)}
 \Vert ^2
 \]
 
-When $H$ is minimized, the network associates each input $\mathbf{x}^{(\mu)} \in D$ with the correct class. Since $H$ is differentiable, we can use standard \textbf{gradient descent} to optimize the network parameters, that is the weights $w_{ij}$ and the biases $b_i$.
+Given our loss function $L$, we can create a metric $H$ that represents the mean error over the data set $D$:
+
+\[
+H = \frac{1}{2 \vert D \vert} \sum_{\mu \in D} L(\mu)
+\]
+
+When $H$ is minimized, the network associates each input $\mathbf{x}^{(\mu)} \in D$ with the correct class. Since $H$ is differentiable, we can use standard \textbf{gradient descent} to optimize the network parameters, that is all weights $w_{ij}$ and biases $b_i$.
+
+In iteration $k$ we can thus use some \textbf{learning rate} $\gamma$ and the gradient of the error $H$ to update the parameters $\mathbf{\theta}$:
+
+\[
+\mathbf{\theta}_{k+1} \leftarrow
+\mathbf{\theta}_k - \gamma \nabla_{\mathbf{\theta}} H
+\]
 
 \subsubsection{Stochastic gradient descent}
 
 Since gradient descent is susceptible to local minima, it is common to use other optimization techniques such as \textbf{stochastic gradient descent} (SGD).
-We see that in gradient descent, we let $H$ sum over all data points in $D$ in every iteration. In contrast SGD draws a new random subset $B \subset D$ in each iteration. We then compute the gradients of $\hat{H}$ which is computed as a sum over $B$:
+In gradient descent above, we let $H$ sum over all data points in $D$ in every iteration. In contrast, SGD draws a new random subset $B \subset D$ in each iteration. We then compute $\hat{H}$ as a sum over $B$ and use its gradient to update the network parameters:
 
 \[
-\hat{H} = \frac{1}{2} \sum_{\mu \in B} \Vert
-  \mathbf{y}^{(\mu)} - \mathbf{p}^{(\mu)}
-\Vert ^2
+\hat{H} = \frac{1}{2 \vert B \vert} \sum_{\mu \in B} L(\mu)
+\]
+
+\[
+\mathbf{\theta}_{k+1} \leftarrow
+\mathbf{\theta}_k - \gamma \nabla_{\mathbf{\theta}} \hat{H}(k)
 \]
 
 It is common to randomly partition $D$ into mini-batches so that all mini-batches are disjoint. Iterating over the entire dataset is then referred to as an \textbf{epoch}.
 To achieve the wanted accuracy, it is often necessary to train over many such epochs.
 The random partition of $D$ should be different for each new epoch.
-
-% In SGD we do not calculate $H$ exactly as a sum over $D$, but as a sum over a random subset $B$
-%but in each iteration draw a random sample $B$ from $D$ of a fixed size. The sample $B$ is called a \textbf{mini-batch}.
-% instead sum over a random sample of $D$ called a \textbf{mini-batch}.
-% It is common to randomly partition the dataset $D$ into mini-batches so that no datapoint is repeated.
-
-% It is common to divide the dataset into mini-batches before training so that all mini-batches are disjoint.
-
-% In order to get avoid getting stuck in local minima, it is common to apply \textbf{stochastic gradient descent} instead. This is achieved by summing over a small subset of $D$ instead of the entire data set.
 
 \subsubsection{Testing}
 
