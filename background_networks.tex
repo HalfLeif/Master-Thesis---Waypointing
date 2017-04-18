@@ -80,11 +80,13 @@ It is common to randomly partition $D$ into mini-batches so that all mini-batche
 To achieve the wanted accuracy, it is often necessary to train over many such epochs.
 The random partition of $D$ should be different for each new epoch.
 
-\subsubsection{Testing}
+\subsubsection{Testing and evaluation}
 
 Because neural networks have many parameters, they risk memorizing the training data and hence fail to learn the general patterns that we actually want them to recognize.
 % \cite{AlexNet, FornesCnnCategorization}.
-This phenomenon is knows as \textbf{overfitting} and can constitute a large problem for small data sets. In order to estimate overfitting, we divide the original data set into one part for training and one for testing. The training data is used for backpropagation while the test data is exclusively used for evaluation. If the network begins to overfit on the training data, the accuracy on the test data decreases.
+This phenomenon is knows as \textbf{overfitting} and can constitute a large problem for small data sets. In order to estimate overfitting, we divide the original data set into one part for training and one for testing. The training data is used for backpropagation while the test data is exclusively used for testing. If the network begins to overfit on the training data, the accuracy on the test data decreases and the training should be aborted.
+
+It is also common to have a third data set for evaluation which is disjoint with both the training data and the test data.
 
 
 \subsection{Deep neural networks}
@@ -97,9 +99,13 @@ The more layers, the more complex tasks can be learned. To the surprise of many,
 
 The large number of parameters in deep networks is both a strength and a weakness since it requires a large amount of training data as well as considerable computation power. More parameters can also memorize more and thus makes the network more prone to overfitting \cite{AlexNet}.
 
-\subsubsection{Pre-training}
+\subsubsection{Pre-training and transfer learning}
 
-% TODO discuss what and why
+When the intended task has limited training data or takes a long time to train, it can be useful to start with a network that has already been trained on a different task or data set.
+For example, \cite{SpatialTransformerNetworks} use the Inception network pre-trained on ImageNet.
+The idea is that the parameters in a network trained on a related task is probably closer to their optimal value than randomly initialized parameters. For example, recognizing edges and corners are central to many visual recognition tasks.
+
+% TODO: is this accurate? Book also mentions greedy pre-training such as training some layers at a time?
 
 \subsubsection{Dropout}
 
@@ -257,6 +263,7 @@ However, because the last layers are fully connected, they can only handle input
 \subsubsection{Spatial transformer networks}
 
 % TODO describe Spatial transformer networks and what they are good for.
+% \cite{SpatialTransformerNetworks}
 
 \subsubsection{Residual networks}
 
