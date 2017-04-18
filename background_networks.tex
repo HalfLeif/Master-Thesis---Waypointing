@@ -47,7 +47,7 @@ L(\mu) = \frac{1}{2} \Vert
 \Vert ^2
 \]
 
-Given our loss function $L$, we can create a metric $H$ that represents the mean error over the data set $D$:
+Given our loss function $L$, we can create a \textbf{cost} $H$ that represents the mean error over the data set $D$:
 
 \[
 H = \frac{1}{\vert D \vert} \sum_{\mu \in D} L(\mu)
@@ -73,7 +73,7 @@ In gradient descent above, we let $H$ sum over all data points in $D$ in every i
 
 \[
 \mathbf{\theta}_{k+1} \leftarrow
-\mathbf{\theta}_k - \gamma \nabla_{\mathbf{\theta}} \hat{H}(k)
+\mathbf{\theta}_k - \eta \nabla_{\mathbf{\theta}} \hat{H}(k)
 \]
 
 It is common to randomly partition $D$ into mini-batches so that all mini-batches are disjoint. Iterating over the entire dataset is then referred to as an \textbf{epoch}.
@@ -106,12 +106,33 @@ One way to reduce the risk of overfitting is by applying \textbf{dropout}  \cite
 %Another problem with large networks is overfitting which means that the network learns the training set by heart instead of learning to recognize the general patterns \cite{AlexNet, FornesCnnCategorization}.
 The dropout method introduces a probability of setting each neuron's activation to $0$ during training, often with $50\%$ probability. This forces the network to learn multiple paths for recognizing different features and hence creating a more robust representation. Dropout also reduces the computational cost because fewer neurons participate in each training step.
 
-\subsubsection{Rectified linear activation}
 
-Very deep networks suffer from the \textbf{vanishing gradient} problem.
-Backpropagation updates each parameter according to its gradient but if the gradient is very small, it will take a long time before the network converges.
-Such small gradients can occur when using the traditional activation functions, hyperbolic tangent and the logistic function, because they have very small gradients for large activations \cite{AlexNet}.
-This can largely be solved by using the \textbf{rectified linear} (ReLU) function for activation: $g(x) = \max{0, x}$.
+\subsubsection{Weight decay}
+
+Another common technique to avoid overfitting is \textbf{weight decay} \cite[Chapter~3]{NielsenBook}, \cite[Chapter~7]{GoodfellowBook}. We add a new penalty term for weight regularization to our previous cost $\hat{H}$, where $\mathbf{w}$ denotes all weight parameters $w_{ij}$ but not the bias parameters $b_i$:
+
+\[
+\tilde{H} = \hat{H} + \alpha \Omega(\mathbf{w})
+\]
+
+The amount of regularization is determined by the hyper-parameter $\alpha \in [0,\infty)$.
+A common version of weight decay is \textbf{L2 regularization}. It adds a penalty to the
+
+\[
+\Omega(\mathbf{w}) = \frac{1}{2} \mathbf{w}^T \mathbf{w}
+\]
+
+By computing the gradient for $\Omega$ we get the new update rule for the weights:
+
+\[
+\mathbf{w}_{k+1} \leftarrow
+(1 - \eta \alpha) \mathbf{w}_k - \eta \nabla_{\mathbf{\theta}} \hat{H}(k)
+\]
+
+We see that $\mathbf{w}$ decay with a factor $(1 - \eta \alpha)$ in each iteration. Thus the weights decay exponentially over time. Thus we see that the weight decay makes sure that the weights are kept small no matter for how long the network is trained, that is no weight parameter can grow indefinitely. Empirically, it has been observed that networks can be trained longer without overfitting when the weights are bounded \cite[Chapter~3]{NielsenBook}.
+
+Since the penalty term does not include the bias terms, the update rule for the bias parameters is unchanged.
+
 
 \subsubsection{Cross-entropy loss}
 
@@ -127,12 +148,16 @@ L(\mu) = - \sum_i \left(
 \right)
 \]
 
-\subsubsection{Weight decay}
-
-% TODO
-
 \subsubsection{Faster gradient descent}
 \textbf{TODO}: briefly describe Adam optimizer and using cross-entropy instead of squared error.
+
+\subsubsection{Rectified linear activation}
+
+Very deep networks suffer from the \textbf{vanishing gradient} problem.
+Backpropagation updates each parameter according to its gradient but if the gradient is very small, it will take a long time before the network converges.
+Such small gradients can occur when using the traditional activation functions, hyperbolic tangent and the logistic function, because they have very small gradients for large activations \cite{AlexNet}.
+This can largely be solved by using the \textbf{rectified linear} (ReLU) function for activation: $g(x) = \max{0, x}$.
+
 
 \subsubsection{Pre-training and transfer learning}
 
