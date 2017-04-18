@@ -116,13 +116,13 @@ Another common technique to avoid overfitting is \textbf{weight decay} \cite[Cha
 \]
 
 The amount of regularization is determined by the hyper-parameter $\alpha \in [0,\infty)$.
-A common version of weight decay is \textbf{L2 regularization}. It adds a penalty to the
+A common version of weight decay is \textbf{L2 regularization}:
 
 \[
 \Omega(\mathbf{w}) = \frac{1}{2} \mathbf{w}^T \mathbf{w}
 \]
 
-By computing the gradient for $\Omega$ we get the new update rule for the weights:
+By computing the gradient for the new cost metric $\tilde{H}$, we get the new update rule for the weights:
 
 \[
 \mathbf{w}_{k+1} \leftarrow
