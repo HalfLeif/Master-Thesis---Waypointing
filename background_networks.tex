@@ -97,30 +97,6 @@ One way to reduce the risk of overfitting is by applying \textbf{dropout}  \cite
 %Another problem with large networks is overfitting which means that the network learns the training set by heart instead of learning to recognize the general patterns \cite{AlexNet, FornesCnnCategorization}.
 The dropout method introduces a probability of setting each neuron's activation to $0$ during training, often with $50\%$ probability. This forces the network to learn multiple paths for recognizing different features and hence creating a more robust representation. Dropout also reduces the computational cost because fewer neurons participate in each training step.
 
-\subsubsection{Batch normalization}
-
-An alternative to Dropout was suggested by \cite{BatchNormalization}. Besides reducing the risk for overfitting, the authors also suggest that it allows for a higher learning rate in deep networks and thus faster convergence.
-
-For some network layer $\mathbf{x} = {x_1, \ldots, x_d}$, we normalize each $x_i$ to zero mean and unit variance over the current mini-batch:
-
-\[
-\hat{x_i} = \frac{x_i - E[x_i]}{ \sqrt{\text{Var} [x_i]} }
-\]
-
-We then use two learned parameters $\gamma$ and $\beta$ to instead output $z_i$:
-
-\[
-z_i = \gamma \hat{x_i} + \beta
-\]
-
-The batch normalization can thus be summarized as $\mathbf{z} = f_{BN}(\mathbf{x}; \gamma, \beta)$.
-
-The batch normalization can either be applied before or after the activation function. The authors suggest that the best result is achieved by applying the batch normalization before the non-liner activation $g$ but after the weights $w_{ij}$ and bias $b_i$:
-
-\[
-v_i = g\left( f_{BN}\left( b_i + \sum_j w_{ij} u_j; \gamma, \beta \right) \right)
-\]
-
 \subsubsection{Rectified linear activation}
 
 Very deep networks suffer from the \textbf{vanishing gradient} problem.
@@ -154,6 +130,8 @@ Because a filter uses the same weights for all sub-regions in the previous layer
 
 Units in higher layers in the CNN receive information from a larger \textbf{receptive field} in the input image. Therefore, the filters in lower layers typically learn to detect low-level features like edges and curves while filters in higher layers can detect more complex objects like cats or faces.
 By synthesizing the input image to maximize a specific filter's activation, it is possible to get an idea of what the filter has learned to recognize \cite{VisualizeCnn}.
+
+% Write how pooling and convolutions affect receptive field.
 
 \input{figures/maxpool.tex}
 
@@ -224,6 +202,30 @@ Another suggested approach to digit recognition in street view is to combine CNN
 \subsection{Additional topics}
 
 Here we list some additional recent progress in the field of neural networks in computer vision which is not used in the thesis.
+
+\subsubsection{Batch normalization}
+
+An alternative to Dropout was suggested by \cite{BatchNormalization}. Besides reducing the risk for overfitting, the authors also suggest that it allows for a higher learning rate in deep networks and thus faster convergence.
+
+For some network layer $\mathbf{x} = {x_1, \ldots, x_d}$, we normalize each $x_i$ to zero mean and unit variance over the current mini-batch:
+
+\[
+\hat{x_i} = \frac{x_i - E[x_i]}{ \sqrt{\text{Var} [x_i]} }
+\]
+
+We then use two learned parameters $\gamma$ and $\beta$ to instead output $z_i$:
+
+\[
+z_i = \gamma \hat{x_i} + \beta
+\]
+
+The batch normalization can thus be summarized as $\mathbf{z} = f_{BN}(\mathbf{x}; \gamma, \beta)$.
+
+The batch normalization can either be applied before or after the activation function. The authors suggest that the best result is achieved by applying the batch normalization before the non-liner activation $g$ but after the weights $w_{ij}$ and bias $b_i$:
+
+\[
+v_i = g\left( f_{BN}\left( b_i + \sum_j w_{ij} u_j; \gamma, \beta \right) \right)
+\]
 
 \subsubsection{Visual-semantic alignment}
 
