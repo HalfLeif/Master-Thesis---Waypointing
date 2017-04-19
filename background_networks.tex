@@ -37,9 +37,7 @@ p_i = \frac{ \exp(o_i) }{ \sum_k \exp(o_k) }
 
 In order to correctly classify new input, we need to \textbf{train} the network on some existing data set $D$ which consists of pairs of correct classifications $(\mathbf{x}^{(\mu)}, y^{(\mu)}$).
 We let $\mathbf{y}^{(\mu)}$ denote a \textbf{onehot} vector, that is a all elements are zero except the indicated class whose associated element has the value $1$.
-We then introduce a loss function $L$ to measure how different one network prediction $\mathbf{p}^{(\mu)}$ is from its correct classification $\mathbf{y}^{(\mu)}$:
-% For each example $\mu \in D$, we
-% We introduce a metric $H$ for how different the network pseudo-probabilities $\mathbf{p}^{(\mu)}$ are from the correct classification $\mathbf{y}^{(\mu)}$.
+We then introduce a loss function $L$ to measure how different one network prediction $\mathbf{p}^{(\mu)}$ is from its correct classification $\mathbf{y}^{(\mu)}$. Here we suggest the \textbf{squared error} loss function:
 
 \[
 L(\mu) = \frac{1}{2} \Vert
@@ -54,7 +52,6 @@ H = \frac{1}{\vert D \vert} \sum_{\mu \in D} L(\mu)
 \]
 
 When $H$ is minimized, the network associates each input $\mathbf{x}^{(\mu)} \in D$ with the correct class. Since $H$ is differentiable, we can use standard \textbf{gradient descent} to optimize the network parameters, that is all weights $w_{ij}$ and biases $b_i$.
-
 In iteration $k$ we can thus use some \textbf{learning rate} $\eta$ and the gradient of the error $H$ to update the parameters $\mathbf{\theta}$:
 
 \[
@@ -81,7 +78,7 @@ To achieve the wanted accuracy, it is often necessary to train over many such ep
 The random partition of $D$ should be different for each new epoch.
 
 
-\subsubsection{Testing and evaluation}
+\subsubsection{Testing and evaluating}
 
 Because neural networks have many parameters, they risk memorizing the training data and hence fail to learn the general patterns that we actually want them to recognize.
 % \cite{AlexNet, FornesCnnCategorization}.
@@ -105,6 +102,7 @@ The large number of parameters in deep networks is both a strength and a weaknes
 One way to reduce the risk of overfitting is by applying \textbf{dropout}  \cite{AlexNet, FornesCnnCategorization}.
 %Another problem with large networks is overfitting which means that the network learns the training set by heart instead of learning to recognize the general patterns \cite{AlexNet, FornesCnnCategorization}.
 The dropout method introduces a probability of setting each neuron's activation to $0$ during training, often with $50\%$ probability. This forces the network to learn multiple paths for recognizing different features and hence creating a more robust representation. Dropout also reduces the computational cost because fewer neurons participate in each training step.
+Note that dropout is not necessarily done for every layer in the network.
 
 
 \subsubsection{Weight decay}
@@ -129,7 +127,7 @@ By computing the gradient for the new cost metric $\tilde{H}$, we get the new up
 (1 - \eta \alpha) \mathbf{w}_k - \eta \nabla_{\mathbf{\theta}} \hat{H}(k)
 \]
 
-We see that $\mathbf{w}$ decay with a factor $(1 - \eta \alpha)$ in each iteration. Thus the weights decay exponentially over time. Thus we see that the weight decay makes sure that the weights are kept small no matter for how long the network is trained, that is no weight parameter can grow indefinitely. Empirically, it has been observed that networks can be trained longer without overfitting when the weights are bounded \cite[Chapter~3]{NielsenBook}.
+We see that $\mathbf{w}$ decay with a factor $(1 - \eta \alpha)$ in each iteration, so the weights decay exponentially over time. Thus the weight decay makes sure that the weights are kept small no matter for how long the network is trained, that is no weight parameter can grow indefinitely. Empirically, it has been observed that networks can be trained longer without overfitting when the weights are bounded \cite[Chapter~3]{NielsenBook}.
 
 Since the penalty term does not include the bias terms, the update rule for the bias parameters is unchanged.
 
@@ -137,7 +135,7 @@ Since the penalty term does not include the bias terms, the update rule for the 
 \subsubsection{Cross-entropy loss}
 
 Above in section \ref{sssec:BackProp}, we used squared error as the loss function $L$. One of the problems with squared error is that a large error does not always result in a large gradient \cite[Chapter~3]{NielsenBook}.
-A more commonly used loss function is \textbf{cross-entropy} which has the property that the learning rate is proportional to the current error.
+A more commonly used loss function is \textbf{cross-entropy} which has the property that its gradient depends directly on the distance between the network output and the correct value.
 Thus in most cases, cross-entropy is a better choice as loss function than squared error.
 
 For training example $\mu \in D$, we denote the network output in neuron $i$ as $p_i^\mu$ while $y_i^\mu$ has the value $1$ if $i$ is the correct class and value $0$ otherwise. Then we can define the cross-entropy loss $L$ as:
@@ -147,6 +145,15 @@ L(\mu) = - \sum_i \left(
   y_i^\mu \log p_i^\mu + (1 - y_i^\mu) \log (1 - p_i^\mu)
 \right)
 \]
+
+This function may not intuitively make sense as a loss function but we can make the following observations:
+
+\begin{itemize}
+    \item Because $p_i \in (0, 1)$, both $\log p_i$ and $\log (1 - p_i)$ must be negative and thus each term in the sum is negative. We have a minus sign before the sum, so $L(\mu)$ must be positive.
+    \item The correct label $y_i$ can only take the value $0$ or $1$. If $y_i=1$, then the expression can be simplified as $\log p_i$ which is greater the farther $p_i$ is from the desired value $1$. By symmetry, the same holds for when $y_i = 0$.
+\end{itemize}
+
+In conclusion we can observe that $L(\mu) \geq 0$ and is minimized when the $y_i$ predict the correct label. Furthermore, the amplitude of the loss depends directly on how far away the actual output $p_i$ is from the expected output $y_i$. Therefore, cross-entropy has the properties of a good loss function.
 
 \subsubsection{Faster gradient descent}
 \textbf{TODO}: briefly describe Adam optimizer and using cross-entropy instead of squared error.
