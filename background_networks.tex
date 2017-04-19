@@ -155,8 +155,29 @@ This function may not intuitively make sense as a loss function but we can make 
 
 In conclusion we can observe that $L(\mu) \geq 0$ and is minimized when the $y_i$ predict the correct label. Furthermore, the amplitude of the loss depends directly on how far away the actual output $p_i$ is from the expected output $y_i$. Therefore, cross-entropy has the properties of a good loss function.
 
-\subsubsection{Faster gradient descent}
-\textbf{TODO}: briefly describe Adam optimizer and using cross-entropy instead of squared error.
+\subsubsection{Momentum}
+
+One problem with stochastic gradient descent (SGD) is that the learning can zig-zag across valleys in the optimization plane, especially for noisy gradients \cite[Chapter~8]{GoodfellowBook}. Another problem is that the learning becomes very slow for stable but small gradients. A suggested solutions to both problems is the use of \textbf{momentum}. When training with momentum, instead of directly updating the parameters $\mathbf{\theta}$, we apply the gradients to a decaying momentum $\mathbf{v}$:
+
+\[
+\mathbf{v} \leftarrow \alpha \mathbf{v} - \eta \nabla_{\mathbf{\theta}} H
+\]
+
+The accumulated momentum is then applied to update the parameters:
+
+\[
+\mathbf{\theta} \leftarrow \mathbf{\theta} + \mathbf{v}
+\]
+
+With momentum, the learning no longer zig-zags across valleys because the accumulated momentum would point directly in the direction of the valley. For stable but small gradients, the learning would accelerate because the accumulated momentum grows in the same direction. Thus both problems presented above are mitigated by momentum.
+
+\subsubsection{Alternative learning algorithms}
+
+Although SGD is a very common technique to minimize the cost $H$, there are several popular alternatives. In stochastic gradient descent, the learning rate is a fixed hyper-parameter $\eta$ that is set manually by the programmer and is often adjusted after considerable empirical experimentation. A too high learning rate may overshoot the optimal values and hinder convergence while a too small learning rate may unnecessarily cause a long training time.
+
+For many tasks it is desirable that the learning rate is high in the beginning when the network is very wrong while the learning rate should be small at the end when the distance to the optimal solution is small. There are several popular methods that use an adaptive learning rate: \textbf{AdaGrad}, \textbf{RMSProp} and \textbf{Adam} \cite[Chapter~8]{GoodfellowBook}. However, there is no clear consensus about which method is the best. People seem to prefer the method they are used to since their personal experience helps with setting the hyper-parameters.
+
+Although gradient-based methods dominate the field, it is not the only possible approach. \textbf{Particle swarm optimization} has also been suggested for training neural networks in cases when it may be difficult to compute the gradient \cite[Chapter~5]{StochasticOpt}.
 
 \subsubsection{Rectified linear activation}
 
