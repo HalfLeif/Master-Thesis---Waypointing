@@ -24,7 +24,7 @@ The number of pooling layers, number of convolutional layers and depth per layer
 
 \subsubsection{Attention model}
 
-Another major difference between our work and \cite{FornesCnnCategorization} is that although we both use variable input size, they use \textbf{Spatial pyramid pooling} while we apply a soft attention model as presented in \cite{AttendAndTell}. Like we discussed previously in \ref{ssec:attention}, the encoder output can be seen as a list of feature vectors $\mathbf{a_i} \in \mathbb{R}^D$ which correspond to different but overlapping locations. The number of produced feature vectors depends on the size of the input image. We will see that this attention model aggregates all feature vectors $\mathbf{a_i}$ into a single fixed size vector $\mathbf{z} \in \mathbb{R}^D$.
+Another major difference between our work and \cite{FornesCnnCategorization} is that although we both use variable input size, they use \textbf{Spatial pyramid pooling} while we apply a soft attention model as presented in \cite{AttendAndTell}. Like we discussed previously in section \ref{ssec:attention}, the encoder output can be seen as a list of feature vectors $\mathbf{a_i} \in \mathbb{R}^D$ which correspond to different but overlapping locations. The number of produced feature vectors depends on the size of the input image. We will see that this attention model aggregates all feature vectors $\mathbf{a_i}$ into a single fixed size vector $\mathbf{z} \in \mathbb{R}^D$.
 
 The attention model consists of a multilayer perceptron which for each feature vector $\mathbf{a_i}$ computes a salience score $e_i$:
 
@@ -50,12 +50,17 @@ If $\mathbf{z}$ had a variable length, then we would need a different number of 
 The proposed MLP consist of one fully connected layer of $1024$ neurons with dropout as well as three parallel readout layers $\mathbf{d}_1$, $\mathbf{d}_2$ and $\mathbf{d}_3$. Each of these three readout layers has a size of $10$ neurons and thus correspond to a single digit.
 Because the years we will extract are all in the range 1627--1890, $3$ digits is more than enough to classify year.
 
-% TODO motivate combined digit training instead of independent...
+We do softmax on each readout layer to get pseudo-probabilities for the digits.
+To compute the probability for a specific 3-digit sequence we simply multiply the probabilities of each digit:
 
-
-%To compute the probability for a 3-digit sequence we take the cartesian product $c_{ijk}$ of the three readouts $c_i$, $c_j$, $c_k$.
+\[
+P(d_1=x, d_2=y, d_3=z) = P(d_1=x) P(d_2=y) P(d_3=z)
+\]
 
  %of the three readouts: (0,0,0) -- (9,9,9) and remap them to 000 -- 999, or in the case of years, to 1000--1999.
+
+% \subsubsection{Loss function}
+% TODO discuss here or further down?
 
 \subsection{Pre-training on synthetic data} \label{ssec:pretrain}
 The network was pre-trained on a synthetic dataset created from MNIST \cite{MNIST_orig}. Using synthetic data allowed us to quickly discard inefficient network architectures and we believe that pre-training helped faster learning on the real data.
@@ -66,6 +71,8 @@ The synthetic dataset was created by putting together 4 independently randomly s
 
 \subsubsection{Experiments}
 
+% TODO motivate combined digit training instead of independent...
+% Actually there is not good motivation for this. Should mention it under experiments though.
 
 
 \subsection{Labeling}
@@ -74,7 +81,7 @@ The synthetic dataset was created by putting together 4 independently randomly s
 
 \subsection{Training procedure}
 
-\subsubsection{Cross entropy}
+\subsubsection{Loss function}
 
 % cross entropy
 % smoothing error

@@ -2,6 +2,8 @@
 \begin{figure}
 \centering
 
+% TODO should mention sizes! Maybe represent decoder output differently.
+
 \begin{tikzpicture}
 % 900, 1500, 1
 % 28, 44, 256
@@ -11,7 +13,7 @@
   \pic [fill=cyan, draw=blue] at (-1,0) {annotated cuboid={width=1, height=900, depth=1500}};
   \pic [fill=cyan, draw=blue] at (4,-0.5) {annotated cuboid={width=256, height=28, depth=44}};
   \pic [fill=cyan, draw=blue] at (7,-0.5) {annotated cuboid={width=256, height=1, depth=1}};
-  \pic [fill=cyan, draw=blue] at (9,1.5) {annotated cuboid={width=1, height=1000, depth=1}};
+  \pic [fill=cyan, draw=blue] at (9,1.5) {annotated cuboid={width=1, height=10, depth=3}};
 
   \draw [->,very thick] (1,-0.5) -- node [above] {encode} (2.5,-0.5);
   \draw [->,very thick] (4.5,-0.5) -- node [above] {attend} (5.5,-0.5);
@@ -20,5 +22,6 @@
 \end{tikzpicture}
 
 \caption{Overview of the proposed network. First the encoder produces a matrix of feature vectors, each corresponding to a different but overlapping location in the input image. Secondly, the attention aggregates the feature vectors into a single feature vector. Lastly, the decoder produces a softmax output over the range of years.}
+% TODO update text!
 \label{fig:sys_overview}
 \end{figure}
