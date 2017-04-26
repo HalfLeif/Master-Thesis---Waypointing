@@ -75,16 +75,25 @@ The synthetic dataset was created by putting together 4 independently randomly s
 % Actually there is not good motivation for this. Should mention it under experiments though.
 
 
-\subsection{Labeling}
-
-% How to label multi-year images.
-
 \subsection{Training procedure}
+% TODO Perhaps make this a different section?
+
+\subsubsection{Multi-year labels}
+% TODO Should this be part of the description of the dataset or not?
+
+In order to make things smoother in Tensorflow, the labels for each image should have the same size. One way to achieve this is to simply select one of the multiple years and ignore the presence of other years. However, a single year does not accurately represent the image if it contains multiple years which is often the case.
+
+Instead we label each image with a tuple of the smallest and the largest year present in the image. This representation has the benefit of having a fix size independently of how many years are in the image. Furthermore, the entire sequence of years is represented. The only information that is lost is the occasional gap in year sequences. Gaps in year sequences in the Swedish dataset are often very small and they are also quite rare. Thus we assume ignoring gaps has a negligible effect.
+
+% TODO find gap example, how does that image look like? Does it contain the year anyway although it is not written in the label?
+
+%Although it is not optimal, we currently train the network using one year as label for each image.
+
 
 \subsubsection{Loss function}
 
 % cross entropy
-% smoothing error
+% cluster error didn't work, because digits are actually independent. Will always have clusters.
 
 \subsection{Evaluation}
 
