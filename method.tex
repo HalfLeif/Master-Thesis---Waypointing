@@ -47,14 +47,14 @@ Note that the spatial information about where in the image $\mathbf{z}$ comes fr
 The decoder employs an MLP for classifying the aggregated feature vector $\mathbf{z}$ from the attention model.
 If $\mathbf{z}$ had a variable length, then we would need a different number of weights in the MLP for each different input size. Since the attention model produces a fixed size output independent of input size we avoid the problem of variable number of parameters.
 
-The proposed MLP consist of one fully connected layer of $1024$ neurons with dropout as well as three parallel readout layers $\mathbf{d}_1$, $\mathbf{d}_2$ and $\mathbf{d}_3$. Each of these three readout layers has a size of $10$ neurons and thus correspond to a single digit.
+The proposed MLP consist of one fully connected layer of $1024$ neurons with dropout as well as three parallel readout layers $D_1$, $D_2$ and $D_3$. Each of these three readout layers has a size of $10$ neurons and thus correspond to a single digit in the range $[0-9]$.
 Because the years we will extract are all in the range 1627--1890, $3$ digits is more than enough to classify year.
 
 We do softmax on each readout layer to get pseudo-probabilities for the digits.
 To compute the probability for a specific 3-digit sequence $[x, y, z]$ we simply multiply the probabilities of each digit:
 
 \[
-P(d_1=x, d_2=y, d_3=z) = P(d_1=x) P(d_2=y) P(d_3=z)
+P(D_1=x, D_2=y, D_3=z) = P(D_1=x) P(D_2=y) P(D_3=z)
 \]
 
 
@@ -92,6 +92,8 @@ We evaluate the models on the test set and evaluation set of the Swedish records
 % problematic for multi-years: the confidence is split between different outputs...
 
 \subsection{Additional ideas}
+
+Here we discuss additional ideas that could be used to further improve our models.
 
 \subsubsection{Multi-year loss}
 
@@ -148,6 +150,15 @@ S_D(U, y) = \int_0^1 P(U=x) W(x, y) dx =
 
 We see that there is a bias for labels $y$ near the edges of the range but for most values of $y$, the bias is negligible for small values of $\sigma$.
 
+\subsubsection{Auxiliary input}
+
+So far we have not utilized the information that pages in a book come in sequences, thus if the previous page was $1771$, the following page has a strong probability of either being $1771$ or $1772$. This additional information could be taken into account by letting the network have the prediction of the previous page as an auxiliary input to the decoder. However, there are some problems with this. Firstly, it is not clear what the auxiliary input should be for the first page in a book. Secondly, during training we want to draw the images in a random order to prevent overfitting. However, we can not classify the previous image again because we would be missing the auxiliary input of that image. Instead, we could use the predictions from the previous epoch. Then the predictions used for auxiliary input would have been produced by presumably rather different weights than the current version of the decoder employ. We hypothesize that this temporal mismatch between decoder weights would introduce randomness and make learning from the auxiliary input slow and/or unstable.
+
+\subsubsection{Post-processing}
+
+Another approach to use the sequential information of books is to post-process the predictions. For example, if the network would suggest the sequence $1771, 1872, 1773$, we could correct it to $1771, 1772, 1773$. We suggest using the Viterbi algorithm on the following model to attempt to correct the predictions.
+
+% For each image $t$ the network outputs a probability distribution for a three digit sequence $\mathbf{z}_t \in \mathbb{R}^1000$ so that $P(D_1=x, D_2=y, D_3=z) = z_{tj}$.
 
 \subsection{Tensorflow}
 % TODO should technologies/implementation be described in a different section?
