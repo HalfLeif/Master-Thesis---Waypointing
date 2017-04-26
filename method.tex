@@ -80,8 +80,9 @@ Instead we label each image with a tuple of the smallest and the largest year pr
 
 \subsubsection{Evaluation}
 
-We evaluate the models on the test set and evaluation set of the Swedish records. Although the models only output a single year per image, we count it as $100\%$ correct if and only if the year with maximum probability is inside the label interval. For example if the label is the interval $(1771, 1774)$ and the network outputs $1773$ we count it as correct. With this definition of correctness we calculate the accuracy over the images in the respective dataset.
+We evaluate the models on the test set and evaluation set of the Swedish records. Although the models only output a single year per image, we count it as $100\%$ correct if and only if the year with maximum probability is inside the label interval. For example if the label is the interval $(1771, 1774)$ and the network outputs $1773$ we count it as correct. With this relaxed definition of correctness we calculate the accuracy over the images in the respective dataset.
 
+% TODO median distance
 
 \subsection{Tensorflow}
 % TODO should technologies/implementation be described in a different section?
