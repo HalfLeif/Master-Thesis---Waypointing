@@ -179,7 +179,7 @@ The jump probability $Q(j, k)$ can be found by statistically counting the page t
 Q(j, k) = Q(k-j) = \frac{N(k-j) + \alpha}{N + \alpha K}
 \]
 
-For images that have multiple years, we uniformly distribute the weight between the possible transitions of the two images. A transition from $[1771, 1772]$ to $1772, 1773$ would thus produce the following count: {0: 1/4, 1: 2/4, 2: 1/4}.
+For images that have multiple years, we uniformly distribute the weight between the possible transitions of the two images. A transition from $[1771, 1772]$ to $[1772, 1773]$ would thus produce the following count: {0: 0.25, 1: 0.5, 2: 0.25}.
 
 % For each image $t$ the network outputs a probability distribution for a three digit sequence $\mathbf{z}_t \in \mathbb{R}^1000$ so that $P(D_1=x, D_2=y, D_3=z) = z_{tj}$.
 
