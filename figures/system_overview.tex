@@ -10,10 +10,10 @@
 % 1, 1, 256
 % 3, 10
 
-\node (input) at (0,-2) {$[1500 \times 900]$};
-\node (encoded) at (0, 0) {$[44 \times 28 \times 256]$};
-\node (attended) at (0, 2) {$[256]$}
-\node (decoded) at (0, 4) {$[3 \times 10]$}
+    \node (input) at (0,0) {$[1500 \times 900]$};
+    \node (encoded) at (3.5, 0) {$[44 \times 28 \times 256]$};
+    \node (attended) at (6, 0) {$[256]$};
+    \node (decoded) at (8, 0) {$[3 \times 10]$};
 
 %   \pic [fill=cyan, draw=blue] at (-1,0) {annotated cuboid={width=1, height=900, depth=1500}};
 %   \pic [fill=cyan, draw=blue] at (4,-0.5) {annotated cuboid={width=256, height=28, depth=44}};
@@ -26,6 +26,6 @@
 
 \end{tikzpicture}
 
-\caption{Overview of the proposed network. First the encoder produces a matrix of feature vectors, each corresponding to a different but overlapping location in the input image. Secondly, the attention aggregates the feature vectors into a single feature vector. Lastly, the decoder produces three softmax outputs, one for each digit.}
+\caption{Overview of how the data flows in the proposed network. First the encoder produces a matrix of feature vectors, each corresponding to a different but overlapping location in the input image. Secondly, the attention aggregates the feature vectors into a single feature vector. Lastly, the decoder produces three softmax outputs, one for each digit.}
 \label{fig:sys_overview}
 \end{figure}
