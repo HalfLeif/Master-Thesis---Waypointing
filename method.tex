@@ -51,28 +51,11 @@ The proposed MLP consist of one fully connected layer of $1024$ neurons with dro
 Because the years we will extract are all in the range 1627--1890, $3$ digits is more than enough to classify year.
 
 We do softmax on each readout layer to get pseudo-probabilities for the digits.
-To compute the probability for a specific 3-digit sequence we simply multiply the probabilities of each digit:
+To compute the probability for a specific 3-digit sequence $[x, y, z]$ we simply multiply the probabilities of each digit:
 
 \[
 P(d_1=x, d_2=y, d_3=z) = P(d_1=x) P(d_2=y) P(d_3=z)
 \]
-
- %of the three readouts: (0,0,0) -- (9,9,9) and remap them to 000 -- 999, or in the case of years, to 1000--1999.
-
-% \subsubsection{Loss function}
-% TODO discuss here or further down?
-
-\subsection{Pre-training on synthetic data} \label{ssec:pretrain}
-The network was pre-trained on a synthetic dataset created from MNIST \cite{MNIST_orig}. Using synthetic data allowed us to quickly discard inefficient network architectures and we believe that pre-training helped faster learning on the real data.
-
-The synthetic dataset was created by putting together 4 independently randomly selected digit images side by side, where the first digit was always a $1$. This 4 digit image was then placed in a random position in a larger blank image. Finally, we applied dot-noise to the image pixel by pixel by multiplying its grayscale value with a random number drawn uniformly from $0.6$ -- $1.0$.
-
-% TODO insert picture with pretraining image.
-
-\subsubsection{Experiments}
-
-% TODO motivate combined digit training instead of independent...
-% Actually there is not good motivation for this. Should mention it under experiments though.
 
 
 \subsection{Training procedure}
@@ -85,7 +68,7 @@ In order to make things smoother in Tensorflow, the labels for each image should
 
 Instead we label each image with a tuple of the smallest and the largest year present in the image. This representation has the benefit of having a fix size independently of how many years are in the image. Furthermore, the entire sequence of years is represented. The only information that is lost is the occasional gap in year sequences. Gaps in year sequences in the Swedish dataset are often very small and they are also quite rare. Thus we assume ignoring gaps has a negligible effect.
 
-% TODO find gap example, how does that image look like? Does it contain the year anyway although it is not written in the label?
+% TODO find gap example, how does that image look like? Does it contain the year anyway although it is not written in the label? Exactly how rare is it?
 
 %Although it is not optimal, we currently train the network using one year as label for each image.
 
@@ -95,9 +78,9 @@ Instead we label each image with a tuple of the smallest and the largest year pr
 % cross entropy
 % cluster error didn't work, because digits are actually independent. Will always have clusters.
 
-\subsection{Evaluation}
+\subsubsection{Evaluation}
 
-% How to properly evaluate multi-year?
+We evaluate the models on the test set and evaluation set of the Swedish records. Although the models only output a single year per image, we count it as $100\%$ correct if and only if the year with maximum probability is inside the label interval. For example if the label is the interval $(1771, 1774)$ and the network outputs $1773$ we count it as correct. With this definition of correctness we calculate the accuracy over the images in the respective dataset.
 
 
 \subsection{Tensorflow}
