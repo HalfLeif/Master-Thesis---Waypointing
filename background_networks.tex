@@ -132,7 +132,7 @@ We see that $\mathbf{w}$ decay with a factor $(1 - \eta \alpha)$ in each iterati
 Since the penalty term does not include the bias terms, the update rule for the bias parameters is unchanged.
 
 
-\subsubsection{Cross-entropy loss}
+\subsubsection{Cross-entropy loss} \label{sssec:CrossEntropy}
 
 Above in section \ref{sssec:BackProp}, we used squared error as the loss function $L$. One of the problems with squared error is that a large error does not always result in a large gradient \cite[Chapter~3]{NielsenBook}.
 A more commonly used loss function is \textbf{cross-entropy} which has the property that its gradient depends directly on the distance between the network output and the correct value.

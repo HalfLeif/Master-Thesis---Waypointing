@@ -77,14 +77,78 @@ Instead we label each image with a tuple of the smallest and the largest year pr
 
 \subsubsection{Loss function}
 
-% cross entropy
-% cluster error didn't work, because digits are actually independent. Will always have clusters.
+We observed previously in section \ref{sssec:CrossEntropy} that cross-entropy often outperforms squared error as a loss function for classification. Cross-entropy compares a single label against the probability distribution from the network's readout layer. In our case, we output three probability distributions, one for each digit.
+For a single label per image, we then have 2 options.
+The first option is to take the cross-entropy for each digit and then sum the losses.
+The other option is to take the Cartesian product of the three distributions into a single large distribution and take the cross-entropy of the combined distribution. A comparison between these two approaches is performed in section \ref{sssec:ind_digits}.
 
 \subsubsection{Evaluation}
 
 We evaluate the models on the test set and evaluation set of the Swedish records. Although the models only output a single year per image, we count it as $100\%$ correct if and only if the year with maximum probability is inside the label interval. For example if the label is the inclusive interval $[1771, 1774]$ and the network outputs $1773$, we count it as correct. With this relaxed definition of correctness we calculate the accuracy over the images in the respective dataset.
 
 % TODO median distance
+
+% TODO precision/recall if uses confidence boundary?
+% problematic for multi-years: the confidence is split between different outputs...
+
+\subsection{Additional ideas}
+
+\subsubsection{Multi-year loss}
+
+It is not trivial to make a good loss-function for multi-year labels. If we sum the loss for each year in the label, the images with many years have a higher influence than images with few years. Instead we can propose to take the average loss over the years but then another problem emerges: if for example the network would correctly classify an image as $1772$ where the label is $[1771, 1774]$, we still punish the network for not finding the other years.
+
+% TODO write about experiment regarding multiyear loss.
+
+\subsubsection{Distance loss}
+
+Sometimes the network makes predictions that are very far away from the correct year, for example $1774$ instead of $1666$. Although we want to get the exact year, $1663$ could be considered a much better suggestion than $1774$.
+
+One suggested loss for distance would be squared distance. For a single year label $y$, and a probability distribution $P(X=x)$ over the years we add a distance loss $L_D$:
+
+\[
+L_D(X, y) = \sum_{x \in [1000, 1999]} (y-x)^2 P(X=x)
+\]
+
+This definition of a distance loss has the wanted property that predictions far away have a big loss while predictions close to the label only give a small loss. However, there are two major problems: 1. bias and 2. independent digits.
+
+For $L_D$ to be unbiased, the loss over a uniform distribution $U$ should be the same for all labels $y$ in the allowed interval. However, this is not the case. We can calculate the bias for different $y$ by summing $L_D$ over the allowed range. For simplicity, we map the integral year range $[1000, 1999]$ to a continuous range $[0,1]$ and integrate:
+
+\[
+L_D(U, y) = \integ_0^1 (x-y)^2 P(U=x) dx = \frac{1}{3} + y(1-y)
+\]
+
+Thus we see that for the above definition of $L_D$, there is a strong bias for labels close to the center of the range. Likewise, a network trained with this distance loss becomes biased to suggesting years closer to the middle of the output range.
+
+The second problem with this distance loss is that even for a perfect network, there will be considerable predictions far away from the true label because we multiply the probability distributions for the digits independently. That is, if the network is $100\%$ certain that the last two digits should be $3, 4$ and the correct label is $1834$, we will still get strong signals for $1734$ and $1634$.
+
+\subsubsection{Distance score}
+
+In order to solve the first problem we could suggest another approach: instead of minimizing a distance error, we can maximize a proximity score $S_D$ using a weight function $W$ around the label $y$:
+
+\[
+S_D(X, y) = \sum_i P(X=x) W(x, y)
+\]
+
+Because we want to reward predictions near $y$, we can use a truncated Gaussian as weight function:
+
+\[
+W(x, y) = \exp \left( \frac{-(y-x)^2}{\sigma^2} \right)
+\]
+
+We can then compute the bias in the same way as before, by integrating over a mapped interval $[0,1]$:
+
+\[
+S_D(U, y) = \integ_0^1 W(x, y) dx =
+\integ_{-y}^{1-y} \exp \left( \frac{-x^2}{\sigma^2} \right) dx
+
+%\frac{\sigma \sqrt{\pi}}{2} \left(
+%\text{erf} \left( \frac{1-y}{\sigma} \right) +
+%\text{erf} \left( \frac{y}{\sigma} \right)
+%\right)
+\]
+
+We see that there is a bias for labels $y$ near the edges of the range but for most values of $y$, the bias is negligible for small values of $\sigma$.
+
 
 \subsection{Tensorflow}
 % TODO should technologies/implementation be described in a different section?
