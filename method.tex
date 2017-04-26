@@ -156,7 +156,30 @@ So far we have not utilized the information that pages in a book come in sequenc
 
 \subsubsection{Post-processing}
 
-Another approach to use the sequential information of books is to post-process the predictions. For example, if the network would suggest the sequence $1771, 1872, 1773$, we could correct it to $1771, 1772, 1773$. We suggest using the Viterbi algorithm on the following model to attempt to correct the predictions.
+Another approach to use the sequential information of books is to post-process the predictions. For example, if the network would suggest the sequence $1771, 1872, 1773$, we could correct it to $1771, 1772, 1773$. We suggest using the \textbf{Viterbi algorithm} on the following model to attempt to correct the predictions.
+
+For each image $t$, we denote $z_{tj}$ the model's prediction probability that page $t$ has label $j$. We also introduce a jump distribution $Q(j, k)$ for making a transition from label $j$ to label $k$.
+
+With this model, we consider the book to be a sequence of state transitions. A transition at time $t$ from state $j$ to state $k$ is calculated as $z_{tk} Q(j, k)$. We can then apply the Viterbi algorithm using \textbf{Dynamic programming} to find the maximum probability sequence of state transitions.
+
+We create a matrix $T$ that for each page $t$ contains the maximum probability of a sequence so far. For the first page, we simply take the network predictions: $T[0,j] = z_{0j}$. For every other page, we introduce the following recurrence:
+
+\[
+T[t,j] = z_{tj} \max_k{ T[t-1,k] Q(k, j) }
+\]
+
+After computing the entire matrix $T$, the probability of the most likely sequence is the largest value in the last column of $T$. We can then reproduce the most likely sequence by backtracking.
+
+To make the algorithm run faster, we only allow labels in a smaller interval $[1625-1899]$ instead of the possible output $[1000-1999]$.
+
+\paragraph{Creating $Q$}
+The jump probability $Q(j, k)$ can be found by statistically counting the page transitions in the training data. We simplify the distribution by only taking into account the year difference between $j$ and $k$. In order to handle unseen transitions, we use \textbf{Laplace smoothing} with $\alpha=0.5$. We denote $N(r)$ as the count of year transitions with difference $r$, $N$ to be the total number of transitions and $K$ to be the number of allowed labels.
+
+\[
+Q(j, k) = Q(k-j) = \frac{N(k-j) + \alpha}{N + \alpha K}
+\]
+
+For images that have multiple years, we uniformly distribute the weight between the possible transitions of the two images. A transition from $[1771, 1772]$ to $1772, 1773$ would thus produce the following count: {0: 1/4, 1: 2/4, 2: 1/4}.
 
 % For each image $t$ the network outputs a probability distribution for a three digit sequence $\mathbf{z}_t \in \mathbb{R}^1000$ so that $P(D_1=x, D_2=y, D_3=z) = z_{tj}$.
 
