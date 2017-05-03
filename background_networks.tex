@@ -3,15 +3,15 @@
 
 \section{Neural networks}
 \label{sec:networks}
-In this section, we give a brief introduction to how neural networks function and describe recent research in applying neural networks to tasks in computer vision.
+In this section, we first give a brief introduction to neural networks and then describe recent research in applying neural networks to tasks in computer vision.
 For a more detailed description of neural networks and deep learning we refer the reader to a textbook in the field such as \cite{GoodfellowBook}.
 
 \subsection{Introduction to neural networks}
 
-Neural networks have recently become increasingly popular in many diverse fields.
+Neural networks have recently gained popularity in various fields.
 % They have been observed to be quite flexible in being able to classify data, find clusters and
 % Neural networks can find meaningful information in a sea of data by clustering,
-Neural networks can be utilized to find the top principal components and find meaningful clusters in a sea of data. They can also be used to generate new information, for example in machine translation \cite{machine_translation_attention}. Here, we will focus on the task of \textbf{classification} which refers to choosing the correct class $y$ for some given input $\mathbf{x}$. This can be to correctly recognize objects in an image or select a strategic action to take in a game.
+Applications include finding principal components, organizing meaningful clusters in a sea of data and generating new information, for example by translating natural languages \cite{machine_translation_attention}. Here, we will focus on the task of \textbf{classification}, which refers to choosing the correct class $y$ for some given input $\mathbf{x}$. For example to correctly recognize objects in an image or to select a strategic action to take in a game.
 
 \subsubsection{Multilayer perceptron}
 
@@ -36,8 +36,8 @@ p_i = \frac{ \exp(o_i) }{ \sum_k \exp(o_k) }
 \subsubsection{Backpropagation} \label{sssec:BackProp}
 
 In order to correctly classify new input, we need to \textbf{train} the network on some existing data set $D$ which consists of pairs of correct classifications $(\mathbf{x}^{(\mu)}, y^{(\mu)}$).
-We let $\mathbf{y}^{(\mu)}$ denote a \textbf{onehot} vector, that is a all elements are zero except the indicated class whose associated element has the value $1$.
-We then introduce a loss function $L$ to measure how different one network prediction $\mathbf{p}^{(\mu)}$ is from its correct classification $\mathbf{y}^{(\mu)}$. Here we suggest the \textbf{squared error} loss function:
+We let $\mathbf{y}^{(\mu)}$ denote a \textbf{onehot} vector, that is all elements are zero except the indicated class whose associated element has the value one.
+We then introduce a loss function $L$ to measure how different one network prediction $\mathbf{p}^{(\mu)}={\ldots, p_i^{(\mu)}, \ldots}$ is from its correct classification $\mathbf{y}^{(\mu)}$. Here we suggest the \textbf{squared error} loss function:
 
 \[
 L(\mu) = \frac{1}{2} \Vert
@@ -52,7 +52,7 @@ H = \frac{1}{\vert D \vert} \sum_{\mu \in D} L(\mu)
 \]
 
 When $H$ is minimized, the network associates each input $\mathbf{x}^{(\mu)} \in D$ with the correct class. Since $H$ is differentiable, we can use standard \textbf{gradient descent} to optimize the network parameters, that is all weights $w_{ij}$ and biases $b_i$.
-In iteration $k$ we can thus use some \textbf{learning rate} $\eta$ and the gradient of the error $H$ to update the parameters $\mathbf{\theta}$:
+In iteration $k$ we use some \textbf{learning rate} $\eta$ and the gradient of the error $H$ to update the parameters $\mathbf{\theta}$:
 
 \[
 \mathbf{\theta}_{k+1} \leftarrow
@@ -62,27 +62,27 @@ In iteration $k$ we can thus use some \textbf{learning rate} $\eta$ and the grad
 \subsubsection{Stochastic gradient descent}
 
 Since gradient descent is susceptible to local minima, it is common to use other optimization techniques such as \textbf{stochastic gradient descent} (SGD).
-In gradient descent above, we let $H$ sum over all data points in $D$ in every iteration. In contrast, SGD draws a new random subset $B \subset D$ in each iteration. We then compute $\hat{H}$ as a sum over $B$ and use its gradient to update the network parameters:
+In gradient descent above, we let $H$ sum over all data points in $D$ in every iteration. In contrast, SGD draws a new random subset $B \subset D$ in each iteration. We refer to $B$ as a \textbf{mini-batch}. We then compute the cost $H$ as a sum over $B$ and use its gradient to update the network parameters:
 
 \[
-\hat{H} = \frac{1}{\vert B \vert} \sum_{\mu \in B} L(\mu)
+H = \frac{1}{\vert B \vert} \sum_{\mu \in B} L(\mu)
 \]
 
 \[
 \mathbf{\theta}_{k+1} \leftarrow
-\mathbf{\theta}_k - \eta \nabla_{\mathbf{\theta}} \hat{H}(k)
+\mathbf{\theta}_k - \eta \nabla_{\mathbf{\theta}} H(k)
 \]
 
 It is common to randomly partition $D$ into mini-batches so that all mini-batches are disjoint. Iterating over the entire dataset is then referred to as an \textbf{epoch}.
-To achieve the wanted accuracy, it is often necessary to train over many such epochs.
 The random partition of $D$ should be different for each new epoch.
+To achieve the wanted accuracy, it is often necessary to train over many epochs.
 
 
 \subsubsection{Testing and evaluating}
 
 Because neural networks have many parameters, they risk memorizing the training data and hence fail to learn the general patterns that we actually want them to recognize.
 % \cite{AlexNet, FornesCnnCategorization}.
-This phenomenon is knows as \textbf{overfitting} and can constitute a large problem for small data sets. In order to estimate overfitting, we divide the original data set into one part for training and one for testing. The training data is used for backpropagation while the test data is exclusively used for testing. If the network begins to overfit on the training data, the accuracy on the test data decreases and the training should be aborted.
+This phenomenon is knows as \textbf{overfitting} and can constitute a large problem for small datasets. In order to estimate overfitting, we divide the original dataset into one part for training and one for testing. The training data is used for backpropagation while the test data is exclusively used for testing. If the network begins to overfit on the training data, the accuracy on the test data decreases and the training should be aborted.
 
 It is also common to have a third data set for evaluation which is disjoint with both the training data and the test data.
 
@@ -95,7 +95,7 @@ One of the reasons why neural networks have recently achieved state-of-the-art i
 % TODO add citation
 The more layers, the more complex tasks can be learned. To the surprise of many, computers recently even outperformed humans in the complex game of Go \cite{AlphaGo, AlphaGoTuringTest}.
 
-The large number of parameters in deep networks is both a strength and a weakness since it requires a large amount of training data as well as considerable computation power. More parameters can also memorize more and thus makes the network more prone to overfitting \cite{AlexNet}.
+The large number of parameters in deep networks is both a strength and a weakness since it requires a large amount of training data as well as considerable computation power. More parameters can also memorize more and thus make the network more prone to overfitting \cite{AlexNet}.
 
 \subsubsection{Dropout}
 
@@ -107,10 +107,10 @@ Note that dropout is not necessarily done for every layer in the network.
 
 \subsubsection{Weight decay}
 
-Another common technique to avoid overfitting is \textbf{weight decay} \cite[Chapter~3]{NielsenBook}, \cite[Chapter~7]{GoodfellowBook}. We add a new penalty term for weight regularization to our previous cost $\hat{H}$, where $\mathbf{w}$ denotes all weight parameters $w_{ij}$ but not the bias parameters $b_i$:
+Another common technique to avoid overfitting is \textbf{weight decay} \cite[Chapter~3]{NielsenBook} \cite[Chapter~7]{GoodfellowBook}. We add a new penalty term for weight regularization to our previous cost $H$, where $\mathbf{w}$ denotes all weight parameters $w_{ij}$ but not the bias parameters $b_i$:
 
 \[
-\tilde{H} = \hat{H} + \alpha \Omega(\mathbf{w})
+\tilde{H} = H + \alpha \Omega(\mathbf{w})
 \]
 
 The amount of regularization is determined by the hyper-parameter $\alpha \in [0,\infty)$.
@@ -124,10 +124,10 @@ By computing the gradient for the new cost metric $\tilde{H}$, we get the new up
 
 \[
 \mathbf{w}_{k+1} \leftarrow
-(1 - \eta \alpha) \mathbf{w}_k - \eta \nabla_{\mathbf{\theta}} \hat{H}(k)
+(1 - \eta \alpha) \mathbf{w}_k - \eta \nabla_{\mathbf{\theta}} H(k)
 \]
 
-We see that $\mathbf{w}$ decay with a factor $(1 - \eta \alpha)$ in each iteration, so the weights decay exponentially over time. Thus the weight decay makes sure that the weights are kept small no matter for how long the network is trained, that is no weight parameter can grow indefinitely. Empirically, it has been observed that networks can be trained longer without overfitting when the weights are bounded \cite[Chapter~3]{NielsenBook}.
+We see that $\mathbf{w}$ decays with a factor $(1 - \eta \alpha)$ in each iteration, so the weights decay exponentially over time. Thus the weight decay makes sure that the weights are kept small no matter for how long the network is trained, that is no weight parameter can grow indefinitely. Empirically, it has been observed that networks can be trained longer without overfitting when the weights are bounded \cite[Chapter~3]{NielsenBook}.
 
 Since the penalty term does not include the bias terms, the update rule for the bias parameters is unchanged.
 
@@ -135,18 +135,18 @@ Since the penalty term does not include the bias terms, the update rule for the 
 \subsubsection{Cross-entropy loss} \label{sssec:CrossEntropy}
 
 Above in section \ref{sssec:BackProp}, we used squared error as the loss function $L$. One of the problems with squared error is that a large error does not always result in a large gradient \cite[Chapter~3]{NielsenBook}.
-A more commonly used loss function is \textbf{cross-entropy} which has the property that its gradient depends directly on the distance between the network output and the correct value.
+A more commonly used loss function is \textbf{cross-entropy}, which has the property that its gradient depends directly on the distance between the network output and the correct value.
 Thus in most cases, cross-entropy is a better choice as loss function than squared error.
 
-For training example $\mu \in D$, we denote the network output in neuron $i$ as $p_i^\mu$ while $y_i^\mu$ has the value $1$ if $i$ is the correct class and value $0$ otherwise. Then we can define the cross-entropy loss $L$ as:
+For training example $\mu \in D$, we denote the network output in neuron $i$ as $p_i^(\mu)$, while $y_i^(\mu)$ takes the value one if $i$ is the correct class and the value zero otherwise. Then we can define the cross-entropy loss $L$ as:
 
 \[
 L(\mu) = - \sum_i \left(
-  y_i^\mu \log p_i^\mu + (1 - y_i^\mu) \log (1 - p_i^\mu)
+  y_i^(\mu) \log p_i^(\mu) + (1 - y_i(^\mu)) \log (1 - p_i^(\mu))
 \right)
 \]
 
-This function may not intuitively make sense as a loss function but we can make the following observations:
+This expression may not intuitively make sense as a loss function but we can make the following observations:
 
 \begin{itemize}
     \item Because $p_i \in (0, 1)$, both $\log p_i$ and $\log (1 - p_i)$ must be negative and thus each term in the sum is negative. We have a minus sign before the sum, so $L(\mu)$ must be positive.
@@ -184,7 +184,7 @@ Although gradient-based methods dominate the field, it is not the only possible 
 Very deep networks suffer from the \textbf{vanishing gradient} problem.
 Backpropagation updates each parameter according to its gradient but if the gradient is very small, it will take a long time before the network converges.
 Such small gradients can occur when using the traditional activation functions, hyperbolic tangent and the logistic function, because they have very small gradients for large activations \cite{AlexNet}.
-This can largely be solved by using the \textbf{rectified linear} (ReLU) function for activation: $g(x) = \max{0, x}$.
+This can largely be solved by using the \textbf{rectified linear} (ReLU) function for activation: $g(x) = \max {0, x}$.
 
 
 \subsubsection{Pre-training and transfer learning}
