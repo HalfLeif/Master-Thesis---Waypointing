@@ -92,11 +92,11 @@ The year can often be found near the top of the page either to the left or in th
 Although the general structure is the same for all six collections, the exact page layout differs greatly both within and between collections. Another difference relevant for the neural network is that sometimes the year is following the word "\r{A}r" although the handwriting style for the word can be very different depending on time and place, see figure \ref{fig:aar} for some examples.
 
 
-\subsubsection{Multiple years per page}
+\subsubsection{Multiple years per page} \label{sssec:swe_multiyear}
 
  % Additionally, when the year changed the scribe often indicated so by writing the new year in big letters before the block of new records.
 Typically, the scribes did not use a new page for every new year but indicated the change of year by writing the new year in big letters before continuing to write the new records; an example of this can be seen in Figure \ref{fig:page}.
-Thus besides at the top, written years can be found in virtually any part of the page. Another consequence is that a page can contain several years in a sequence like $1771, 1772, 1773, 1774$. This is especially true for small parishes where there may not have been so many burials per year. Out of the $43068$ indexed images, $16074$ or $37.3\%$ have more than one year in the extracted information. There are also cases where the page span several years but with a small gap: $1771, 1773, 1774$.
+Thus besides at the top, written years can be found in virtually any part of the page. Another consequence is that a page can contain several years in a sequence like $\langle 1771, 1772, 1773, 1774 \rangle$. This is especially true for small parishes where there may not have been so many burials per year. Out of the $43068$ indexed images, $16074$ or $37.3\%$ have more than one year in the extracted information. There are also cases where the page span several years but with a small gap: $\langle 1771, 1773, 1774 \rangle$.
 
 Some images however do not contain a written year, the year is simply implied from previous pages. For such instances, indexers are instructed to search the previous and following image for an indication of the year. If the implied year is found, it is noted in the extracted information, otherwise it is indicated as unknown.
 If the year is unknown or the image is blank, we ignore the image because we do not have a label for it and we expect that the year is anyway not indicated in the image. Of the indexed images, $471$ or $1\%$ have no year label.

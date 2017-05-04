@@ -12,9 +12,9 @@ We now describe the different parts of the proposed network. See figure \ref{fig
 
 For encoder, we use a CNN with 7 convolutional layers with additional pooling layers, see figure \ref{fig:encoder}.
 % We experimented with several different variations in number of convolution layers, pooling layers and layer depths before choosing this model.
-Two consecutive 3x3 convolutional layers is a refactoring of a single 5x5 layer as suggested by \cite{InceptionV3}. Thus, the first four convolutional layers correspond to two 5x5 convolutional layers with pooling, similar to the original single-digit CNN classifier \cite{lecun_1989} but with greater depth.
+Two consecutive 3x3 convolutional layers is a refactoring of a single 5x5 layer as suggested by \textcite{InceptionV3}. Thus, the first four convolutional layers correspond to two 5x5 convolutional layers with pooling, similar to the original single-digit CNN classifier \cite{lecun_1989} but with greater depth.
 
-The number of pooling layers, number of convolutional layers and depth per layer were determined experimentally. The final encoder design, as in figure \ref{fig:encoder}, is somewhat similar to the encoder used in \cite{FornesCnnCategorization} except that we use more aggressive pooling. This is necessary because in our work, we input images of entire pages while \cite{FornesCnnCategorization} classify word images which presumably are much smaller.
+The number of pooling layers, number of convolutional layers and depth per layer were determined experimentally. The final encoder design, depicted in figure \ref{fig:encoder}, is somewhat similar to the encoder used in \cite{FornesCnnCategorization} except that we use more aggressive pooling. This is necessary because in our work, we input images of entire pages, while \textcite{FornesCnnCategorization} classify word images, which presumably are much smaller.
 
 %The first four layers correspond closely to the original single digit classifier CNN \cite{lecun_1989} with the exception
 
@@ -24,34 +24,44 @@ The number of pooling layers, number of convolutional layers and depth per layer
 
 \subsubsection{Attention model}
 
-Another major difference between our work and \cite{FornesCnnCategorization} is that although we both use variable input size, they use \textbf{Spatial pyramid pooling} while we apply a soft attention model as presented in \cite{AttendAndTell}. Like we discussed previously in section \ref{ssec:attention}, the encoder output can be seen as a list of feature vectors $\mathbf{a_i} \in \mathbb{R}^D$ which correspond to different but overlapping locations. The number of produced feature vectors depends on the size of the input image. We will see that this attention model aggregates all feature vectors $\mathbf{a_i}$ into a single fixed size vector $\mathbf{z} \in \mathbb{R}^D$.
+Another major difference between our work and \cite{FornesCnnCategorization} is that although we both use variable input size, they use \textbf{Spatial pyramid pooling}, while we apply a soft attention model as presented in \cite{AttendAndTell}. As presented in section \ref{ssec:attention}, the encoder output can be seen as a list of feature vectors $\mathbf{a_i} \in \mathbb{R}^D$, which correspond to different, but overlapping, locations in the input image. The number of produced feature vectors depends on the size of the input image. We will see that this attention model aggregates all feature vectors $\mathbf{a_i}$ into a single fixed size vector $\mathbf{z} \in \mathbb{R}^D$.
 
-The attention model consists of a multilayer perceptron which for each feature vector $\mathbf{a_i}$ computes a salience score $e_i$:
+The attention model consists of a multilayer perceptron, which for each feature vector $\mathbf{a_i}$ computes a salience score $e_i$:
 
 \[
 e_i = f_\text{MLP}(\mathbf{a_i})
 \]
 
-Note that this MLP does not have access to any information about the corresponding location of $\mathbf{a_i}$, thus the network must learn to recognize important parts by looking at the encoded features alone instead of learning to always look at a certain position in the input image. This is especially important for population records where the relevant information can be in different locations depending on scribe and time period.
+Note that this MLP does not have access to any information about the corresponding location of $\mathbf{a_i}$, thus the network must learn to recognize important parts by looking at the encoded features alone instead of learning to always look at a certain position in the input image. This is especially important for population records, where the relevant information can be in different locations depending on scribe and time period.
 
-As discussed, we normalize the $e_i$ into $\alpha_i$ by computing the softmax. Then we use the attentions $\{\alpha_i\}$ as weights over the feature vectors:
+% We normalize the $e_i$ into $\alpha_i$ by computing the softmax.
+% We normalize the $e_i$ by softmax and call the corresponding values attentions
+
+We denote the softmax of $e_i$ as attentions $\alpha_i$, which sums to one by definition of softmax.
+%We compute the softmax of $e_i$ as $\alpha_i$, which sums to one per definition.
+We then use the attentions $\alpha_i$ as weights over the feature vectors:
 
 \[
 \mathbf{z} = \sum_{k=1}^L \alpha_i \mathbf{a_i}
 \]
 
-Note that the spatial information about where in the image $\mathbf{z}$ comes from is lost in this sum. So just like the attention MLP, the decoder also becomes invariant to the object's position in the input image.
+% Note that the spatial information about where in the image $\mathbf{z}$ comes from is lost in this sum.
+
+%So just like the attention MLP, the decoder also becomes invariant to the object's position in the input image.
 
 \subsubsection{Decoder}
 
-The decoder employs an MLP for classifying the aggregated feature vector $\mathbf{z}$ from the attention model.
+The decoder employs an MLP for classifying the aggregated feature vector $\mathbf{z} \in \mathbb{R}^D$ from the attention model.
 If $\mathbf{z}$ had a variable length, then we would need a different number of weights in the MLP for each different input size. Since the attention model produces a fixed size output independent of input size we avoid the problem of variable number of parameters.
 
-The proposed MLP consist of one fully connected layer of $1024$ neurons with dropout as well as three parallel readout layers $D_1$, $D_2$ and $D_3$. Each of these three readout layers has a size of $10$ neurons and thus correspond to a single digit in the range $[0-9]$.
+Because $\mathbf{z}$ is summed over all locations, it does not contain any spatial information about where detected features come from.
+Thus, the decoder is invariant to the location of detected objects, just like the attention model.
+
+The proposed decoder MLP consists of an input layer of size $D$, one fully connected layer of $1024$ neurons with dropout and three parallel readout layers $D_1$, $D_2$ and $D_3$. Each of these three readout layers has a size of $10$ neurons and corresponds to a single digit in the range zero to nine.
 Because the years we will extract are all in the range 1627--1890, $3$ digits is more than enough to classify year.
 
 We do softmax on each readout layer to get pseudo-probabilities for the digits.
-To compute the probability for a specific 3-digit sequence $[x, y, z]$ we simply multiply the probabilities of each digit:
+To compute the probability for a specific 3-digit sequence $\langle x, y, z \rangle$ we simply multiply the probability of each digit:
 
 \[
 P(D_1=x, D_2=y, D_3=z) = P(D_1=x) P(D_2=y) P(D_3=z)
@@ -64,11 +74,11 @@ P(D_1=x, D_2=y, D_3=z) = P(D_1=x) P(D_2=y) P(D_3=z)
 Here we describe how we train and evaluate the different models.
 
 \subsubsection{Multi-year labels}
-% TODO Should this be part of the description of the dataset or not?
 
-In order to make things smoother in Tensorflow, the labels for each image should have the same size. One way to achieve this is to simply select one of the multiple years and ignore the presence of other years. However, a single year does not accurately represent the image if it contains multiple years which is often the case.
+As presented in section \ref{sssec:swe_multiyear}, many images contain records from multiple years. However, in order to simplify the implementation, we would like all image labels to have the same size.
+One way to achieve this is to simply select one of the multiple years in an image and ignore the presence of other years. However, a single year does not accurately represent images that contain multiple years.
 
-Instead we label each image with a tuple of the smallest and the largest year present in the image. This representation has the benefit of having a fix size independently of how many years are in the image. Furthermore, the entire sequence of years is represented. The only information that is lost is the occasional gap in year sequences. Gaps in year sequences in the Swedish dataset are often very small and they are also quite rare. Thus we assume ignoring gaps has a negligible effect.
+Instead, we label each image with a tuple of the smallest and the largest year present in the image. This representation has the benefit of having a fixed size independently of how many years are in the image. Furthermore, the entire sequence of years is represented. The only information that is lost is the occasional gap in year sequences. Such gaps are often very small and also quite rare in the Swedish dataset so we assume ignoring them has a negligible effect on training and evaluation.
 
 % TODO find gap example, how does that image look like? Does it contain the year anyway although it is not written in the label? Exactly how rare is it?
 
@@ -78,7 +88,7 @@ Instead we label each image with a tuple of the smallest and the largest year pr
 \subsubsection{Loss function}
 
 We observed previously in section \ref{sssec:CrossEntropy} that cross-entropy often outperforms squared error as a loss function for classification. Cross-entropy compares a single label against the probability distribution from the network's readout layer. In our case, we output three probability distributions, one for each digit.
-For a single label per image, we then have 2 options.
+For a single label per image, we then have two options.
 The first option is to take the cross-entropy for each digit and then sum the losses.
 The other option is to take the Cartesian product of the three distributions into a single large distribution and take the cross-entropy of the combined distribution. A comparison between these two approaches is performed in section \ref{sssec:ind_digits}.
 
@@ -91,13 +101,13 @@ We evaluate the models on the test set and evaluation set of the Swedish records
 % TODO precision/recall if uses confidence boundary?
 % problematic for multi-years: the confidence is split between different outputs...
 
-\subsection{Additional ideas}
+\subsection{Extensions}
 
 Here we discuss additional ideas that could be used to further improve our models.
 
 \subsubsection{Multi-year loss}
 
-It is not trivial to make a good loss-function for multi-year labels. If we sum the loss for each year in the label, the images with many years have a higher influence than images with few years. Instead we can propose to take the average loss over the years but then another problem emerges: if for example the network would correctly classify an image as $1772$ where the label is $[1771, 1774]$, we still punish the network for not finding the other years.
+It is not trivial to make a good loss function for multi-year labels. If we sum the loss for each year in the label, the images with many years have a higher influence than images with few years. Instead we can propose to take the average loss over the years but then another problem emerges: if for example the network would correctly classify an image as $1772$ where the label is $[1771, 1774]$, we still punish the network for not finding the other years.
 
 % TODO write about experiment regarding multiyear loss.
 
@@ -108,7 +118,7 @@ Sometimes the network makes predictions that are very far away from the correct 
 One suggested loss for distance would be squared distance. For a single year label $y$, and a probability distribution $P(X=x)$ over the years we add a distance loss $L_D$:
 
 \[
-L_D(X, y) = \sum_{x \in [1000, 1999]} (y-x)^2 P(X=x)
+L_D(X, y) = \sum_{x \in \{1000, \ldots, 1999\}} (y-x)^2 P(X=x)
 \]
 
 This definition of a distance loss has the wanted property that predictions far away have a big loss while predictions close to the label only give a small loss. However, there are two major problems: 1. bias and 2. independent digits.
