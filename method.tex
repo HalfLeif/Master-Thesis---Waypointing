@@ -12,7 +12,7 @@ We now describe the different parts of the proposed network. See figure \ref{fig
 
 For encoder, we use a CNN with 7 convolutional layers with additional pooling layers, see figure \ref{fig:encoder}.
 % We experimented with several different variations in number of convolution layers, pooling layers and layer depths before choosing this model.
-Two consecutive 3x3 convolutional layers is a refactoring of a single 5x5 layer as suggested by \cite{InceptionV3}. Thus, the first four convolutional layers correspond to two 5x5 convolutional layers with pooling, similar to the original single digit CNN classifier \cite{lecun_1989} but with greater depth.
+Two consecutive 3x3 convolutional layers is a refactoring of a single 5x5 layer as suggested by \cite{InceptionV3}. Thus, the first four convolutional layers correspond to two 5x5 convolutional layers with pooling, similar to the original single-digit CNN classifier \cite{lecun_1989} but with greater depth.
 
 The number of pooling layers, number of convolutional layers and depth per layer were determined experimentally. The final encoder design, as in figure \ref{fig:encoder}, is somewhat similar to the encoder used in \cite{FornesCnnCategorization} except that we use more aggressive pooling. This is necessary because in our work, we input images of entire pages while \cite{FornesCnnCategorization} classify word images which presumably are much smaller.
 
