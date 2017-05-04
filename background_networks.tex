@@ -184,7 +184,7 @@ Although gradient-based methods dominate the field, it is not the only possible 
 Very deep networks suffer from the \textbf{vanishing gradient} problem.
 Backpropagation updates each parameter according to its gradient but if the gradient is very small, it will take a long time before the network converges.
 Such small gradients can occur when using the traditional activation functions, hyperbolic tangent and the logistic function, because they have very small gradients for large activations \cite{AlexNet}.
-This can largely be solved by using the \textbf{rectified linear} (ReLU) function for activation: $g(x) = \max {0, x}$.
+This can largely be solved by using the \textbf{rectified linear} (ReLU) function for activation: $g(x) = \max \{0, x\}$.
 
 
 \subsubsection{Pre-training and transfer learning}
@@ -208,11 +208,11 @@ Since the publication of the AlexNet in 2012 \cite{AlexNet}, CNNs have gained la
 
 % TODO add citations
 
-In CNNs, each layer has a width, height and depth. Like in MLPs, the input layer has the width and height of the input image while the depth correspond to the number of color channels (1 for gray scale, 3 for RGB and 4 for RGBA). We now refer to each number in the network as a \textbf{unit} instead of a neuron.
+In CNNs, each layer has a width, height and depth. Like in MLPs, the input layer has the width and height of the input image while the depth correspond to the number of color channels (one for gray scale, three for RGB and four for RGBA). We now refer to each number in the network as a \textbf{unit} instead of a neuron.
 
-As indicated by the name, CNNs mainly consist of \textbf{convolutional layers}. The depth of a convolutional layer is determined by how many filters it has. Each filter produces a 2-dimensional \textbf{activation map}, see Figure \ref{fig:filter}. Each unit in the activation map comes from a weighted sum over a 3-dimensional region in the previous layer over its full depth. For example a 3x3 filter applied to a 32 depth layer has $3 \cdot 3 \cdot 32=288$ weights and one bias term.
+As indicated by the name, CNNs mainly consist of \textbf{convolutional layers}. The depth of a convolutional layer is determined by how many filters it has. Each filter produces a two-dimensional \textbf{activation map}, see Figure \ref{fig:filter}. Each unit in the activation map comes from a weighted sum over a three-dimensional region in the previous layer over its full depth. For example a 3x3 filter applied to a 32 depth layer has $3 \cdot 3 \cdot 32=288$ weights and one bias term.
 Like with MLP, the sum is passed to to a non-linear activation function such as $\tanh$. The 3x3 regions for each unit are overlapping.
-The activation maps for all filters are stacked together to form a 3-dimensional output, which is passed to the next layer.
+The activation maps for all filters are stacked together to form a three-dimensional output, which is passed to the next layer.
 
 Because a filter uses the same weights for all sub-regions in the previous layer, the total number of parameters are dramatically reduced compared with a fully connected layer as in an MLP. Moreover, because the same filter is applied to each sub-region, it does not matter where in the input image the object is located.
 
@@ -224,7 +224,7 @@ By synthesizing the input image to maximize a specific filter's activation, it i
 \input{figures/maxpool.tex}
 
 Besides filters, CNNs also use \textbf{pooling layers} in order to increase the receptive field without increasing the number of parameters in the model.
-Separately for each activation map, pooling aggregates a 2 dimensional region of units (e.g. 2x2) into a single unit, typically by taking the maximum value; see Figure \ref{fig:maxpool}. These regions are non-overlapping so a 2x2 pooling layer decreases the representational size by 4. Thus another benefit of pooling layers is reduced computation time.
+Separately for each activation map, pooling aggregates a two-dimensional region of units (e.g. 2x2) into a single unit, typically by taking the maximum value; see Figure \ref{fig:maxpool}. These regions are non-overlapping so a 2x2 pooling layer decreases the representational size by 4. Thus another benefit of pooling layers is reduced computation time.
 
 At the end of the network, there are often a few fully connected layers (MLP) where the last layer represent the output of the network, for example pseudo-probabilities for different categories using softmax like discussed previously.
 
@@ -254,7 +254,7 @@ Besides image classification, attention models have also been highly successful 
 We now describe how the attention model in \cite{AttendAndTell} works in more detail.
 The goal of the attention model is to produce a vector $\mathbf{z} \in \mathbb{R}^D$ that represents the entire input image by weighing different parts of the output from the encoder CNN.
 
-The encoder output is 3-dimensional but can be seen as a grid of $L$ feature vectors. Each feature vector $\mathbf{a_i} \in \mathbb{R}^D$ corresponds to a specific location in the input image. We feed each $\mathbf{a_i}$ to an MLP which produces a scalar $e_i \in \mathbb{R}$. In the paper, the decoder uses an RNN whose hidden state is also used as input to the MLP besides the feature vector $\mathbf{a_i}$.
+The encoder output is three-dimensional but can be seen as a grid of $L$ feature vectors. Each feature vector $\mathbf{a_i} \in \mathbb{R}^D$ corresponds to a specific location in the input image. We feed each $\mathbf{a_i}$ to an MLP which produces a scalar $e_i \in \mathbb{R}$. In the paper, the decoder uses an RNN whose hidden state is also used as input to the MLP besides the feature vector $\mathbf{a_i}$.
 The scalar attention weight $\alpha_i$ for each location can then be computed by taking the softmax of $e_i$ over all units:
 
 \[
