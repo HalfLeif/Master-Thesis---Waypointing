@@ -69,7 +69,7 @@ From manually inspecting these images, we conclude that many of them do not cont
 \input{figures/collections}
 
 In cooperation with FamilySearch for making this thesis, we have been granted access to images and the corresponding extracted information from six collections of Swedish population records.
-These collections contain records of baptisms, burials and marriages in six regions between 1627 and 1890, see Table \ref{tab:collections}. They are the Swedish counterpart of the French IRIS collection mentioned above.
+These collections contain records of baptisms, burials and marriages in six regions between 1607 and 1890, see Table \ref{tab:collections}. They are the Swedish counterpart of the French IRIS collection mentioned above.
 
 \input{figures/page.tex}
 
@@ -111,3 +111,21 @@ If the year is unknown or the image is blank, we ignore the image because we do 
 
 However, in the extracted information there is no way to distinguish whether the extracted year came from the same image or if it was implied from a neighboring image. Thus, it is inevitable that some images in the dataset have labels although the year is actually not written in the image. One way to counter this problem would be to only train on images that are labeled with more than one year, expecting an indicated year change somewhere in the image. Doing so would however reduce the dataset to $37.3\%$ of the original size.
 Although we have no way to calculate how often the label implies a year that is missing from the image without manually inspecting every image, we assume that it is relatively rare and thus negligible.
+
+\subsubsection{Partioning}
+
+We divided the dataset into three partitions, one for training, one for testing and one for validation. The two smallest collections, Kalmar (1930243) and Västernorrland (1949331), were reserved for validation.
+Each image in the remaining four collections was independently randomly selected to belong to the training set, with $90\%$ probability, or to the test set, with $10\%$ probability.
+The training set consists of $34623$ labeled images and the test set of $4040$ images.
+% The remaining four collections were divided into training and testing by randomly
+
+Thus the training and testing sets are disjoint but are drawn from the same books and scribes. The validation set on the other hand comes from entirely different regions and new scribes whose handwriting has not been seen by the model before. We can therefore use the test set to detect overfitting on specific images while the validation set can measure how well the model generalizes to new books and regions as in a realistic use case scenario.
+
+%We want to investigate how well learning in some regions can generalize to other regions. We also want to reserve these collections to validate any potential scheme for post-processing since we expect that a sequence of pages will correspond to a mostly unbroken sequence of years.
+
+%The four largest collections have each been randomly divided into a training set ($90\%$) and a test set ($10\%$). The combined training set thus consist of $34623$ labeled images and the test set of $4040$ images.
+
+\subsubsection{Label density} \label{sssec:few_labels}
+
+Some labels occur very few times in the dataset. Although the labels span from 1607 to 1890, the majority of images lie between 1690 and 1861, with very few examples outside. Each year occurs in 147 images on average and few of the labels have more than 300 examples in the combined training and test data.
+In this counting, we give each image a weight of one, so for multiyear images, we increment the count for each year in the label by a fraction of one.

@@ -88,18 +88,18 @@ Instead, we label each image with a tuple of the smallest and the largest year p
 \subsubsection{Loss function}
 
 We observed previously in section \ref{sssec:CrossEntropy} that cross-entropy often outperforms squared error as a loss function for classification. Cross-entropy compares a single label against the probability distribution from the network's readout layer. In our case, we output three probability distributions, one for each digit.
-For a single label per image, we then have two options.
-The first option is to take the cross-entropy for each digit and then sum the losses.
-The other option is to take the Cartesian product of the three distributions into a single large distribution and take the cross-entropy of the combined distribution. A comparison between these two approaches is performed in section \ref{sssec:ind_digits}.
+% For a single label per image, we then have two options.
+We compute
+%The first option is to take
+the cross-entropy for each digit and then sum the losses.
 
 \subsubsection{Evaluation}
 
 We evaluate the models on the test set and evaluation set of the Swedish records. Although the models only output a single year per image, we count it as $100\%$ correct if and only if the year with maximum probability is inside the label interval. For example if the label is the inclusive interval $[1771, 1774]$ and the network outputs $1773$, we count it as correct. With this relaxed definition of correctness we calculate the accuracy over the images in the respective dataset.
 
-% TODO median distance
+Another possible metric is measuring the numeric distance between the prediction and the label; in the case of multiple years we choose the closest one. Although we will see that numeric distance is not very useful as a loss function, it can give an indication whether the model can predict the correct decade.
 
-% TODO precision/recall if uses confidence boundary?
-% problematic for multi-years: the confidence is split between different outputs...
+% TODO precision/recall if uses confidence boundary
 
 
 \subsection{Alternative loss functions}
@@ -109,7 +109,29 @@ Choosing a suitable loss function for training the model is paramount to success
 % Here we discuss possible extensions and variations to the model described above.
 % additional ideas that could be used to further improve our models.
 
+\subsubsection{Disjoint labels}
+
+% If we viewed each year as a disjoint label, with nothing in common
+
+We could view each year as a disjoint label with nothing in common. In that case the decoder would need to have a readout layer of size $300$, one neuron for each possible year, instead of $3 \times 10$. Then we could simply take the cross-entropy loss on the readout layer directly.
+
+A drawback of disjoint labels is that learning is not reused, training on an image with label $1772$ only benefits recognition of that label.
+If we instead represent labels as a sequence of digits, the example of $1772$ helps in recognizing years that follow any of the patterns 17\_\_, 1\_7\_ and 1\_\_2 where \_ refers to any digit.
+Another drawback of disjoint labels is that there may be very few training examples for some years, as mentioned in section \ref{sssec:few_labels}.
+
+% However, we wanted the model to learn to recognize individual digits and combine them into sequences.
+% Assuming that digits look somewhat similar over different time periods, the learning rate should be higher for individual digits. For example if we are training on an image with the label $1772$, it should also benefit learning for all the years with patterns .
+
+% Instead, we chose to recognize each digit independently.
+
 \subsubsection{Cartesian loss}
+%The other option is to take the Cartesian product of the three distributions into a single large distribution and take the cross-entropy of the combined distribution. A comparison between these two approaches is performed in section \ref{sssec:ind_digits}.
+
+% A hybrid between disjoint labels and the three digit decoder
+%
+
+Here we introduce a loss function inspired by disjoint labels but that still let the model reuse learning of individual digits. Above we suggested to sum the cross-entropy for each digit, instead we can compute the cartesian product of the readout layers to make a vector over the supported year range and take the cross-entropy directly on this vector. A comparison between the two loss functions is performed in secion \ref{sssec:ind_digits}.
+
 
 \subsubsection{Multi-year loss}
 
@@ -143,8 +165,6 @@ The second problem with this distance loss is that even for a perfect network, t
 So even though it may make intuitive sense to penalize numeric distance, it is questionable whether it in the end would benefit learning.
 
 \subsubsection{Proximity score}
-
-\textbf{TODO: delete this section about Proximity score? The idea does not really seem helpful...}
 
 Although the second problem would remain, the bias in the distance loss could be alleviated by using another approach:
 %In order to solve the first problem we could suggest another approach:
