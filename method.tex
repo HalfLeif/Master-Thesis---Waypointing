@@ -29,7 +29,7 @@ Another major difference between our work and \cite{FornesCnnCategorization} is 
 The attention model consists of a multilayer perceptron, which for each feature vector $\mathbf{a_i}$ computes a salience score $e_i$:
 
 \[
-e_i = f_\text{MLP}(\mathbf{a_i})
+e_i = f_\text{att}(\mathbf{a_i})
 \]
 
 Note that this MLP does not have access to any information about the corresponding location of $\mathbf{a_i}$, thus the network must learn to recognize important parts by looking at the encoded features alone instead of learning to always look at a certain position in the input image. This is especially important for population records, where the relevant information can be in different locations depending on scribe and time period.
@@ -101,9 +101,15 @@ We evaluate the models on the test set and evaluation set of the Swedish records
 % TODO precision/recall if uses confidence boundary?
 % problematic for multi-years: the confidence is split between different outputs...
 
-\subsection{Extensions}
 
-Here we discuss additional ideas that could be used to further improve our models.
+\subsection{Alternative loss functions}
+
+Choosing a suitable loss function for training the model is paramount to successful learning. Here we introduce and discuss some alternative loss functions for our task.
+
+% Here we discuss possible extensions and variations to the model described above.
+% additional ideas that could be used to further improve our models.
+
+\subsubsection{Cartesian loss}
 
 \subsubsection{Multi-year loss}
 
@@ -113,15 +119,15 @@ It is not trivial to make a good loss function for multi-year labels. If we sum 
 
 \subsubsection{Distance loss}
 
-Sometimes the network makes predictions that are very far away from the correct year, for example $1774$ instead of $1666$. Although we want to get the exact year, $1663$ could be considered a much better suggestion than $1774$.
+Sometimes the network makes predictions that are very far away from the correct year, for example $1774$ instead of $1661$. Although we want to get the exact year, $1662$ could be considered a much better suggestion than $1861$. Cross-entropy penalizes each different digit but not the numeric distance, so $1662$ and $1861$ would get the same penalty, because in both cases, two digits are wrong.
 
-One intuitive loss for distance would be squared distance. For a single year label $y$, and a probability distribution $P(X=x)$ over the years we add a distance loss $L_D$:
+One intuitive loss for distance would be squared distance. For a single year label $y$, and a probability distribution $P(X=x)$ over the years we add a distance loss $L_D$ in addition to the cross-entropy:
 
 \[
 L_D(X, y) = \sum_{x \in \{1000, \ldots, 1999\}} (y-x)^2 P(X=x)
 \]
 
-This definition of a distance loss has the wanted property that predictions far away have a big loss while predictions close to the label only give a small loss. However, there are two major problems: (1) bias and (2) independent digits.
+This definition of a distance loss has the wanted property that predictions far away have a big loss while predictions close to the label only give a small loss. However, there are two fundamental problems with this choice of loss function: (1) bias and (2) independent digits.
 
 For $L_D$ to be unbiased, the loss over a uniform distribution $U$ should be the same for all labels $y$ in the allowed interval. However, this is not the case. We can calculate the bias for different $y$ by summing $L_D$ over the allowed range. For simplicity, we map the integral year range $\{ 1000, \ldots, 1999 \}$ to a continuous range $[0,1]$ and integrate:
 
@@ -129,21 +135,26 @@ For $L_D$ to be unbiased, the loss over a uniform distribution $U$ should be the
 L_D(U, y) = \int_0^1 (x-y)^2 P(U=x) dx = \frac{1}{3} + y(1-y)
 \]
 
-Thus we see that for the above definition of $L_D$, there is a strong bias for labels close to the center of the range. Likewise, a network trained with this distance loss becomes biased to suggesting years closer to the middle of the output range.
+Thus we see that for the above definition of $L_D$, there is a strong bias for labels close to the center of the range. Likewise, a network trained with this distance loss becomes strongly biased to suggesting years closer to the middle of the output range.
 
-The second problem with this distance loss is that even for a perfect network, there will be considerable predictions far away from the true label because we multiply the probability distributions for the digits independently. That is, if the network is $100\%$ certain that the last two digits should be $3, 4$ and the correct label is $1834$, we will still get strong signals for $1734$ and $1634$.
+% TODO mention in Experiments/Results?
+
+The second problem with this distance loss is that even for a perfect network, there will be considerable predictions far away from the true label because we multiply the probability distributions for the digits independently. That is, if the network is $100\%$ certain that the last two digits should be $3, 4$ and the correct label is $1834$, we will still get strong signals for $1734$ and $1634$, although they have a great numeric distance to the correct label.
+So even though it may make intuitive sense to penalize numeric distance, it is questionable whether it in the end would benefit learning.
 
 \subsubsection{Proximity score}
 
 \textbf{TODO: delete this section about Proximity score? The idea does not really seem helpful...}
 
-In order to solve the first problem we could suggest another approach: instead of minimizing a distance error, we can maximize a proximity score $S_D$ using a weight function $W$ around the label $y$:
+Although the second problem would remain, the bias in the distance loss could be alleviated by using another approach:
+%In order to solve the first problem we could suggest another approach:
+instead of minimizing a distance loss, we can maximize a proximity score $S_D$ using a weight function $W$ around the label $y$:
 
 \[
 S_D(X, y) = \sum_i P(X=x) W(x, y)
 \]
 
-Because we want to reward predictions near $y$, we can use a truncated Gaussian as weight function:
+Because we want to reward predictions near $y$, we can use a Gaussian function as weight function:
 
 \[
 W(x, y) = \exp \left( \frac{-(y-x)^2}{\sigma^2} \right)
@@ -160,11 +171,20 @@ S_D(U, y) = \int_0^1 P(U=x) W(x, y) dx =
 %\right)
 \]
 
-We see that there is a bias for labels $y$ near the edges of the range, but for most values of $y$, the bias is negligible for small values of $\sigma$.
+We see that there is a bias against labels $y$ near the edges of the range, but for most values of $y$, the bias is negligible for small values of $\sigma$. The value of $\sigma$ could be chosen depending on the year interval in the label, so that a larger $\sigma$ is used for a larger interval.
+
+A property of proximity score is to reward finding numbers numerically close to the label, such as $1669$ for $1670$. A potential problem with this is that the model is encouraged to recognize other features of $1670$ than the actual digits $\langle 6, 7, 0 \rangle$, such as page layout, handwriting style or image artifacts. Recognizing such additional features is a type of overfitting and do not generalize to other books or collections.
+This kind of overfitting is another reason to not use loss functions based on numeric distance.
+
+\subsection{Sequential information}
+
+So far we have not utilized the information that pages in a book come in sequences, for example if the previous page was $1771$, the following page would have a strong probability of being $1771$ or $1772$.
+In this section we suggest two ways of utilizing this contextual information for the purpose of improving the accuracy of the model when classifying new collections.
 
 \subsubsection{Auxiliary input}
 
-So far we have not utilized the information that pages in a book come in sequences, thus if the previous page was $1771$, the following page has a strong probability of either being $1771$ or $1772$. This additional information could be taken into account by letting the network have the prediction of the previous page as an auxiliary input to the decoder. However, there are some problems with this. Firstly, it is not clear what the auxiliary input should be for the first page in a book. Secondly, during training we want to draw the images in a random order to prevent overfitting. However, we can not classify the previous image again because we would be missing the auxiliary input of that image. Instead, we could use the predictions from the previous epoch. Then the predictions used for auxiliary input would have been produced by presumably rather different weights than the current version of the decoder employ. We hypothesize that this temporal mismatch between decoder weights would introduce randomness and make learning from the auxiliary input slow and/or unstable.
+% This additional information could be taken into account by letting
+One approach would be to let the network have the prediction of the previous page as an auxiliary input to the decoder. However, there are some problems with this. Firstly, it is not clear what the auxiliary input should be for the first page in a book. Secondly, during training we want to draw the images in a random order to prevent overfitting. However, we can not classify the previous image again because we would be missing the auxiliary input of that image. Instead, we could use the predictions from the previous epoch. Then the predictions used for auxiliary input would have been produced by presumably rather different weights than the current version of the decoder employ. We hypothesize that this temporal mismatch between decoder weights would introduce randomness and make learning from the auxiliary input slow and/or unstable.
 
 \subsubsection{Post-processing}
 
@@ -196,12 +216,3 @@ For images that have multiple years, we uniformly distribute the weight between 
 % TODO: mention conditioning
 
 % For each image $t$ the network outputs a probability distribution for a three digit sequence $\mathbf{z}_t \in \mathbb{R}^1000$ so that $P(D_1=x, D_2=y, D_3=z) = z_{tj}$.
-
-\subsection{Tensorflow}
-% TODO should technologies/implementation be described in a different section?
-% Is it at all relevant to discuss about Tensorflow?
-
-% TODO Mention GPU acceleration here or in section about neural networks or Hardware?
-
-\subsection{Hardware}
-% TODO Mention hardware and training time .

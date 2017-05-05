@@ -1,11 +1,6 @@
 \section{Results}
 
-\subsection{Pre-training on synthetic data} \label{ssec:pretrain}
-The network was pre-trained on a synthetic dataset created from MNIST \cite{MNIST_orig}. Using synthetic data allowed us to quickly discard inefficient network architectures and we believe that pre-training helped faster learning on the real data.
 
-The synthetic dataset was created by putting together 4 independently randomly selected digit images side by side, where the first digit was always a $1$. This 4 digit image was then placed in a random position in a larger blank image. Finally, we applied dot-noise to the image pixel by pixel by multiplying its grayscale value with a random number drawn uniformly from $[0.6, 1.0]$.
-
-% TODO insert picture with pretraining image.
 
 \subsection{Experiments}
 
