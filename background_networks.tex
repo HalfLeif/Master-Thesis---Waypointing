@@ -291,6 +291,22 @@ Another suggested approach to digit recognition in street view is to combine CNN
 
 Here we list some additional recent progress in the field of neural networks in computer vision which is not used in the thesis.
 
+\subsubsection{Confidence thresholding}
+
+Certain tasks, like automatic house number transcriptions in Google Street View, require the model to have a very high accuracy to be useful \cite{multidigit_streetview}.
+For these instances, the model should output a \textbf{confidence} for its classification. If the confidence is higher than some pre-determined threshold $\tau$, we keep the prediction; otherwise we ignore the prediction and conclude that the model is not sure about that example.
+% In order to increase the accuracy, the predictions that have a confidence lower than some threshold $\tau$ may be discarded.
+We then need to use two metrics for evaluating the model's performance: \textbf{precision} and \textbf{recall}.
+
+The precision measures the quality of the predictions that were higher than the threshold. It is the accuracy, or percentage of correct predictions, among the predictions that were not discarded.
+% Out of the non-discarded predictions, the precision is the percentage of correct predictions.
+
+Recall on the other hand measures how many correct predictions were discarded due to low confidence. Instead of measuring recall, we can use \textbf{coverage}, which is simply the percentage of predictions whose confidence was above the threshold $\tau$.
+% TODO: is it really?
+% More precisely, recall is the number of correct predictions that were not discarded divided by the total number of correct predictions.
+
+In order to compare models, we can then plot precision vs recall or coverage for different values of $\tau$. For $\tau=0$, the precision is the same as accuracy and the coverage is $100\%$. For $\tau=1.0$, everything is discarded so the precision is $100\%$ but the coverage is $0\%$.
+
 \subsubsection{Batch normalization}
 
 An alternative to Dropout was suggested by \cite{BatchNormalization}. Besides reducing the risk for overfitting, the authors also suggest that it allows for a higher learning rate in deep networks and thus faster convergence.
