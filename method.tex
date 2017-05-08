@@ -5,6 +5,7 @@
 \input{figures/system_overview.tex}
 
 We now describe the different parts of the proposed network. See figure \ref{fig:sys_overview} for an overview of how the different parts of the network interact.
+The network architecture is mainly inspired by the work of \textcite{multidigit_streetview} who successfully detect house numbers in Google Street View and \textcite{AttendAndTell} who introduced the attention mechanism that we use.
 
 \subsubsection{Encoder}
 
@@ -12,9 +13,30 @@ We now describe the different parts of the proposed network. See figure \ref{fig
 
 For encoder, we use a CNN with 7 convolutional layers with additional pooling layers, see figure \ref{fig:encoder}.
 % We experimented with several different variations in number of convolution layers, pooling layers and layer depths before choosing this model.
-Two consecutive 3x3 convolutional layers is a refactoring of a single 5x5 layer as suggested by \textcite{InceptionV3}. Thus, the first four convolutional layers correspond to two 5x5 convolutional layers with pooling, similar to the original single-digit CNN classifier \cite{lecun_1989} but with greater depth.
+The original single-digit CNN classifier used two $5 \times 5$ convolutional layers with pooling after each layer \cite{lecun_1989}.
+We use a similar beginning of the encoder except that each $5 \times 5$ layer has been refactored into two $3 \times 3$ layers as suggested by \textcite{InceptionV3}. Therefore, the first layers of the encoder should be able to recognize individual digits; we intend the remaining layers to encode a short sequence of digits.
 
-The number of pooling layers, number of convolutional layers and depth per layer were determined experimentally. The final encoder design, depicted in figure \ref{fig:encoder}, is somewhat similar to the encoder used in \cite{FornesCnnCategorization} except that we use more aggressive pooling. This is necessary because in our work, we input images of entire pages, while \textcite{FornesCnnCategorization} classify word images, which presumably are much smaller.
+% Two consecutive $3 \times 3$ convolutional layers is a refactoring of a single $5 \times 5$ layer as suggested by \textcite{InceptionV3}. Thus, the first four convolutional layers correspond to two $5 \times 5$ convolutional layers with pooling, similar to the original single-digit CNN classifier \cite{lecun_1989} but with greater depth.
+
+After each pooling layer, we increase the number of filters in order to maintain a good size for the representation of the input. Per recommendation of \textcite{InceptionV3}, we let the representational size be somewhat larger in the beginning of the network and then slowly decrease. The representation should decrease as the information in the previous layer is abstracted.
+
+%There is a balance between the number of layers in the encoder and the width of each layer.
+In the experience of \textcite{InceptionV3}, a network is the most computationally efficient when the depth and width of a network is kept in balance. Consequently, we experiment with different number of layers and filters for each layer in section \ref{sssec:exp_encoder}.
+
+% As \textcite{InceptionV3} also recommended, we try to keep a healthy balance between the depth and the width of the network.
+%They suggest that a network is most computationally efficient when
+% the number of filters in each layer.
+% A deep network has many layers
+% A shallow network where each layer is very thick can be refactored into a more efficient network with more layers. However, if the network is very deep but thin, the representation at each layer may be insufficient to encode the necessary information.
+
+% The number of pooling layers, number of convolutional layers and depth per layer were determined experimentally.
+
+% Optimally, we want all 4 digits of a year to fit in a single receptive field.
+% To achieve this, we use many $2 \times 2$ pooling layers
+
+The final encoder design, depicted in figure \ref{fig:encoder}, is somewhat similar to the encoder used by \textcite{FornesCnnCategorization} except that we use more aggressive pooling. The additional pooling layers are necessary because we input images of entire pages, while \textcite{FornesCnnCategorization} classify word images, which presumably are much smaller.
+Another difference is that we use a $1 \times 5$ convolutional layer at the end of the encoder in order to increase the width of the receptive field. We want the receptive field to be wide in order to capture as mush as possible of each  digit sequence in a single output unit.
+% , which increases the width of the receptive field without increasing its height.
 
 %The first four layers correspond closely to the original single digit classifier CNN \cite{lecun_1989} with the exception
 

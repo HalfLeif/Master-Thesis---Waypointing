@@ -210,31 +210,38 @@ Since the publication of the AlexNet in 2012 \cite{AlexNet}, CNNs have gained la
 
 In CNNs, each layer has a width, height and depth. Like in MLPs, the input layer has the width and height of the input image while the depth correspond to the number of color channels (one for gray scale, three for RGB and four for RGBA). We now refer to each number in the network as a \textbf{unit} instead of a neuron.
 
-As indicated by the name, CNNs mainly consist of \textbf{convolutional layers}. The depth of a convolutional layer is determined by how many filters it has. Each filter produces a two-dimensional \textbf{activation map}, see Figure \ref{fig:filter}. Each unit in the activation map comes from a weighted sum over a three-dimensional region in the previous layer over its full depth. For example a 3x3 filter applied to a 32 depth layer has $3 \cdot 3 \cdot 32=288$ weights and one bias term.
-Like with MLP, the sum is passed to to a non-linear activation function such as $\tanh$. The 3x3 regions for each unit are overlapping.
+As indicated by the name, CNNs mainly consist of \textbf{convolutional layers}. The depth of a convolutional layer is determined by how many filters it has. Each filter produces a two-dimensional \textbf{activation map}, see Figure \ref{fig:filter}. Each unit in the activation map comes from a weighted sum over a three-dimensional region in the previous layer over its full depth. For example a $3 \times 3$ filter applied to a 32 depth layer has $3 \cdot 3 \cdot 32=288$ weights and one bias term.
+Like with MLP, the sum is passed to to a non-linear activation function such as $\tanh$. The $3 \times 3$ regions for each unit are overlapping.
 The activation maps for all filters are stacked together to form a three-dimensional output, which is passed to the next layer.
 
 Because a filter uses the same weights for all sub-regions in the previous layer, the total number of parameters are dramatically reduced compared with a fully connected layer as in an MLP. Moreover, because the same filter is applied to each sub-region, it does not matter where in the input image the object is located.
 
-Units in higher layers in the CNN receive information from a larger \textbf{receptive field} in the input image. Therefore, the filters in lower layers typically learn to detect low-level features like edges and curves while filters in higher layers can detect more complex objects like cats or faces.
+Units in higher layers in the CNN receive information from a larger \textbf{receptive field} in the input image.
+% Each $2 \times 2$ pooling layer doubles the receptive field in each dimension, while every $3 \times 3$ convolutional layer increases the receptive field with 2.
+Therefore, the filters in lower layers typically learn to detect low-level features like edges and curves while filters in higher layers can detect more complex objects like cats or faces.
 By synthesizing the input image to maximize a specific filter's activation, it is possible to get an idea of what the filter has learned to recognize \cite{VisualizeCnn}.
-
-% Write how pooling and convolutions affect receptive field.
 
 \input{figures/maxpool.tex}
 
 Besides filters, CNNs also use \textbf{pooling layers} in order to increase the receptive field without increasing the number of parameters in the model.
-Separately for each activation map, pooling aggregates a two-dimensional region of units (e.g. 2x2) into a single unit, typically by taking the maximum value; see Figure \ref{fig:maxpool}. These regions are non-overlapping so a 2x2 pooling layer decreases the representational size by 4. Thus another benefit of pooling layers is reduced computation time.
+Separately for each activation map, pooling aggregates a two-dimensional region of units (e.g. $2 \times 2$) into a single unit, typically by taking the maximum value; see Figure \ref{fig:maxpool}. These regions are non-overlapping so a $2 \times 2$ pooling layer decreases the representational size by 4. Thus another benefit of pooling layers is reduced computation time.
+
+We can calculate the size of the receptive field for each output unit by doubling the field for each $2 \times 2$ pooling layer and adding $n-1$ for each $n \times n$ convolutional layer.
+If we have a network that consists of two $5 \times 5$ convolutional layers with a single $2 \times 2$ maxpool layer in between, then we can compute the pixel size $r \times r$ of the receptive field as follows:
+
+\[
+r = 4 + 2(4 + 1) = 14
+\]
 
 At the end of the network, there are often a few fully connected layers (MLP) where the last layer represent the output of the network, for example pseudo-probabilities for different categories using softmax like discussed previously.
 
 \subsubsection{Network architecture for faster computation}
 
-The performance of CNNs typically increases with greater width and depth but it comes at a higher computational cost \cite{InceptionV3}. However, by choosing a good network architecture the same performance can be achieved but at a substantially lower computational cost, for example by refactoring large filters (5x5, 7x7) into consecutive small filters (3x3) and extensive use of pooling layers to reduce dimensionality. The authors also suggest a balance between depth and width of the network.
+The performance of CNNs typically increases with greater width and depth but it comes at a higher computational cost \cite{InceptionV3}. However, by choosing a good network architecture the same performance can be achieved but at a substantially lower computational cost, for example by refactoring large filters ($5 \times 5$, 7x7) into consecutive small filters ($3 \times 3$) and extensive use of pooling layers to reduce dimensionality. The authors also suggest a balance between depth and width of the network.
 
 \subsubsection{Zero padding}
 
-Applying a 3x3 filter to an input image of size 10x10 will output an image of size 8x8 since there are only 8 positions in a single row where the filter can fit. For deep networks, this shrinking might cause the final representation to become too narrow.
+Applying a $3 \times 3$ filter to an input image of size 10x10 will output an image of size 8x8 since there are only 8 positions in a single row where the filter can fit. For deep networks, this shrinking might cause the final representation to become too narrow.
 One can pad each activation map with zeroes to instead maintain the same size.
 
 \subsection{Attention models}
@@ -275,7 +282,7 @@ In contrast, a \textbf{hard attention} model interprets the ${\alpha_i}$ as a pr
 \subsection{CNNs in multi-digit recognition}
 
 Digit recognition has been studied extensively, especially for recognition of zip-codes in the US postal service \cite{lecun_1989, lecun_1990}. Originally, the digits were segmented manually and linearly transformed to a fix input size of 16x16 pixels.
-Each digit image was then classified using a CNN with 3 or 4 hidden layers, with 2x2 pooling between each convolutional layer.
+Each digit image was then classified using a CNN with 3 or 4 hidden layers, with $2 \times 2$ pooling between each convolutional layer.
 
 A complete zip-code recognition system locates the place of the zip-code and segments the zip-code into digit images \cite{zipcode_system}. The segmentation is performed by finding \textbf{connected components} (CC) in the image. If the CC has a high confidence in classification it is removed, otherwise it is either split or combined with adjacent CCs until a segmentation has been found where each classification has a high enough confidence. This is done by building a directed acyclic graph where each proposed segment is a node. The length of a path is defined as the product of the classification confidence for each node in the path. The best segmentation is then the path of greatest length in the graph. In order to avoid redundant computations, the segmentation can be done indirectly after the convolutional layers instead of on the input image \cite{lecun_multidigit}.
 
