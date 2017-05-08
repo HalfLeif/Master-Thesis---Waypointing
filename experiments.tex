@@ -4,14 +4,10 @@
 In this section we describe the different experiments that were designed to evaluate which model is best suited for extracting years from handwritten documents.
 
 \subsection{Setup}
-% \subsection{Tensorflow}
-% TODO should technologies/implementation be described in a different section?
-% Is it at all relevant to discuss about Tensorflow?
 
-% TODO Mention GPU acceleration here or in section about neural networks or Hardware?
+The models were implemented in Tensorflow \cite{Tensorflow}, which is a popular open-sourced machine learning framework. The implementation\footnote{\url{https://github.com/HalfLeif/CNN_doc_extraction}} is freely available on Github.
 
-% \subsection{Hardware}
-% TODO Mention hardware and training time .
+We trained the models on 3 threads on a single Intel(R) Core(TM) i7-4770K @ 3.50GHz. Training a single epoch of Swedish population records took about 28 hours. It would be faster to train using more threads or using GPU acceleration but we were constrained by low access to hardware.
 
 
 \subsection{Four-digit MNIST} \label{ssec:pretrain}
