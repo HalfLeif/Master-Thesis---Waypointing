@@ -17,7 +17,7 @@ Applications include finding principal components, organizing meaningful cluster
 
 \input{figures/mlp.tex}
 
-A \textbf{multilayer perceptron} (MLP) is organized in several \textbf{layers}, see illustration in Figure \ref{fig:mlp}. Each layer consists of a number of \textbf{neurons}.
+A \textbf{multilayer perceptron} (MLP) is organized in several \textbf{layers}, see illustration in figure \ref{fig:mlp}. Each layer consists of a number of \textbf{neurons}.
 %, the first layer has the same number as elements in the input vector $\mathbf{x}$.
 Each element in the input vector $\mathbf{x}$ becomes a neuron in the input layer. Each neuron $v_i$ in the following layers gets its value by computing a weighted sum over the neurons $u_j$ in the previous layer using weights  $w_{ij}$, a bias term $b_i$ and an \textbf{activation function} $g$:
 
@@ -210,7 +210,7 @@ Since the publication of the AlexNet in 2012 \cite{AlexNet}, CNNs have gained la
 
 In CNNs, each layer has a width, height and depth. Like in MLPs, the input layer has the width and height of the input image while the depth correspond to the number of color channels (one for gray scale, three for RGB and four for RGBA). We now refer to each number in the network as a \textbf{unit} instead of a neuron.
 
-As indicated by the name, CNNs mainly consist of \textbf{convolutional layers}. The depth of a convolutional layer is determined by how many filters it has. Each filter produces a two-dimensional \textbf{activation map}, see Figure \ref{fig:filter}. Each unit in the activation map comes from a weighted sum over a three-dimensional region in the previous layer over its full depth. For example a $3 \times 3$ filter applied to a 32 depth layer has $3 \cdot 3 \cdot 32=288$ weights and one bias term.
+As indicated by the name, CNNs mainly consist of \textbf{convolutional layers}. The depth of a convolutional layer is determined by how many filters it has. Each filter produces a two-dimensional \textbf{activation map}, see figure \ref{fig:filter}. Each unit in the activation map comes from a weighted sum over a three-dimensional region in the previous layer over its full depth. For example a $3 \times 3$ filter applied to a 32 depth layer has $3 \cdot 3 \cdot 32=288$ weights and one bias term.
 Like with MLP, the sum is passed to to a non-linear activation function such as $\tanh$. The $3 \times 3$ regions for each unit are overlapping.
 The activation maps for all filters are stacked together to form a three-dimensional output, which is passed to the next layer.
 
@@ -224,7 +224,7 @@ By synthesizing the input image to maximize a specific filter's activation, it i
 \input{figures/maxpool.tex}
 
 Besides filters, CNNs also use \textbf{pooling layers} in order to increase the receptive field without increasing the number of parameters in the model.
-Separately for each activation map, pooling aggregates a two-dimensional region of units (e.g. $2 \times 2$) into a single unit, typically by taking the maximum value; see Figure \ref{fig:maxpool}. These regions are non-overlapping so a $2 \times 2$ pooling layer decreases the representational size by 4. Thus another benefit of pooling layers is reduced computation time.
+Separately for each activation map, pooling aggregates a two-dimensional region of units (e.g. $2 \times 2$) into a single unit, typically by taking the maximum value; see figure \ref{fig:maxpool}. These regions are non-overlapping so a $2 \times 2$ pooling layer decreases the representational size by 4. Thus another benefit of pooling layers is reduced computation time.
 
 We can calculate the size of the receptive field for each output unit by doubling the field for each $2 \times 2$ pooling layer and adding $n-1$ for each $n \times n$ convolutional layer.
 If we have a network that consists of two $5 \times 5$ convolutional layers with a single $2 \times 2$ maxpool layer in between, then we can compute the pixel size $r \times r$ of the receptive field as follows:

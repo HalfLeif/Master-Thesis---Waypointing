@@ -15,7 +15,7 @@ We trained the models on 3 threads on a single Intel(R) Core(TM) i7-4770K @ 3.50
 \input{figures/mnist4.tex}
 
 For our early experiments we created a synthetic dataset with small images of four-digit sequences.
-Each image was a concatenation of four independently randomly selected digit images from MNIST \cite{MNIST_orig}, where the first digit was always a one. The resulting image was then $28 \times 112$ pixels.
+Each image was a concatenation of four independently randomly selected digit images from MNIST \cite{MNIST_orig}, where the first digit was always a one. See figure \ref{fig:mnist4} for an example. The resulting image was then $28 \times 112$ pixels.
 % which is very much smaller than the images of the Swedish records.
 Because the images were so small, it took a much shorter time to train and evaluate different models on the synthetic dataset than on the Swedish population records, whose images were very large.
 
@@ -33,6 +33,8 @@ Finally, we applied dot-noise to the image by:
 (2) multiplying each pixel value with a random number drawn independently uniformly from $[0.6, 1.0]$ and
 (3) inverting the image back again.
 This corresponds to adding a random but small amount of ink to each pixel in the image.
+
+An example image with dot noise and random position can be seen in figure \ref{fig:mnist_random_pad}. The models were evaluated on the image size $56 \times 168$ pixels, like in the figure.
 
 % Finally, we applied dot-noise to the image by multiplying each pixel's grayscale value with a random number drawn independently uniformly from $[0.6, 1.0]$.
 
