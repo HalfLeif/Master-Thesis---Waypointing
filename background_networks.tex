@@ -19,7 +19,7 @@ Applications include finding principal components, organizing meaningful cluster
 
 A \textbf{multilayer perceptron} (MLP) is organized in several \textbf{layers}, see illustration in figure \ref{fig:mlp}. Each layer consists of a number of \textbf{neurons}.
 %, the first layer has the same number as elements in the input vector $\mathbf{x}$.
-Each element in the input vector $\mathbf{x}$ becomes a neuron in the input layer. Each neuron $v_i$ in the following layers gets its value by computing a weighted sum over the neurons $u_j$ in the previous layer using weights  $w_{ij}$, a bias term $b_i$ and an \textbf{activation function} $g$:
+Each element in the input vector $\mathbf{x}$ becomes a neuron in the \textbf{input layer}. Each neuron $v_i$ in the following layers gets its value by computing a weighted sum over the neurons $u_j$ in the previous layer using weights  $w_{ij}$, a bias term $b_i$ and an \textbf{activation function} $g$:
 
 \[
 v_i = g\left( b_i + \sum_j w_{ij} u_j \right)
@@ -32,6 +32,8 @@ The final layer is called the \textbf{readout layer} and has as many neurons as 
 \[
 p_i = \frac{ \exp(o_i) }{ \sum_k \exp(o_k) }
 \]
+
+The layers between the input layer and the readout layer are referred to as \textbf{hidden layers}.
 
 \subsubsection{Backpropagation} \label{sssec:BackProp}
 
