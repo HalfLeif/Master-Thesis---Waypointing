@@ -1,10 +1,10 @@
-\section{Data}
+\chapter{Data}
 
 \textit{In this section we describe various datasets for digit recognition and transcription with increasing difficulty. We use a more difficult version of the first dataset, MNIST, as a synthetic dataset for simulations. The real dataset for our task consist of the Swedish population records that are described in detail at the end of this section.}
 
 % Here we describe some existing datasets for historical handwriting recognition and information extraction. We also consider their usefulness in regard to the thesis.
 
-\subsection{MNIST}
+\section{MNIST}
 
 The MNIST database contains $70000$ normalized images of handwritten digits \cite{MNIST_orig}.
 %All images have the fix size $$ pixels.
@@ -14,16 +14,16 @@ The dataset is very popular for testing new algorithms and machine learning mode
 % https://www.tensorflow.org/get_started/mnist/pros
 Although we can not use MNIST to evaluate the proposed models in this thesis, the dataset is useful for quick experimentation and possibly also for pre-training. We discuss this further in section \ref{ssec:pretrain}.
 
-\subsection{Street View House Numbers}
+\section{Street View House Numbers}
 
 The Street View House Numbers (SVHN) dataset consists of about $200000$ images of house numbers taken from Google Street View \cite{SVHN}. The dataset both contains original images of the house numbers as well as cropped and rescaled images for each digit. This dataset was used by \textcite{multidigit_streetview} to train models for transcribing millions of other images with $83\%$ coverage at $99\%$ accuracy.
 
-\subsection{Historical documents}
+\section{Historical documents}
 
 Several collections of historical documents have been line segmented and transcribed for public use \cite{esposalles}: George Washington, Parzival, Saint Gall, RODRIGO and GERMANA. However, they consist of prose written by one or two scribes and not civil population records which are typically written by many different scribes.
 % TODO add citations for each mentioned data set?
 
-\subsection{Esposalles}
+\section{Esposalles}
 In contrast, the Esposalles dataset consists of book indices and historical marriage licenses from the Cathedral of Barcelona \cite{esposalles}. Experts have manually segmented and transcribed each word exactly as they occur in the image.
 
 Although the Cathedral of Barcelona holds 291 books containing approximately 600 000 marriage licenses between 1451 and 1905, only a tiny fraction of this collection has been transcribed for the Esposalles dataset. The dataset consists of 173 pages from a single book written by a single scribe, containing 1747 marriage licenses between 1617 and 1619. Additionally, the dataset contains 29 pages of book indices.
@@ -43,30 +43,29 @@ Specifically for this thesis, we intend to classify years in a much larger range
 %only contain the most vital coarse information instead of every single word.
 
 
-\subsection{IRIS}
+\section{IRIS}
 
 While the Esposalles dataset focus on individual words transcribed by experts, the IRIS dataset contain record information extracted by volunteers in FamilySearch's indexing program \cite{Iris}.
 Thus the extracted information does not contain exact transcriptions of the text but rather the most important semantic contents.
 For example, abbreviations may have been expanded, dittos replaced by their intended values and information that was deemed genealogically irrelevant has been ignored.
 Furthermore, while in Esposalles each transcribed word has a manually created bounding box, in IRIS there is no indication about what part of the image the information was extracted from.
 
-The IRIS dataset consist of four collections of population records, totaling nearly $50000$ images:
-
-\paragraph{1, 2}
+The IRIS dataset consist of four collections of population records, totaling nearly $50000$ images.
+% \paragraph{1, 2}
 The first two collections in the IRIS dataset are the 1930 population census in the US and Mexico. The images consist of big tables with names and occupations in the cells.
 For the purpose of this thesis where we extract the written year for each page, the 1930 censuses are not directly useful since they only contains records from a single year. Furthermore, it is not clear that if a system can learn from this collection that it would by useful for any other collection.
 However because the 1930 censuses are written on printed tables, word segmentation should be considerably simpler than for the free-form writing as in other collections.
 
-\paragraph{3}
+% \paragraph{3}
 The third collection contains marriage licenses between 1837-1944 in Arkansas. The marriage licenses are printed templates with handwritten text in the blanks.
 It is likely that the system would learn to recognize the printed template and hence it would not be able to generalize to other collections that use different templates or free-form writing. If many collections were using the same template it would be useful to learn but then one might as well hard-code the positions of the blanks in the template. Thus, it is not very useful as training-data for models in this thesis.
 
-\paragraph{4}
+% \paragraph{4}
 The last collection contains more than 10000 pages with records of baptisms, burials and marriages from French parishes between 1533-1906. Some of the pages contain printed templates but the majority seems to be free-form handwriting.
 From manually inspecting these images, we conclude that many of them do not contain a written year anywhere on the page. These are problems that a future automated extraction system would need to handle, for this thesis however we settle for another dataset that seems somewhat easier.
 
 
-\subsection{Swedish population records}
+\section{Swedish population records}
 
 \input{figures/collections}
 
@@ -75,7 +74,7 @@ These collections contain records of baptisms, burials and marriages in six regi
 
 \input{figures/page.tex}
 
-\subsubsection{The indexing process}
+\subsection{The indexing process}
 
 Just like with the IRIS dataset, the indexers have not provided us with bounding boxes or exact transcriptions but with extracted genealogical information. An indexed baptism record typically contains the name of the newborn child, the names of the parents, the date of birth, the date of baptism and location of the parents' home. The ecclesiastical records typically contain the names of witnesses to the baptism but this is ignored in the indexing process.
 
@@ -87,12 +86,12 @@ The double work and review process increases the quality and consistency of the 
 The extracted information is stored in the compressed GedcomX\footnote{\url{http://www.gedcomx.org/About.html}} format which has been developed specifically for genealogical information.
 Each event of baptism, burial or marriage is stored as a record organized in the above mentioned six collections. Within a collection, the records do not seem to be stored in any particular order. Each record however contains information about which image it belongs to as well as some meta-information about the book the record comes from.
 
-\subsubsection{Varying image size}
+\subsection{Varying image size}
 
 The images are stored in the JPG-format using lossy compression. Each image has a different size although the majority are about $5700 \times 4500$ pixels. There are also outliers with sizes like $7262 \times 5907$ pixels and $1885 \times 5110$ pixels. We think the varying image sizes is a result of cropping the image to fit the book in the photograph.
 Since different books have different proportions, the aspect ratio of the images differs somewhat although it is often close to $1.25$:$1$.
 
-\subsubsection{Page structure}
+\subsection{Page structure}
 
 Each image consist of two pages. The pages are always handwritten. Sometimes the pages have pre-printed headers and vertical lines for columns, other times they are entirely free-form.
 The year can often be found near the top of the page either to the left or in the middle, see figure \ref{fig:page} for an example.
@@ -102,7 +101,7 @@ The year can often be found near the top of the page either to the left or in th
 Although the general structure is the same for all six collections, the exact page layout differs greatly both within and between collections. Another difference relevant for the neural network is that sometimes the year is following the word "\r{A}r" although the handwriting style for the word can be very different depending on time and place, see figure \ref{fig:aar} for some examples.
 
 
-\subsubsection{Multiple years per page} \label{sssec:swe_multiyear}
+\subsection{Multiple years per page} \label{sssec:swe_multiyear}
 
  % Additionally, when the year changed the scribe often indicated so by writing the new year in big letters before the block of new records.
 Typically, the scribes did not use a new page for every new year but indicated the change of year by writing the new year in big letters before continuing to write the new records; an example of this can be seen in Figure \ref{fig:page}.
@@ -114,7 +113,7 @@ If the year is unknown or the image is blank, we ignore the image because we do 
 However, in the extracted information there is no way to distinguish whether the extracted year came from the same image or if it was implied from a neighboring image. Thus, it is inevitable that some images in the dataset have labels although the year is actually not written in the image. One way to counter this problem would be to only train on images that are labeled with more than one year, expecting an indicated year change somewhere in the image. Doing so would however reduce the dataset to $37.3\%$ of the original size.
 Although we have no way to calculate how often the label implies a year that is missing from the image without manually inspecting every image, we assume that it is relatively rare and thus negligible.
 
-\subsubsection{Partioning}
+\subsection{Partioning}
 
 We divided the dataset into three partitions, one for training, one for testing and one for validation. The two smallest collections, Kalmar (1930243) and Västernorrland (1949331), were reserved for validation.
 Each image in the remaining four collections was independently randomly selected to belong to the training set, with $90\%$ probability, or to the test set, with $10\%$ probability.
@@ -127,7 +126,7 @@ Thus the training and testing sets are disjoint but are drawn from the same book
 
 %The four largest collections have each been randomly divided into a training set ($90\%$) and a test set ($10\%$). The combined training set thus consist of $34623$ labeled images and the test set of $4040$ images.
 
-\subsubsection{Label density} \label{sssec:few_labels}
+\subsection{Label density} \label{sssec:few_labels}
 
 Some labels occur very few times in the dataset. Although the labels span from 1607 to 1890, the majority of images lie between 1690 and 1861, with very few examples outside. Each year occurs in 147 images on average and few of the labels have more than 300 examples in the combined training and test data.
 In this counting, we give each image a weight of one, so for multiyear images, we increment the count for each year in the label by a fraction of one.

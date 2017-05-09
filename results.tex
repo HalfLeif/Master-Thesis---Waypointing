@@ -1,13 +1,13 @@
-\section{Results}
+\chapter{Results}
 
-\subsection{Setup}
+\section{Setup}
 
 The models were implemented in Tensorflow \cite{Tensorflow}, which is a popular open-sourced machine learning framework. The implementation\footnote{\url{https://github.com/HalfLeif/CNN_doc_extraction}} is freely available on Github.
 
 We trained the models on 3 threads on a single Intel(R) Core(TM) i7-4770K @ 3.50GHz. Training a single epoch of Swedish population records took about 28 hours. It would be faster to train using more threads or using GPU acceleration but we were constrained by low access to hardware.
 
 
-\subsection{Four-digit MNIST} \label{ssec:pretrain}
+\section{Four-digit MNIST} \label{ssec:pretrain}
 
 \input{figures/mnist4.tex}
 
@@ -18,7 +18,7 @@ Because the images were so small, it took a much shorter time to train and evalu
 
 Several models performed very well on this task, one of them achieving $94\%$ accuracy after $10500$ cpu-seconds of training.
 
-\subsection{Noisy MNIST}
+\section{Noisy MNIST}
 
 In order to make the synthetic data a little bit more difficult to classify and more similar to the Swedish dataset, each four-digit image was placed at a random position in a larger image whose pixel values were zero, that is no ink.
 
@@ -35,7 +35,7 @@ An example image with dot noise and random position can be seen in figure \ref{f
 
 % Finally, we applied dot-noise to the image by multiplying each pixel's grayscale value with a random number drawn independently uniformly from $[0.6, 1.0]$.
 
-% \subsubsection{Noise}
+% \subsection{Noise}
 
 %The network was pre-trained on a synthetic dataset created from MNIST \cite{MNIST_orig}. Using synthetic data allowed us to quickly discard inefficient network architectures and we believe that pre-training helped faster learning on the real data.
 
@@ -44,11 +44,11 @@ An example image with dot noise and random position can be seen in figure \ref{f
 % TODO insert picture with pretraining image.
 
 
-\subsection{Experiments}
+\section{Experiments}
 
 Here we discuss comparisons we made between different models.
 
-\subsubsection{Network depth and width} \label{sssec:exp_encoder}
+\subsection{Network depth and width} \label{sssec:exp_encoder}
 
 By training on the simpler four-digit MNIST dataset without noise,
 %we made several observations.
@@ -68,10 +68,10 @@ The best variations were evaluated on the more difficult synthetic dataset with 
 
 
 
-% \subsubsection{Encoder depth}
+% \subsection{Encoder depth}
 
-\subsubsection{Soft vs hard attention}
+\subsection{Soft vs hard attention}
 
-\subsubsection{Independent digits} \label{sssec:ind_digits}
+\subsection{Independent digits} \label{sssec:ind_digits}
 
-\subsubsection{Multi-year vs single-year loss function}
+\subsection{Multi-year vs single-year loss function}

@@ -1,13 +1,13 @@
-\section{Method}
+\chapter{Method}
 
-\subsection{Network architecture}
+\section{Network architecture}
 
 \input{figures/system_overview.tex}
 
 We now describe the different parts of the proposed network. See figure \ref{fig:sys_overview} for an overview of how the different parts of the network interact.
 The network architecture is mainly inspired by the work of \textcite{multidigit_streetview} who successfully detect house numbers in Google Street View and \textcite{AttendAndTell} who introduced the attention mechanism that we use.
 
-\subsubsection{Encoder}
+\subsection{Encoder}
 
 \input{figures/encoder.tex}
 
@@ -44,9 +44,10 @@ Another difference is that we use a $1 \times 5$ convolutional layer at the end 
 
 
 
-\subsubsection{Attention model}
+\subsection{Attention model}
 
-Another major difference between our work and \cite{FornesCnnCategorization} is that although we both use variable input size, they use \textbf{Spatial pyramid pooling}, while we apply a soft attention model as presented in \cite{AttendAndTell}. As presented in section \ref{ssec:attention}, the encoder output can be seen as a list of feature vectors $\mathbf{a_i} \in \mathbb{R}^D$, which correspond to different, but overlapping, locations in the input image. The number of produced feature vectors depends on the size of the input image. We will see that this attention model aggregates all feature vectors $\mathbf{a_i}$ into a single fixed size vector $\mathbf{z} \in \mathbb{R}^D$.
+Another major difference between our work and \cite{FornesCnnCategorization} is that although we both use variable input size, they use \textbf{spatial pyramid pooling}, while we apply a soft attention model as presented in \cite{AttendAndTell}.
+Like previously mentioned in section \ref{ssec:attention}, the encoder output can be seen as a list of feature vectors $\mathbf{a_i} \in \mathbb{R}^D$, which correspond to different, but overlapping, locations in the input image. The number of produced feature vectors depends on the size of the input image. We will see that this attention model aggregates all feature vectors $\mathbf{a_i}$ into a single fixed size vector $\mathbf{z} \in \mathbb{R}^D$.
 
 The attention model consists of a multilayer perceptron, which for each feature vector $\mathbf{a_i}$ computes a salience score $e_i$:
 
@@ -71,7 +72,7 @@ We then use the attentions $\alpha_i$ as weights over the feature vectors:
 
 %So just like the attention MLP, the decoder also becomes invariant to the object's position in the input image.
 
-\subsubsection{Decoder}
+\subsection{Decoder}
 
 The decoder employs an MLP for classifying the aggregated feature vector $\mathbf{z} \in \mathbb{R}^D$ from the attention model.
 If $\mathbf{z}$ had a variable length, then we would need a different number of weights in the MLP for each different input size. Since the attention model produces a fixed size output independent of input size we avoid the problem of variable number of parameters.
@@ -90,12 +91,12 @@ P(D_1=x, D_2=y, D_3=z) = P(D_1=x) P(D_2=y) P(D_3=z)
 \]
 
 
-\subsection{Training procedure}
+\section{Training procedure}
 % TODO Perhaps make this a different section?
 
 Here we describe how we train and evaluate the different models.
 
-\subsubsection{Multi-year labels}
+\subsection{Multi-year labels}
 
 As presented in section \ref{sssec:swe_multiyear}, many images contain records from multiple years. However, in order to simplify the implementation, we would like all image labels to have the same size.
 One way to achieve this is to simply select one of the multiple years in an image and ignore the presence of other years. However, a single year does not accurately represent images that contain multiple years.
@@ -107,7 +108,7 @@ Instead, we label each image with a tuple of the smallest and the largest year p
 %Although it is not optimal, we currently train the network using one year as label for each image.
 
 
-\subsubsection{Loss function}
+\subsection{Loss function}
 
 We observed previously in section \ref{sssec:CrossEntropy} that cross-entropy often outperforms squared error as a loss function for classification. Cross-entropy compares a single label against the probability distribution from the network's readout layer. In our case, we output three probability distributions, one for each digit.
 % For a single label per image, we then have two options.
@@ -115,7 +116,7 @@ We compute
 %The first option is to take
 the cross-entropy for each digit and then sum the losses.
 
-\subsubsection{Evaluation}
+\subsection{Evaluation}
 
 We evaluate the models on the test set and evaluation set of the Swedish records. Although the models only output a single year per image, we count it as $100\%$ correct if and only if the year with maximum probability is inside the label interval. For example if the label is the inclusive interval $[1771, 1774]$ and the network outputs $1773$, we count it as correct. With this relaxed definition of correctness we calculate the accuracy over the images in the respective dataset.
 

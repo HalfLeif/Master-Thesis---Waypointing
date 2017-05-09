@@ -1,14 +1,14 @@
-\section{Conclusion}
+\chapter{Conclusion}
 
-\subsection{Things we would have done differently}
-\textbf{TODO}: change title of subsection
+\section{Things we would have done differently}
+\textbf{TODO}: change title of section
 
 Encoder should also be trained using dropout as \textcite{multidigit_streetview}.
 
 Retrain network from start for each experiment, however takes too much time.
 
 
-\subsection{Our work compared to previous work}
+\section{Our work compared to previous work}
 
 % A great advantage of the
 
@@ -25,7 +25,7 @@ In contrast, \textcite{AttendAndTell} run on the entire input image while using 
 Another major difference between our work and \cite{AttendAndTell} is that their decoder was sequential so for each iteration it looked at a new part of the image. So even though the decoder only looked at a single place in each iteration, over the output sequence most relevant parts of the image had been covered.
 
 
-\subsection{Best future approach}
+\section{Best future approach}
 
 Thus it seems that attention mechanisms after running on the entire image is less suitable for information extraction and transcription than for object recognition and caption generation. Instead, it seems that the traditional approach of segmenting the page image to word images is still the best way to go. However, there are two major challenges with segmentation.
 

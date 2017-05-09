@@ -1,3 +1,4 @@
+\section{Extensions}
 
 \subsection{Alternative loss functions}
 
@@ -121,7 +122,7 @@ After computing the entire matrix $T$, the probability of the most likely sequen
 
 To make the algorithm run faster, we only allow labels in a smaller interval 1600--1899 instead of the possible output 1000--1999.
 
-\paragraph{Creating $Q$}
+% \paragraph{Creating $Q$}
 The jump probability $Q(j, k)$ can be found by statistically counting the page transitions in the training data. We simplify the distribution by only taking into account the year difference between $j$ and $k$. In order to handle unseen transitions, we use \textbf{Laplace smoothing} with $\alpha=0.5$. We denote $N(r)$ as the count of year transitions with difference $r$, $N$ to be the total number of transitions and $K$ to be the number of allowed labels.
 
 \[
