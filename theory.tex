@@ -4,8 +4,8 @@
 \chapter{Neural networks}
 \label{sec:networks}
 \textit{
-In this section, we first give an introduction to neural networks, especially convolutional neural networks, and then describe recent research in applying neural networks to tasks in computer vision.
-For further reading about neural networks and applied deep learning, we recommend the detailed textbook by \textcite{GoodfellowBook}.
+In this chapter, we first give an introduction to neural networks and deep learning in the context of classification. We then describe convolutional neural networks and their application to real tasks in computer vision, in particular for digit recognition. At the end of the chapter we summarize some recent research on deep learning for computer vision that is not used in the thesis.
+For further reading about neural networks and applied deep learning to various fields, we recommend the textbook by \textcite{GoodfellowBook}.
 % For a more exhaustive reading of neural networks and deep learning we recommend the reader to search out a textbook in the field such as \cite{GoodfellowBook}.
 }
 
@@ -200,6 +200,22 @@ The idea is that the parameters in a network trained on a related task is probab
 
 % TODO: is this accurate? Book also mentions greedy pre-training such as training some layers at a time?
 
+\subsection{Confidence thresholding}
+
+Certain tasks, like automatic house number transcriptions in Google Street View, require the model to have a very high accuracy to be useful \cite{multidigit_streetview}.
+For these instances, the model should output a \textbf{confidence} for its classification. If the confidence is higher than some pre-determined threshold $\tau$, we keep the prediction; otherwise we ignore the prediction and conclude that the model is not sure about that example.
+% In order to increase the accuracy, the predictions that have a confidence lower than some threshold $\tau$ may be discarded.
+We then need to use two metrics for evaluating the model's performance: \textbf{precision} and \textbf{recall}.
+
+The precision measures the quality of the predictions that were higher than the threshold. It is the accuracy, or percentage of correct predictions, among the predictions that were not discarded.
+% Out of the non-discarded predictions, the precision is the percentage of correct predictions.
+
+Recall on the other hand measures how many correct predictions were discarded due to low confidence. Instead of measuring recall, we can use \textbf{coverage}, which is simply the percentage of predictions whose confidence was above the threshold $\tau$.
+% TODO: is it really?
+% More precisely, recall is the number of correct predictions that were not discarded divided by the total number of correct predictions.
+
+In order to compare models, we can then plot precision vs recall or coverage for different values of $\tau$. For $\tau=0$, the precision is the same as accuracy and the coverage is $100\%$. For $\tau=1.0$, everything is discarded so the precision is $100\%$ but the coverage is $0\%$.
+
 \section{Deep learning in computer vision}
 
 Both machine translation and image captioning used to be solved by solving each subproblem separately but this kind of approach has been outperformed by end-to-end systems using deep learning \cite{ShowAndTell}. One neural network \textbf{encoded} the input to a fixed-length vector representation which was \textbf{decoded} by another network. In the case of machine translation both the encoder and decoder was implemented by an RNN which are highly suitable for processing sequences like sentences. The image captioning system was implemented in a similar manner but using a \textbf{convolutional neural network} (CNN) as encoder.
@@ -303,25 +319,11 @@ Another suggested approach to digit recognition in street view is to combine CNN
 
 Here we list some additional recent progress in the field of neural networks in computer vision which is not used in the thesis.
 
-\subsection{Confidence thresholding}
 
-Certain tasks, like automatic house number transcriptions in Google Street View, require the model to have a very high accuracy to be useful \cite{multidigit_streetview}.
-For these instances, the model should output a \textbf{confidence} for its classification. If the confidence is higher than some pre-determined threshold $\tau$, we keep the prediction; otherwise we ignore the prediction and conclude that the model is not sure about that example.
-% In order to increase the accuracy, the predictions that have a confidence lower than some threshold $\tau$ may be discarded.
-We then need to use two metrics for evaluating the model's performance: \textbf{precision} and \textbf{recall}.
-
-The precision measures the quality of the predictions that were higher than the threshold. It is the accuracy, or percentage of correct predictions, among the predictions that were not discarded.
-% Out of the non-discarded predictions, the precision is the percentage of correct predictions.
-
-Recall on the other hand measures how many correct predictions were discarded due to low confidence. Instead of measuring recall, we can use \textbf{coverage}, which is simply the percentage of predictions whose confidence was above the threshold $\tau$.
-% TODO: is it really?
-% More precisely, recall is the number of correct predictions that were not discarded divided by the total number of correct predictions.
-
-In order to compare models, we can then plot precision vs recall or coverage for different values of $\tau$. For $\tau=0$, the precision is the same as accuracy and the coverage is $100\%$. For $\tau=1.0$, everything is discarded so the precision is $100\%$ but the coverage is $0\%$.
 
 \subsection{Batch normalization}
 
-An alternative to Dropout was suggested by \cite{BatchNormalization}. Besides reducing the risk for overfitting, the authors also suggest that it allows for a higher learning rate in deep networks and thus faster convergence.
+An alternative to dropout was suggested by \textcite{BatchNormalization}. Besides reducing the risk for overfitting, the authors claim that it allows for a higher learning rate in deep networks and thus faster convergence.
 
 For some network layer $\mathbf{x} = {x_1, \ldots, x_d}$, we normalize each $x_i$ to zero mean and unit variance over the current mini-batch:
 
@@ -335,7 +337,11 @@ We then use two learned parameters $\gamma$ and $\beta$ to instead output $z_i$:
 z_i = \gamma \hat{x_i} + \beta
 \]
 
-The batch normalization can thus be summarized as $\mathbf{z} = f_{BN}(\mathbf{x}; \gamma, \beta)$.
+The batch normalization can be summarized as: 
+
+\[
+\mathbf{z} = f_{BN}(\mathbf{x}; \gamma, \beta)
+\]
 
 The batch normalization can either be applied before or after the activation function. The authors suggest that the best result is achieved by applying the batch normalization before the non-liner activation $g$ but after the weights $w_{ij}$ and bias $b_i$:
 
@@ -347,12 +353,13 @@ v_i = g\left( f_{BN}\left( b_i + \sum_j w_{ij} u_j; \gamma, \beta \right) \right
 
 % Another way to model regions in the input is by using a R-CNN which have also been very successful at image captioning
 
-Another successful approach to image captioning uses a \textbf{region convolutional neural network} (R-CNN) as encoder \cite{VisualSemanticAlignment}.
+We saw earlier that \textcite{AttendAndTell} successfully used attention models for image captioning.
+An alternative successful method for image captioning uses a \textbf{region convolutional neural network} (R-CNN) as encoder \cite{VisualSemanticAlignment}.
 The original R-CNN method works by proposing 2000 regions in the image that are the most likely to contain an object \cite{RCNN}. Each region is then fed to a regular CNN for encoding before classification.
 
 Since many regions overlap, it is unnecessary to compute the convolutions for them independently \cite{FastRCNN}. Instead the entire input image is processed through the CNN once and the feature vector of each region is extracted from the resulting activation map. After this improvement, the bottleneck is selecting the regions \cite{FasterRCNN}. By making a neural network to select regions from the activation map instead of from the image, the computation speed can be significantly reduced. However, this requires the training data to contain bounding boxes for the objects to detect.
 
-In the case of image captioning, the correspondences between words and regions in the image is unknown so this relationship is modeled by latent variables \cite{VisualSemanticAlignment}.
+For the case of image captioning, the correspondences between words and regions in the image is unknown so this relationship is modeled by latent variables \cite{VisualSemanticAlignment}.
 
 \subsection{Spatial pyramid pooling}
 
