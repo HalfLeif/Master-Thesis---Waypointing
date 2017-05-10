@@ -6,7 +6,7 @@
 
 \section{MNIST}
 
-The MNIST database contains $70000$ normalized images of handwritten digits \cite{MNIST_orig}.
+The MNIST database contains 70,000 normalized images of handwritten digits \cite{MNIST_orig}.
 %All images have the fix size $$ pixels.
 Each image is represented by a floating-point matrix of $28 \times 28$, where the value $1.0$ corresponds to maximum presence of ink and $0.0$ corresponds to no ink.
 The dataset is very popular for testing new algorithms and machine learning models \cite{MNIST}.
@@ -16,7 +16,7 @@ Although we can not use MNIST to evaluate the proposed models in this thesis, th
 
 \section{Street View House Numbers}
 
-The Street View House Numbers (SVHN) dataset consists of about $200000$ images of house numbers taken from Google Street View \cite{SVHN}. The dataset both contains original images of the house numbers as well as cropped and rescaled images for each digit. This dataset was used by \textcite{multidigit_streetview} to train models for transcribing millions of other images with $83\%$ coverage at $99\%$ accuracy.
+The Street View House Numbers (SVHN) dataset consists of about 200,000 images of house numbers taken from Google Street View \cite{SVHN}. The dataset both contains original images of the house numbers as well as cropped and rescaled images for each digit. This dataset was used by \textcite{multidigit_streetview} to train models for transcribing millions of other images with $83\%$ coverage at $99\%$ accuracy.
 
 \section{Historical documents}
 
@@ -26,7 +26,7 @@ Several collections of historical documents have been line segmented and transcr
 \section{Esposalles}
 In contrast, the Esposalles dataset consists of book indices and historical marriage licenses from the Cathedral of Barcelona \cite{esposalles}. Experts have manually segmented and transcribed each word exactly as they occur in the image.
 
-Although the Cathedral of Barcelona holds 291 books containing approximately 600 000 marriage licenses between 1451 and 1905, only a tiny fraction of this collection has been transcribed for the Esposalles dataset. The dataset consists of 173 pages from a single book written by a single scribe, containing 1747 marriage licenses between 1617 and 1619. Additionally, the dataset contains 29 pages of book indices.
+Although the Cathedral of Barcelona holds 291 books containing approximately 600,000 marriage licenses between 1451 and 1905, only a tiny fraction of this collection has been transcribed for the Esposalles dataset. The dataset consists of 173 pages from a single book written by a single scribe, containing 1747 marriage licenses between 1617 and 1619. Additionally, the dataset contains 29 pages of book indices.
 
 The Esposalles dataset was used as ground truth for named entity recognition in the Robust reading competition at the International Conference on Document Analysis and Recognition (ICDAR) 2017 \cite{EsposallesCompetition}. For the competition, the words have been annotated with semantic categories such as surname of husband and surname of wife.
 
@@ -50,7 +50,7 @@ Thus the extracted information does not contain exact transcriptions of the text
 For example, abbreviations may have been expanded, dittos replaced by their intended values and information that was deemed genealogically irrelevant has been ignored.
 Furthermore, while in Esposalles each transcribed word has a manually created bounding box, in IRIS there is no indication about what part of the image the information was extracted from.
 
-The IRIS dataset consist of four collections of population records, totaling nearly $50000$ images.
+The IRIS dataset consist of four collections of population records, totaling nearly 50,000 images.
 % \paragraph{1, 2}
 The first two collections in the IRIS dataset are the 1930 population census in the US and Mexico. The images consist of big tables with names and occupations in the cells.
 For the purpose of this thesis where we extract the written year for each page, the 1930 censuses are not directly useful since they only contains records from a single year. Furthermore, it is not clear that if a system can learn from this collection that it would by useful for any other collection.
@@ -61,7 +61,7 @@ The third collection contains marriage licenses between 1837-1944 in Arkansas. T
 It is likely that the system would learn to recognize the printed template and hence it would not be able to generalize to other collections that use different templates or free-form writing. If many collections were using the same template it would be useful to learn but then one might as well hard-code the positions of the blanks in the template. Thus, it is not very useful as training-data for models in this thesis.
 
 % \paragraph{4}
-The last collection contains more than 10000 pages with records of baptisms, burials and marriages from French parishes between 1533-1906. Some of the pages contain printed templates but the majority seems to be free-form handwriting.
+The last collection contains more than 10,000 pages with records of baptisms, burials and marriages from French parishes between 1533-1906. Some of the pages contain printed templates but the majority seems to be free-form handwriting.
 From manually inspecting these images, we conclude that many of them do not contain a written year anywhere on the page. These are problems that a future automated extraction system would need to handle, for this thesis however we settle for another dataset that seems somewhat easier.
 
 
@@ -105,7 +105,7 @@ Although the general structure is the same for all six collections, the exact pa
 
  % Additionally, when the year changed the scribe often indicated so by writing the new year in big letters before the block of new records.
 Typically, the scribes did not use a new page for every new year but indicated the change of year by writing the new year in big letters before continuing to write the new records; an example of this can be seen in Figure \ref{fig:page}.
-Thus besides at the top, written years can be found in virtually any part of the page. Another consequence is that a page can contain several years in a sequence like $\langle 1771, 1772, 1773, 1774 \rangle$. This is especially true for small parishes where there may not have been so many burials per year. Out of the $43068$ indexed images, $16074$ or $37.3\%$ have more than one year in the extracted information. There are also cases where the page span several years but with a small gap: $\langle 1771, 1773, 1774 \rangle$.
+Thus besides at the top, written years can be found in virtually any part of the page. Another consequence is that a page can contain several years in a sequence like $\langle 1771, 1772, 1773, 1774 \rangle$. This is especially true for small parishes where there may not have been so many burials per year. Out of the 43,068 indexed images, 16,074 or $37.3\%$ have more than one year in the extracted information. There are also cases where the page span several years but with a small gap: $\langle 1771, 1773, 1774 \rangle$.
 
 Some images however do not contain a written year, the year is simply implied from previous pages. For such instances, indexers are instructed to search the previous and following image for an indication of the year. If the implied year is found, it is noted in the extracted information, otherwise it is indicated as unknown.
 If the year is unknown or the image is blank, we ignore the image because we do not have a label for it and we expect that the year is anyway not indicated in the image. Of the indexed images, $471$ or $1\%$ have no year label.
@@ -117,7 +117,7 @@ Although we have no way to calculate how often the label implies a year that is 
 
 We divided the dataset into three partitions, one for training, one for testing and one for validation. The two smallest collections, Kalmar (1930243) and Västernorrland (1949331), were reserved for validation.
 Each image in the remaining four collections was independently randomly selected to belong to the training set, with $90\%$ probability, or to the test set, with $10\%$ probability.
-The training set consists of $34623$ labeled images and the test set of $4040$ images.
+The training set consists of 34,623 labeled images and the test set of 4040 images.
 % The remaining four collections were divided into training and testing by randomly
 
 Thus the training and testing sets are disjoint but are drawn from the same books and scribes. The validation set on the other hand comes from entirely different regions and new scribes whose handwriting has not been seen by the model before. We can therefore use the test set to detect overfitting on specific images while the validation set can measure how well the model generalizes to new books and regions as in a realistic use case scenario.

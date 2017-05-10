@@ -92,6 +92,17 @@ The third competing encoder (DEB) was a middleground between DEP and DEM, design
 
 \input{figures/mnist_resilience.tex}
 
+When increasing the size of the generated synthetic images without retraining the models, the accuracy of the DEP model was relatively stable even for the double width and height but dropped for larger input. The two lighter models, DEB and DEM, were less robust to this change in input; see figure \ref{fig:mnist_resilience}.
+
+The attention model is responsible for choosing the correct location in the input image. The receptive field of output units in the three configurations were the same and the architecture of the attention model was identical.
+
+We see that the more filters a model has, the more stable it is to change.
+We attribute this resilience to noise to detecting more features in the input, some of which are better preserved after adding the noise.
+
+
+
+% We argue that the heavier model, DEP, with its additional filters can detect more features in the input 
+
 % The lightest encoder (DEM) was designed to have the same representational size as DEP at the end of the encoder but decreasing the number of filters in the beginning in order
 % keeping the representational size as constant as possible from the start by using fewer filters, in contrast to the advice from \textcite{InceptionV3}.
 
