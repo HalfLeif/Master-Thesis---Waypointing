@@ -50,16 +50,36 @@ An example image with dot noise and random position can be seen in figure \ref{f
 
 \subsection{Network depth and width} \label{sssec:exp_encoder}
 
-\input{figures/mnist_models.tex}
+\input{figures/mnist_early_models.tex}
 
-By training on the simpler four-digit MNIST dataset without noise,
+In figure \ref{fig:mnist_early_models} we can see the resulting accuracy over training time of some different model configurations. The DE model was used as baseline with an encoder that had 7 layers and an output depth of 256. It is very similar to the DEP encoder illustrated in figure \ref{fig:encoder} except that it used one less pooling layer.
+
+Halving the depth of the decoder from 1024 to 512 (DED) had little impact on this task. Halving the number of filters in every layer (DEL) halved the training time per epoch but also halved the learning rate, so in the end its performance was about the same.
+
+% The TE model was identical to DE except that it used fewer convolutional layers. More precisely, the DE encoder started with $\langle C,C,P,C,C,P \rangle$ while TE started with $\langle C, P, C, P \rangle$, where $C$ stands for $3 \times 3$ convolution and $P$ stands for $2 \times 2$ max-pooling.
+
+Reducing the number of convolutional layers in the beginning of the encoder (TE) also sped up training time although the accuracy over time was about the same.
+
+When adding an additional pooling layer (TEP) to the thinner model (TE), learning increased very rapidly for the first two epochs. However, it started to overfit after hitting $90\%$ accuracy, while the accuracy of the baseline model (DE) continued to rise to $94\%$.
+
+In summary we can see that models with smaller representational size achieves about the same accuracy given the same amount of training time, although the heavier models seem to have higher potential in the long run. Another observation is that additional pooling can greatly increase the early learning.
+
+% The learning rate on the simpler four-digit MNIST dataset for different some possible configurations of the encoder.
+
+% By training on the simpler four-digit MNIST dataset without noise,
 %we made several observations.
 % We experimented on various configurations of encoder and decoder depth and width.
-we found that increasing the width of the decoder's hidden layer from 512 to 1024 had a very small impact on the training time while increasing accuracy. Decreasing the number of layers in the encoder from 7 to 5 decreased the accuracy somewhat but increased training time considerably. Halving the encoder width halved the training time but also decreased accuracy. Adding a pooling layer at the end of the encoder resulted in a higher accuracy after the first epoch and reduced training time. The effect of an extra pooling layer can be seen by comparing the models DE and DEP in figure \ref{fig:mnist_models}.
+% we found that increasing the width of the decoder's hidden layer from 512 to 1024 had a very small impact on the training time while increasing accuracy. Decreasing the number of layers in the encoder from 7 to 5 decreased the accuracy somewhat but increased training time considerably. Halving the encoder width halved the training time but also decreased accuracy. Adding a pooling layer at the end of the encoder resulted in a higher accuracy after the first epoch and reduced training time. The effect of an extra pooling layer can be seen by comparing the models TE and TEP in figure \ref{fig:mnist_early_models}.
 
 \subsubsection{Wider networks are more robust to noise}
 
-The best configurations so far were evaluated on the more difficult synthetic dataset with random positions and noise. Figure \ref{fig:mnist_models} contains a comparison between some variations of encoder configurations on the noisy MNIST dataset. The three best configurations (DEP, DEB, DEM) achieved very similar results considering the test accuracy vs training time. These three configurations had the same number of encoder layers but different depth of each layer.
+\input{figures/mnist_models.tex}
+
+The best configurations so far were evaluated on the more difficult synthetic dataset with random positions and noise. Figure \ref{fig:mnist_models} contains a comparison between some variations of encoder configurations on the noisy MNIST dataset.
+By comparing this graph to figure \ref{fig:mnist_early_models}, we can see that using larger input images, placing the digits at a random position and adding noise makes the problem much more difficult. Training a single epoch takes almost three times as long and the learning per epoch is reduced.
+%Note that for the same model, we needed to train more than 4 times longer to get the same accuracy as on the simpler synthetic dataset.
+
+The three best configurations (DEP, DEB, DEM) achieved very similar results considering the test accuracy vs training time. These three configurations had the same number of encoder layers but different depth of each layer.
 
 The heaviest encoder (DEP) is illustrated in figure \ref{fig:encoder}.
 Because it had the most number of filters, the training time for each epoch was much longer than for the other two alternatives.
