@@ -225,13 +225,13 @@ Both machine translation and image captioning used to be solved by solving each 
 
 Since the publication of the AlexNet in 2012 \cite{AlexNet}, CNNs have gained large attention in computer vision for achieving state-of-the-art in various tasks such as object-detection, segmentation, video classification and object tracking \cite{InceptionV3}.
 
-\input{figures/filter.tex}
-
 % TODO add citations
 
 Each layer in a CNN consists of a two-dimensional grid of vectors, which we will refer to as \textbf{units}. Throughout the network, each unit will correspond to different regions in the input image. Sometimes we will refer to this grid as a three-dimensional tensor where the depth is the size of the vectors. The \textbf{representational size} of a layer is simply the product of its height, width and depth.
 
 % The \textbf{representational size} of a layer is the width times the height of the activation map times the number of filters. In short, it is the number of scalars in the tensor currently representing the input image.
+
+% The depth of a CNN refers to the number of layers while the width of a CNN refers to the depths of its layers.
 
 Similar to MPLs, the input layer has the same width and height as the input image while the depth of the input layer matches the number of color channels in the image (one for gray scale, three for RGB and four for RGBA).
 
@@ -240,6 +240,9 @@ Similar to MPLs, the input layer has the same width and height as the input imag
 %We now refer to each number in the network as a \textbf{unit} instead of a neuron.
 
 \subsection{Convolutions}
+
+\input{figures/filter.tex}
+
 As indicated by the name, CNNs mainly consist of \textbf{convolutional layers}. The depth of a convolutional layer is determined by how many filters it has. Each filter produces a two-dimensional \textbf{activation map}, as illustrated in figure \ref{fig:filter}. Each unit in the activation map comes from a weighted sum over a three-dimensional region in the previous layer over its full depth. For example a $3 \times 3$ filter applied to a 32 depth layer has $3 \cdot 3 \cdot 32=288$ weights and one bias term.
 Like with MLP, the sum is passed to to a non-linear activation function such as $\tanh$.
 
@@ -312,7 +315,7 @@ The scalar attention weight $\alpha_i$ for each location can then be computed by
 \alpha_i = \frac{ \exp(e_i) }{ \sum_{k=1}^L \exp(e_i) }
 \]
 
-\subsubsection{Soft attention}
+\subsubsection{Soft attention} \label{sssec:soft_attention}
 By definition, the attention weights sum to one. A \textbf{soft attention} model computes the representative vector $\mathbf{z}$ by summing over the feature vectors $\mathbf{a_i}$, using attention as weights:
 
 \[
