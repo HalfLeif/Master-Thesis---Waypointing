@@ -88,16 +88,19 @@ While the representational size decreases for DEP, as recommended by \textcite{I
 This was done by reducing the number of filters to a minimal amount, with only 4 filters at the input layer instead of 32.
 As we can see in figure \ref{fig:mnist_models}, the training time for each epoch was much faster although the actual learning over time was almost the same as for the DEP model.
 
-The third competing encoder (DEB) was a middleground between DEP and DEM, designed to have a very slowly decreasing representational size.
+The third competing encoder (DEB) was a middle ground between DEP and DEM, designed to have a very slowly decreasing representational size.
 
 \input{figures/mnist_resilience.tex}
 
 When increasing the size of the generated synthetic images without retraining the models, the accuracy of the DEP model was relatively stable even for the double width and height but dropped for larger input. The two lighter models, DEB and DEM, were less robust to this change in input; see figure \ref{fig:mnist_resilience}.
 
-The attention model is responsible for choosing the correct location in the input image. The receptive field of output units in the three configurations were the same and the architecture of the attention model was identical.
+The attention model is responsible for choosing the correct location in the input image. The receptive field of output units in the three configurations were the same and the architecture of the attention model was identical. The background noise was also identical. So although the attention model worked well for a smaller image, it is not sure it may work as well for a larger image where the background is the same.
+% One possible reason for this is that the soft attention for all locations must sum to one. Since there are more locations to choose from, the weight on the correct location decreases.
+Remember that the attention model does not know how many locations there are but outputs a salience score for each location independently. Since we use the softmax of these salience scores, the resulting attention weights must sum to one. So the more locations there are, the more the attention risk to spread out over noisy locations. To counter this, the attention model would have to be even more aggressive to separate background noise from useful signals. For hard attention however, only the most promising location is kept and the rest are ignored. So a model trained with hard attention should be more resilient to increased image size. We discuss more about attention later in section \ref{sssec:result_attention}.
 
-We see that the more filters a model has, the more stable it is to change.
-We attribute this resilience to noise to detecting more features in the input, some of which are better preserved after adding the noise.
+We see that the more filters a model has, the more stable it is to change. Hence we believe that although on a single task the three configurations performed comparatively, the heavier model generalizes better in the long run.
+
+% We attribute this resilience to noise to detecting more features in the input, some of which are better preserved after adding the noise.
 
 
 
@@ -141,7 +144,7 @@ The experiments in this section were performed after training the model for many
 
 \subsection{Independent digits} \label{sssec:ind_digits}
 
-\subsection{Soft vs hard attention}
+\subsection{Soft vs hard attention} \label{sssec:result_attention}
 
 \textbf{TODO}: example image with soft and hard attention. Show both success and failure.
 
