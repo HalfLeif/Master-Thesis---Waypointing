@@ -48,9 +48,9 @@ An example image with dot noise and random position can be seen in figure \ref{f
 % TODO insert picture with pretraining image.
 
 
-\subsection{Network depth and width} \label{sssec:exp_encoder}
+\input{figures/mnist_models.tex}
 
-\input{figures/mnist_early_models.tex}
+\subsection{Network depth and width} \label{sssec:exp_encoder}
 
 In figure \ref{fig:mnist_early_models} we can see the resulting accuracy over training time of some different model configurations. The DE model was used as baseline with an encoder that had 7 layers and an output depth of 256. It is very similar to the DEP encoder illustrated in figure \ref{fig:encoder} except that it used one less pooling layer.
 
@@ -72,8 +72,6 @@ In summary we can see that models with smaller representational size achieves ab
 % we found that increasing the width of the decoder's hidden layer from 512 to 1024 had a very small impact on the training time while increasing accuracy. Decreasing the number of layers in the encoder from 7 to 5 decreased the accuracy somewhat but increased training time considerably. Halving the encoder width halved the training time but also decreased accuracy. Adding a pooling layer at the end of the encoder resulted in a higher accuracy after the first epoch and reduced training time. The effect of an extra pooling layer can be seen by comparing the models TE and TEP in figure \ref{fig:mnist_early_models}.
 
 \subsubsection{Wider networks are more robust to noise}
-
-\input{figures/mnist_models.tex}
 
 The best configurations so far were evaluated on the more difficult synthetic dataset with random positions and noise. Figure \ref{fig:mnist_models} contains a comparison between some variations of encoder configurations on the noisy MNIST dataset.
 By comparing this graph to figure \ref{fig:mnist_early_models}, we can see that using larger input images, placing the digits at a random position and adding noise makes the problem much more difficult. Training a single epoch takes almost three times as long and the learning per epoch is reduced.
