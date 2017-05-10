@@ -93,7 +93,7 @@ The third competing encoder (DEB) was a middleground between DEP and DEM, design
 % The lightest encoder (DEM) was designed to have the same representational size as DEP at the end of the encoder but decreasing the number of filters in the beginning in order
 % keeping the representational size as constant as possible from the start by using fewer filters, in contrast to the advice from \textcite{InceptionV3}.
 
-% The 
+% The
 
 
 % By training on the simpler four-digit MNIST dataset without noise, we found several viable configurations of encoder and decoder.
@@ -123,15 +123,14 @@ We trained the models on 3 threads on a single Intel(R) Core(TM) i7-4770K @ 3.50
 
 
 \subsection{Caveat}
-The experiments in this section were performed after training the model for many epochs on the Swedish data already. Optimally we would want to retrain the model from scratch for each alteration but doing so would take too much time. Thus we can only provide a lower bound for the accuracy of each alteration.
+The experiments in this section were performed after training the model for many epochs on the Swedish data already. Optimally we would want to retrain the model from scratch for each alteration but doing so would take too much time. Thus we can only provide a lower bound for the accuracy of the altered models.
 
 
+\subsection{Independent digits} \label{sssec:ind_digits}
 
 \subsection{Soft vs hard attention}
 
 \textbf{TODO}: example image with soft and hard attention. Show both success and failure.
-
-\subsection{Independent digits} \label{sssec:ind_digits}
 
 \subsection{Multi-year vs single-year loss function}
 
