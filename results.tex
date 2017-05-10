@@ -1,4 +1,4 @@
-\chapter{Results}
+\chapter{Results and discussion}
 
 \textit{
 In the previous chapter we described our main model and training procedure as well as some alternatives.
@@ -6,12 +6,15 @@ In this chapter we describe the numerical results of our implementation of the m
 
 \section{Simulations on synthetic data}
 
+Since the images of the Swedish records are so large, we decided to create a simpler and faster dataset so we could quickly iterate on the network architecture. Here we describe the synthetic dataset we created as well as some observations from altering the network configuration.
+
 \subsection{Four-digit MNIST} \label{ssec:pretrain}
 
 \input{figures/mnist4.tex}
 
 For our early experiments we created a synthetic dataset with small images of four-digit sequences.
-Each image was a concatenation of four independently randomly selected digit images from MNIST \cite{MNIST_orig}, where the first digit was always a one. See figure \ref{fig:mnist4} for an example. The resulting image was then $28 \times 112$ pixels.
+Each image was a concatenation of four independently randomly selected digit images from MNIST \cite{MNIST_orig}, where the first digit was always a one. See figure \ref{fig:mnist4} for an example. The resulting image was then a fixed size of $28 \times 112$ pixels.
+%, compared to $900 \times 1500$ or more for the downsampled Swedish records.
 % which is very much smaller than the images of the Swedish records.
 Because the images were so small, it took a much shorter time to train and evaluate different models on the synthetic dataset than on the Swedish population records, whose images were very large.
 
@@ -21,8 +24,9 @@ Several models performed very well on this task, one of them achieving $94\%$ ac
 
 In order to make the synthetic data a little bit more difficult to classify and more similar to the Swedish dataset, each four-digit image was placed at a random position in a larger image whose pixel values were zero, that is no ink.
 
-When putting the four-digit image at a fixed position instead of a random position, one model learned to encode the distance from the left side of the image, which is quite interesting considering that neither the attention model or the decoder has any explicit access to spatial information.
+When putting the four-digit image at a fixed position instead of a random position, one model learned to encode the distance from the left side of the image, which is quite interesting considering that neither the attention model nor the decoder had any explicit access to spatial information.
 When adding $100$ additional zero-pixels to the right of the image, the accuracy dropped from $85\%$ to $80\%$. However, when adding $4$ zero-pixels to the left, the accuracy dropped to only $1\%$. We attribute this sudden accuracy loss to the difficulty of identifying which digit to keep and which to ignore. Since we are training on four-digit images but only expect the last three, the model must learn to find but ignore the first digit.
+Since the year can appear at any position in the Swedish data, the simulations should also vary the position of the digits. Therefore, we must use random positions instead of fixed positions for the synthetic data.
 
 Finally, we applied dot-noise to the image by:
 (1) inverting the image so that the background is represented by one instead of zero,
@@ -50,10 +54,18 @@ By training on the simpler four-digit MNIST dataset without noise,
 % We experimented on various configurations of encoder and decoder depth and width.
 we found that increasing the width of the decoder's hidden layer from 512 to 1024 had a very small impact on the training time while increasing accuracy. Decreasing the number of layers in the encoder from 7 to 5 decreased the accuracy somewhat but increased training time considerably. Halving the encoder width halved the training time but also decreased accuracy. Adding a pooling layer at the end of the encoder resulted in a higher accuracy after the first epoch and reduced training time.
 
+\subsubsection{Encoder variations}
+
 \input{figures/mnist_models.tex}
 
-The best variations were evaluated on the more difficult synthetic dataset with random positions and noise. Figure \ref{fig:mnist_models} contains a comparison between some variations of encoder configurations on the noisy MNIST dataset. The three best model configurations (DEM, DEP, DEB) achieved very similar results considering the test accuracy vs training time.
+The best configurations so far were evaluated on the more difficult synthetic dataset with random positions and noise. Figure \ref{fig:mnist_models} contains a comparison between some variations of encoder configurations on the noisy MNIST dataset. The three best configurations (DEP, DEB, DEM) achieved very similar results considering the test accuracy vs training time. These three configurations had the same number of encoder layers but different depth of each layer.
 
+The heaviest encoder (DEP) is illustrated in figure \ref{fig:encoder}.
+Because it had the most number of filters, the training time for each epoch was much longer than for the other two alternatives.
+% For this encoder the representational size of the input decreases exponentially for each pooling layer: 32, 16, 8, 4, 2.
+Since each pooling layer divides the representational size by four and the number of filters in this model doubles after each pooling layer, the representational size is halved after every pooling layer: 32, 16, 8, 4, 2.
+
+% The 
 
 
 % By training on the simpler four-digit MNIST dataset without noise, we found several viable configurations of encoder and decoder.
@@ -67,19 +79,35 @@ The best variations were evaluated on the more difficult synthetic dataset with 
 
 \section{Experiments}
 
-Here we discuss comparisons we made between different models.
+Here we discuss comparisons we made between different models on the Swedish population records.
 
-\subsection{Hardware setup}
+\subsection{Setup}
 
+
+\subsubsection{Input}
+The images of the Swedish population records had a high resolution so they were down sampled with a ratio of 8. So instead of having a size of $4688 \times 6360$ it was down sampled to $586 \times 795$. Because the images have different sizes, in each batch the images were padded with zeroes to get the same size as the largest image in the batch.
+
+\subsubsection{Implementation}
 The models were implemented in Tensorflow \cite{Tensorflow}, which is a popular open-sourced machine learning framework. The implementation\footnote{\url{https://github.com/HalfLeif/CNN_doc_extraction}} is freely available on Github.
 
-We trained the models on 3 threads on a single Intel(R) Core(TM) i7-4770K @ 3.50GHz. Training a single epoch of Swedish population records took about 28 hours. It would be faster to train using more threads or using GPU acceleration but we were constrained by low access to hardware.
+\subsubsection{Hardware}
+We trained the models on 3 threads on a single Intel(R) Core(TM) i7-4770K @ 3.50GHz. Training a single epoch of Swedish population records took about 28 hours. It would be faster to train using more threads or GPU acceleration but we were constrained by limited access to hardware.
 
+
+\subsection{Caveat}
+The experiments in this section were performed after training the model for many epochs on the Swedish data already. Optimally we would want to retrain the model from scratch for each alteration but doing so would take too much time. Thus we can only provide a lower bound for the accuracy of each alteration.
 
 
 
 \subsection{Soft vs hard attention}
 
+\textbf{TODO}: example image with soft and hard attention. Show both success and failure.
+
 \subsection{Independent digits} \label{sssec:ind_digits}
 
 \subsection{Multi-year vs single-year loss function}
+
+
+\section{Best model}
+
+TODO: compare metrics and suggest best model. Also show confidence thresholds and other metrics.

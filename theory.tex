@@ -218,7 +218,7 @@ In order to compare models, we can then plot precision vs recall or coverage for
 
 \section{Deep learning in computer vision}
 
-Both machine translation and image captioning used to be solved by solving each subproblem separately but this kind of approach has been outperformed by end-to-end systems using deep learning \cite{ShowAndTell}. One neural network \textbf{encoded} the input to a fixed-length vector representation which was \textbf{decoded} by another network. In the case of machine translation both the encoder and decoder was implemented by an RNN which are highly suitable for processing sequences like sentences. The image captioning system was implemented in a similar manner but using a \textbf{convolutional neural network} (CNN) as encoder.
+Both machine translation and image captioning used to be solved by solving each sub-problem separately but this kind of approach has been outperformed by end-to-end systems using deep learning \cite{ShowAndTell}. One neural network \textbf{encoded} the input to a fixed-length vector representation which was \textbf{decoded} by another network. In the case of machine translation both the encoder and decoder was implemented by an RNN which are highly suitable for processing sequences like sentences. The image captioning system was implemented in a similar manner but using a \textbf{convolutional neural network} (CNN) as encoder.
 
 
 \section{Convolutional neural networks}
@@ -229,36 +229,59 @@ Since the publication of the AlexNet in 2012 \cite{AlexNet}, CNNs have gained la
 
 % TODO add citations
 
-In CNNs, each layer has a width, height and depth. Like in MLPs, the input layer has the width and height of the input image while the depth correspond to the number of color channels (one for gray scale, three for RGB and four for RGBA). We now refer to each number in the network as a \textbf{unit} instead of a neuron.
+Each layer in a CNN consists of a two-dimensional grid of vectors, which we will refer to as \textbf{units}. Throughout the network, each unit will correspond to different regions in the input image. Sometimes we will refer to this grid as a three-dimensional tensor where the depth is the size of the vectors. The \textbf{representational size} of a layer is simply the product of its height, width and depth.
 
-As indicated by the name, CNNs mainly consist of \textbf{convolutional layers}. The depth of a convolutional layer is determined by how many filters it has. Each filter produces a two-dimensional \textbf{activation map}, see figure \ref{fig:filter}. Each unit in the activation map comes from a weighted sum over a three-dimensional region in the previous layer over its full depth. For example a $3 \times 3$ filter applied to a 32 depth layer has $3 \cdot 3 \cdot 32=288$ weights and one bias term.
-Like with MLP, the sum is passed to to a non-linear activation function such as $\tanh$. The $3 \times 3$ regions for each unit are overlapping.
+% The \textbf{representational size} of a layer is the width times the height of the activation map times the number of filters. In short, it is the number of scalars in the tensor currently representing the input image.
+
+Similar to MPLs, the input layer has the same width and height as the input image while the depth of the input layer matches the number of color channels in the image (one for gray scale, three for RGB and four for RGBA).
+
+% In CNNs, each layer has a width, height and depth. Like in MLPs, the input layer has the width and height of the input image while the depth correspond to the number of color channels (one for gray scale, three for RGB and four for RGBA).
+% We see each layer as a two-dimensional grid of vectors, where each vector is referred to as a \textbf{unit}.
+%We now refer to each number in the network as a \textbf{unit} instead of a neuron.
+
+\subsection{Convolutions}
+As indicated by the name, CNNs mainly consist of \textbf{convolutional layers}. The depth of a convolutional layer is determined by how many filters it has. Each filter produces a two-dimensional \textbf{activation map}, as illustrated in figure \ref{fig:filter}. Each unit in the activation map comes from a weighted sum over a three-dimensional region in the previous layer over its full depth. For example a $3 \times 3$ filter applied to a 32 depth layer has $3 \cdot 3 \cdot 32=288$ weights and one bias term.
+Like with MLP, the sum is passed to to a non-linear activation function such as $\tanh$.
+
+The $3 \times 3$ regions for adjacent units are overlapping.
+It also possible to explicitly reduce or avoid such overlapping by setting a \textbf{stride} greater than one. Doing so also reduces the representational size of the following layers.
+
 The activation maps for all filters are stacked together to form a three-dimensional output, which is passed to the next layer.
 
-Because a filter uses the same weights for all sub-regions in the previous layer, the total number of parameters are dramatically reduced compared with a fully connected layer as in an MLP. Moreover, because the same filter is applied to each sub-region, it does not matter where in the input image the object is located.
+Because a filter uses the same weights for all sub-regions in the previous layer, the total number of parameters are dramatically reduced compared with a fully connected layer as in an MLP. Moreover, because the same filter is applied to every sub-region, the filter can detect objects regardless of their position in the image.
+Thus, reuse of weights increases the ability to generalize and reduces training time.
+%it does not matter where in the input image the object is located.
 
-Units in higher layers in the CNN receive information from a larger \textbf{receptive field} in the input image.
-% Each $2 \times 2$ pooling layer doubles the receptive field in each dimension, while every $3 \times 3$ convolutional layer increases the receptive field with 2.
-Therefore, the filters in lower layers typically learn to detect low-level features like edges and curves while filters in higher layers can detect more complex objects like cats or faces.
-By synthesizing the input image to maximize a specific filter's activation, it is possible to get an idea of what the filter has learned to recognize \cite{VisualizeCnn}.
-
+\subsection{Pooling}
 \input{figures/maxpool.tex}
 
-Besides filters, CNNs also use \textbf{pooling layers} in order to increase the receptive field without increasing the number of parameters in the model.
-Separately for each activation map, pooling aggregates a two-dimensional region of units (e.g. $2 \times 2$) into a single unit, typically by taking the maximum value; see figure \ref{fig:maxpool}. These regions are non-overlapping so a $2 \times 2$ pooling layer decreases the representational size by 4. Thus another benefit of pooling layers is reduced computation time.
+Besides filters, CNNs also use \textbf{pooling layers}, which compress the signals of the previous layer into a smaller representation without using any additional parameters.
+%in order to increase the receptive field without increasing the number of parameters in the model.
+% Separately for each activation map, 
+Pooling aggregates a two-dimensional region of units (e.g. $2 \times 2$) into a single unit, typically by taking the maximum value element-wise; see figure \ref{fig:maxpool}. These regions are non-overlapping so a $2 \times 2$ pooling layer divides the representational size by 4.
+Since the representation is now smaller, the remaining computations are cheaper to perform, resulting in reduced memory usage and running time.
+
+\subsection{Receptive field}
+Since both convolutional layers and pooling layers gathers information from a larger field, units in later layers in the CNN receive information from a larger \textbf{receptive field} in the input image.
+% Each $2 \times 2$ pooling layer doubles the receptive field in each dimension, while every $3 \times 3$ convolutional layer increases the receptive field with 2.
+Therefore, the filters in early layers typically learn to detect low-level features like edges and curves while filters in later layers can detect more complex objects like cats or faces.
+By synthesizing the input image to maximize a specific filter's activation, it is possible to get an idea of what the filter has learned to recognize \cite{VisualizeCnn}.
 
 We can calculate the size of the receptive field for each output unit by doubling the field for each $2 \times 2$ pooling layer and adding $n-1$ for each $n \times n$ convolutional layer.
-If we have a network that consists of two $5 \times 5$ convolutional layers with a single $2 \times 2$ maxpool layer in between, then we can compute the pixel size $r \times r$ of the receptive field as follows:
+If we have a network that consists of two $5 \times 5$ convolutional layers with a single $2 \times 2$ max-pool layer in between, then we can compute the pixel size $r \times r$ of the receptive field as follows:
 
 \[
 r = 4 + 2(4 + 1) = 14
 \]
 
+\subsection{Classification}
 At the end of the network, there are often a few fully connected layers (MLP) where the last layer represent the output of the network, for example pseudo-probabilities for different categories using softmax like discussed previously.
 
 \subsection{Network architecture for faster computation}
 
-The performance of CNNs typically increases with greater width and depth but it comes at a higher computational cost \cite{InceptionV3}. However, by choosing a good network architecture the same performance can be achieved but at a substantially lower computational cost, for example by refactoring large filters ($5 \times 5$, 7x7) into consecutive small filters ($3 \times 3$) and extensive use of pooling layers to reduce dimensionality. The authors also suggest a balance between depth and width of the network.
+The performance of CNNs typically increases with greater width and depth but it comes at a higher computational cost \cite{InceptionV3}. However, by choosing a good network architecture the same performance can be achieved but at a substantially lower computational cost, for example by refactoring large filters ($5 \times 5$, $7 \times 7$) into consecutive small filters ($3 \times 3$). They also suggest using more pooling layers early in the network as well as maintaining a balance between depth and width of the network.
+
+\textcite{InceptionV3} recommend that representational bottlenecks are avoided and that the representational size should decrease slowly after each layer.
 
 \subsection{Zero padding}
 
