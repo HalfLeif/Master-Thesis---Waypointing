@@ -94,7 +94,6 @@ P(D_1=x, D_2=y, D_3=z) = P(D_1=x) P(D_2=y) P(D_3=z)
 
 
 \section{Training procedure}
-% TODO Perhaps make this a different section?
 
 Here we describe how we train and evaluate the different models.
 
@@ -112,11 +111,16 @@ Instead, we label each image with a tuple of the smallest and the largest year p
 
 \subsection{Loss function}
 
+As mentioned above, we encode the label as a tuple of min and max year. Although it is not optimal to ignore the other years, our base loss function  only uses the maximum year.
+The reason for taking the maximum year instead of the minimum is that during the indexing process, the indexer could have inferred the minimum year from a previous page. In such a case, the minimum year would not be written anywhere on the current page. However, if there is more than one year for an image, all years except the first must be present on the page to show where the new year starts. See figure \ref{fig:page} for an example.
+
 We observed previously in section \ref{sssec:CrossEntropy} that cross-entropy often outperforms squared error as a loss function for classification. Cross-entropy compares a single label against the probability distribution from the network's readout layer. In our case, we output three probability distributions, one for each digit.
 % For a single label per image, we then have two options.
-We compute
+Taking the maximum year as our label, we compute
 %The first option is to take
-the cross-entropy for each digit and then sum the losses.
+the cross-entropy for each digit and sum the losses.
+
+In section \ref{ssec:alt_loss} we present and discuss some alternatives for loss function on this task. Some of the alternative loss functions we discard by theory and the others we evaluate in section \ref{sec:experiments}.
 
 \subsection{Evaluation}
 

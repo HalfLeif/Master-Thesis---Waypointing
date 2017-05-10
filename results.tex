@@ -2,7 +2,11 @@
 
 \textit{
 In the previous chapter we described our main model and training procedure as well as some alternatives.
-In this chapter we describe the numerical results of our implementation of the main model on two datasets, one synthetic dataset created from MNIST and the much more difficult Swedish population records. We also perform several experiments where we change the model configuration or training procedure and observe the effect on either or both datasets. }
+In this chapter we describe the numerical results of our implementation of the main model on two datasets, one synthetic dataset created from MNIST and the much more difficult Swedish population records. We also perform several experiments where we change the model configuration or training procedure and observe the effect on either or both datasets.
+Hopefully, our observations can be instrumental in
+% TODO: instrumental? Rephrase?
+designing future encoder-decoder networks.
+}
 
 \section{Simulations on synthetic data}
 
@@ -18,8 +22,7 @@ Each image was a concatenation of four independently randomly selected digit ima
 % which is very much smaller than the images of the Swedish records.
 Because the images were so small, it took a much shorter time to train and evaluate different models on the synthetic dataset than on the Swedish population records, whose images were very large.
 
-Several models performed very well on this task, one of them achieving $94\%$ accuracy after $10500$ cpu-seconds of training.
-All models used cartesian loss (defined in section \ref{sssec:cartesian}) and soft attention (see section \ref{sssec:soft_attention}).
+Several models performed very well on this task, one of them achieving $94\%$ accuracy after 10,500 cpu-seconds of training. These models are discussed further in section \ref{sssec:exp_encoder}.
 
 \subsection{Noisy MNIST}
 
@@ -37,22 +40,14 @@ This corresponds to adding a random but small amount of ink to each pixel in the
 
 An example image with dot noise and random position can be seen in figure \ref{fig:mnist_random_pad}. The models were evaluated on the image size $56 \times 168$ pixels, like in the figure.
 
-% Finally, we applied dot-noise to the image by multiplying each pixel's grayscale value with a random number drawn independently uniformly from $[0.6, 1.0]$.
-
-% \subsection{Noise}
-
-%The network was pre-trained on a synthetic dataset created from MNIST \cite{MNIST_orig}. Using synthetic data allowed us to quickly discard inefficient network architectures and we believe that pre-training helped faster learning on the real data.
-
-%  This 4 digit image was then placed in a random position in a larger blank image. Finally, we applied dot-noise to the image pixel by pixel by multiplying its grayscale value with a random number drawn uniformly from $[0.6, 1.0]$.
-
-% TODO insert picture with pretraining image.
-
-
-\input{figures/mnist_models.tex}
 
 \subsection{Network depth and width} \label{sssec:exp_encoder}
 
-In figure \ref{fig:mnist_early_models} we can see the resulting accuracy over training time of some different model configurations. The DE model was used as baseline with an encoder that had 7 layers and an output depth of 256. It is very similar to the DEP encoder illustrated in figure \ref{fig:encoder} except that it used one less pooling layer.
+\input{figures/mnist_models.tex}
+
+In figure \ref{fig:mnist_early_models} we can see the resulting accuracy over training time of some different model configurations.
+All configurations used cartesian loss (defined in section \ref{sssec:cartesian}) and soft attention (see section \ref{sssec:soft_attention}).
+The DE model was used as baseline with an encoder that had 7 layers and an output depth of 256. It is very similar to the DEP encoder illustrated in figure \ref{fig:encoder} except that it used one less pooling layer.
 
 Halving the depth of the decoder from 1024 to 512 (DED) had little impact on this task. Halving the number of filters in every layer (DEL) halved the training time per epoch but also halved the learning rate, so in the end its performance was about the same.
 
@@ -103,27 +98,17 @@ We see that the more filters a model has, the more stable it is to change. Hence
 % We attribute this resilience to noise to detecting more features in the input, some of which are better preserved after adding the noise.
 
 
-
-% We argue that the heavier model, DEP, with its additional filters can detect more features in the input 
+% We argue that the heavier model, DEP, with its additional filters can detect more features in the input
 
 % The lightest encoder (DEM) was designed to have the same representational size as DEP at the end of the encoder but decreasing the number of filters in the beginning in order
 % keeping the representational size as constant as possible from the start by using fewer filters, in contrast to the advice from \textcite{InceptionV3}.
 
-% The
 
+\section{Experiments} \label{sec:experiments}
 
-% By training on the simpler four-digit MNIST dataset without noise, we found several viable configurations of encoder and decoder.
-
-% We found various viable models by working on the simpler dataset of four-digit MNIST without noise.
-
-
-
-
-% \subsection{Encoder depth}
-
-\section{Experiments}
-
-Here we discuss comparisons we made between different models on the Swedish population records.
+In this section we present and discuss our model as well as some variations on the Swedish population records.
+% metrics of different models and training
+% comparisons we made between different models on the Swedish population records.
 
 \subsection{Setup}
 
@@ -138,18 +123,34 @@ The models were implemented in Tensorflow \cite{Tensorflow}, which is a popular 
 We trained the models on 3 threads on a single Intel(R) Core(TM) i7-4770K @ 3.50GHz. Training a single epoch of Swedish population records took about 28 hours. It would be faster to train using more threads or GPU acceleration but we were constrained by limited access to hardware.
 
 
-\subsection{Caveat}
-The experiments in this section were performed after training the model for many epochs on the Swedish data already. Optimally we would want to retrain the model from scratch for each alteration but doing so would take too much time. Thus we can only provide a lower bound for the accuracy of the altered models.
+\subsubsection{Pre-training}
+
+All experiments in this section start with a pre-trained model already, we refer to this as the \textbf{base model}. The base model uses the DEP encoder and was trained using soft attention and cartesian loss for 5 epochs on the noisy MNIST and then for 16 epochs on the Swedish population data. Thus it had an accumulated training time of about 400,000 cpu-seconds.
+% noisy MNIST DEP-5: 41217 cpusec
+% 16 epochs of SweDEP: 22440*16 cpusec
+% SUM: ca 400k cpusec.
+The base model had a test accuracy of $8.39\%$ and an evaluation accuracy of $2.11\%$.
+
+Optimally the experiment variations should be retrained from scratch, but since they are heavily pre-trained with another configuration, we present our observations as a lower bound to the potential accuracy of each variation.
+
+% that pre-trained on the noisy MNIST for 5 epochs which was then trained on the Swedish population data
+
+% The experiments in this section were performed after training the model for many epochs on the Swedish data already. Optimally we would want to retrain the model from scratch for each alteration but doing so would take too much time. Thus we can only provide a lower bound for the accuracy of the altered models.
 
 
 \subsection{Independent digits} \label{sssec:ind_digits}
+
+% TODO: check in notes for results on MNSIT data.
+
+
 
 \subsection{Soft vs hard attention} \label{sssec:result_attention}
 
 \textbf{TODO}: example image with soft and hard attention. Show both success and failure.
 
-\subsection{Multi-year vs single-year loss function}
+\subsection{Multi-year vs single-year loss function} \label{ssec:result_multiyear}
 
+\section{Post-processing} \label{sec:result_post_process}
 
 \section{Best model}
 

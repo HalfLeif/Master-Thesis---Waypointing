@@ -1,8 +1,16 @@
 \section{Extensions}
 
-\subsection{Alternative loss functions}
+If the problem was simple we would not need to look for alternatives; but as it turns out, the Swedish population dataset is quite challenging.
+In this section we think about and discuss extensions to the model described above in order to fix various problems.
+As we will see, not all such ideas will work; in fact, some of them can be discarded already in theory. Others, we evaluate later in section \ref{sec:experiments}.
 
-Choosing a suitable loss function for training the model is paramount to successful learning. Here we introduce and discuss some alternative loss functions for our task.
+
+\subsection{Alternative loss functions} \label{ssec:alt_loss}
+
+Choosing a suitable loss function for training the model is paramount to successful learning.
+Here we present and discuss some ideas for alternative loss functions for our task.
+The two most promising alternatives, cartesian loss and multi-year loss, are evaluated in section \ref{sec:experiments}.
+%The other presented alternatives we discard based on our discussion in this section.
 
 % Here we discuss possible extensions and variations to the model described above.
 % additional ideas that could be used to further improve our models.
@@ -34,8 +42,7 @@ Here we introduce a loss function inspired by disjoint labels but that still let
 \subsubsection{Multi-year loss}
 
 It is not trivial to make a good loss function for multi-year labels. If we sum the loss for each year in the label, the images with many years have a higher influence than images with few years. Instead we can propose to take the average loss over the years but then another problem emerges: if for example the network would correctly classify an image as $1772$ where the label is $[1771, 1774]$, we still punish the network for not finding the other years.
-
-% TODO write about experiment regarding multiyear loss.
+In section \ref{ssec:result_multiyear} we compare using this multi-year loss against the default single-year loss.
 
 \subsubsection{Distance loss}
 
@@ -106,7 +113,10 @@ One approach would be to let the network have the prediction of the previous pag
 
 \subsubsection{Post-processing}
 
-Another approach to use the sequential information of books is to post-process the predictions. For example, if the network would suggest the sequence $\langle 1771, 1872, 1773 \rangle$, we could correct it to $\langle 1771, 1772, 1773 \rangle$. We suggest using the \textbf{Viterbi algorithm} on the following model to attempt to correct the predictions.
+Another approach to use the sequential information of books is to post-process the predictions. For example, if the network would suggest the sequence $\langle 1771, 1872, 1773 \rangle$, we could correct it to $\langle 1771, 1772, 1773 \rangle$.
+In section \ref{sec:result_post_process}, we evaluate post-processing using the \textbf{Viterbi algorithm} on the following model
+% We suggest using  on the following model
+to attempt correcting the predictions.
 
 For each image $t$, we define $z_{tj}$ to be the model's prediction probability that page $t$ has label $j$. We also introduce a jump distribution $Q(j, k)$ for making a transition from label $j$ to label $k$.
 
@@ -122,7 +132,7 @@ After computing the entire matrix $T$, the probability of the most likely sequen
 
 To make the algorithm run faster, we only allow labels in a smaller interval 1600--1899 instead of the possible output 1000--1999.
 
-% \paragraph{Creating $Q$}
+\paragraph{Jump probability}
 The jump probability $Q(j, k)$ can be found by statistically counting the page transitions in the training data. We simplify the distribution by only taking into account the year difference between $j$ and $k$. In order to handle unseen transitions, we use \textbf{Laplace smoothing} with $\alpha=0.5$. We denote $N(r)$ as the count of year transitions with difference $r$, $N$ to be the total number of transitions and $K$ to be the number of allowed labels.
 
 \[
@@ -131,6 +141,7 @@ Q(j, k) = Q(k-j) = \frac{N(k-j) + \alpha}{N + \alpha K}
 
 For images that have multiple years, we uniformly distribute the weight between the possible transitions of the two images. A transition from $[1771, 1772]$ to $[1772, 1773]$ would thus produce the following count: {0: 0.25, 1: 0.5, 2: 0.25}.
 
-% TODO: mention conditioning
+\paragraph{Conditional jump probability}
+TODO: write about this.
 
 % For each image $t$ the network outputs a probability distribution for a three digit sequence $\mathbf{z}_t \in \mathbb{R}^1000$ so that $P(D_1=x, D_2=y, D_3=z) = z_{tj}$.
