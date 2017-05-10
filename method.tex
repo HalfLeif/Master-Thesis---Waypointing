@@ -109,7 +109,7 @@ Instead, we label each image with a tuple of the smallest and the largest year p
 %Although it is not optimal, we currently train the network using one year as label for each image.
 
 
-\subsection{Loss function}
+\subsection{Loss function} \label{ssec:method_loss}
 
 As mentioned above, we encode the label as a tuple of min and max year. Although it is not optimal to ignore the other years, our base loss function  only uses the maximum year.
 The reason for taking the maximum year instead of the minimum is that during the indexing process, the indexer could have inferred the minimum year from a previous page. In such a case, the minimum year would not be written anywhere on the current page. However, if there is more than one year for an image, all years except the first must be present on the page to show where the new year starts. See figure \ref{fig:page} for an example.

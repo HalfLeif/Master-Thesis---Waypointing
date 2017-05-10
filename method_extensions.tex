@@ -39,7 +39,7 @@ Another drawback of disjoint labels is that there may be very few training examp
 Here we introduce a loss function inspired by disjoint labels but that still let the model reuse learning of individual digits. Above we suggested to sum the cross-entropy for each digit, instead we can compute the cartesian product of the readout layers to make a vector over the supported year range and take the cross-entropy directly on this vector. A comparison between the two loss functions is performed in secion \ref{sssec:ind_digits}.
 
 
-\subsubsection{Multi-year loss}
+\subsubsection{Multi-year loss} \label{sssec:alt_multiyear}
 
 It is not trivial to make a good loss function for multi-year labels. If we sum the loss for each year in the label, the images with many years have a higher influence than images with few years. Instead we can propose to take the average loss over the years but then another problem emerges: if for example the network would correctly classify an image as $1772$ where the label is $[1771, 1774]$, we still punish the network for not finding the other years.
 In section \ref{ssec:result_multiyear} we compare using this multi-year loss against the default single-year loss.

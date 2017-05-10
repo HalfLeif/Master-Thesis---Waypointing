@@ -138,17 +138,23 @@ Optimally the experiment variations should be retrained from scratch, but since 
 % The experiments in this section were performed after training the model for many epochs on the Swedish data already. Optimally we would want to retrain the model from scratch for each alteration but doing so would take too much time. Thus we can only provide a lower bound for the accuracy of the altered models.
 
 
-\subsection{Independent digits} \label{sssec:ind_digits}
+\subsection{Independent digits vs cartesian loss} \label{sssec:ind_digits}
 
-% TODO: check in notes for results on MNSIT data.
+We now compare using the independent digit loss presented in section \ref{ssec:method_loss} against the cartesian loss introduced in section \ref{sssec:cartesian}.
+% TODO: check in notes for results on MNIST data.
+Training the DEP configuration from scratch on the noisy MNIST data using either loss function gave very similar results although the training time was slightly longer for cartesian loss.
 
+For the Swedish population records, the base model used cartesian loss already. When training one additional epoch using the independent digit loss, the training accuracy dropped from $8.39\%$ to $7.2\%$. However, when training the model for another 6 epochs we reached the accuracy of $8.98\%$.
 
+\subsection{Multi-year vs single-year loss} \label{ssec:result_multiyear}
+
+The independent digit loss presented in section \ref{ssec:method_loss} only used a single year from the label. We suggested another loss function in section \ref{sssec:alt_multiyear} that takes into account the full year interval in the label by averaging the loss over all years in the interval.
+
+% When training one additional epoch with the base model
 
 \subsection{Soft vs hard attention} \label{sssec:result_attention}
 
 \textbf{TODO}: example image with soft and hard attention. Show both success and failure.
-
-\subsection{Multi-year vs single-year loss function} \label{ssec:result_multiyear}
 
 \section{Post-processing} \label{sec:result_post_process}
 
