@@ -113,6 +113,8 @@ If the year is unknown or the image is blank, we ignore the image because we do 
 However, in the extracted information there is no way to distinguish whether the extracted year came from the same image or if it was implied from a neighboring image. Thus, it is inevitable that some images in the dataset have labels although the year is actually not written in the image. One way to counter this problem would be to only train on images that are labeled with more than one year, expecting an indicated year change somewhere in the image. Doing so would however reduce the dataset to $37.3\%$ of the original size.
 Although we have no way to calculate how often the label implies a year that is missing from the image without manually inspecting every image, we assume that it is relatively rare and thus negligible.
 
+Another kind of false labels are years occurring in free-form text. For example, a page with burial records for 1771 may mention that a deceased person was born in 1725. In this case, we only want to recognize 1771 although 1725 is actually another year present in the image.
+
 \subsection{Partioning}
 
 We divided the dataset into three partitions, one for training, one for testing and one for validation. The two smallest collections, Kalmar (1930243) and Västernorrland (1949331), were reserved for validation.
