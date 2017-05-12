@@ -11,7 +11,7 @@ In the next chapter we compare our work with other related work as well as metho
 
 %% Rewrite this part, add more recent work, especially in deep learning and CNNs: spatial transformations, visual-semantic alignment etc.
 
-\section{Handwritten text recognition}
+\section{Handwritten text recognition} \label{sec:alt_htr}
 
 HTR systems have
 % been employed successfully in industry for
@@ -38,7 +38,12 @@ Pre-processing is commonly used to improve the quality of the input \cite{HWR_su
 
 \subsubsection{Binarization}
 
-First, the pixels are mapped to 0 or 1 depending on whether the gray-scale value of the pixel is above or below some threshold. The simplest is to use a global threshold, often calculated by Otsu's method. Otsu's method looks at the intensity histogram of the image. Assuming that there are two peaks in the histogram, one for background and one for foreground, it attempts to find a balanced threshold between the peaks. If the lighting was uneven at the time of photography, global thresholding does not work very well.
+Binarization maps each pixel to 0 or 1 depending on whether the gray-scale value of the pixel is above or below some threshold.
+Binarizing the image is necessary for some techniques that count black pixels
+% such as projection-based skew detection,
+or use connected components (CCs). A connected component is simply a group of adjacent black pixels surrounded by white pixels in the binarized image.
+
+The simplest is to use a global threshold, often calculated by Otsu's method. Otsu's method looks at the intensity histogram of the image. Assuming that there are two peaks in the histogram, one for background and one for foreground, it attempts to find a balanced threshold between the peaks. If the lighting was uneven at the time of photography, global thresholding does not work very well.
 
 Another approach is to use local or adaptive thresholds, which calculates different thresholds for each pixel depending on the surrounding area. Local thresholds are more successful than global thresholding on low quality images, especially in the presence of noise. There are extensions to Otsu's method to produce local thresholds.
 
@@ -104,4 +109,4 @@ Stochastic methods utilize HMMs to ...
 
 \section{Named entity recognition}
 
-\textbf{Named entity recognition} (NER) ...
+\textbf{Named entity recognition} (NER) ...?

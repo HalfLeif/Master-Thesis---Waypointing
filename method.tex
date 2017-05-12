@@ -52,7 +52,6 @@ Another major difference between our work and \cite{FornesCnnCategorization} is 
 Like previously mentioned in section \ref{ssec:attention}, the encoder output can be seen as a list of feature vectors $\mathbf{a_i} \in \mathbb{R}^D$, which correspond to different, but overlapping, locations in the input image. The number of produced feature vectors depends on the size of the input image. We will see that this attention model aggregates all feature vectors $\mathbf{a_i}$ into a single fixed size vector $\mathbf{z} \in \mathbb{R}^D$.
 
 The attention model consists of a multilayer perceptron, which for each feature vector $\mathbf{a_i}$ computes a salience score $e_i$:
-
 \[
 e_i = f_\text{att}(\mathbf{a_i})
 \]
@@ -65,7 +64,6 @@ Note that this MLP does not have access to any information about the correspondi
 We denote the softmax of $e_i$ as attentions $\alpha_i$, which sums to one by definition of softmax.
 %We compute the softmax of $e_i$ as $\alpha_i$, which sums to one per definition.
 We then use the attentions $\alpha_i$ as weights over the feature vectors:
-
 \[
 \mathbf{z} = \sum_{k=1}^L \alpha_i \mathbf{a_i}
 \]
@@ -87,7 +85,6 @@ Because the years we will extract are all in the range 1627--1890, $3$ digits is
 
 We do softmax on each readout layer to get pseudo-probabilities for the digits.
 To compute the probability for a specific 3-digit sequence $\langle x, y, z \rangle$ we simply multiply the probability of each digit:
-
 \[
 P(D_1=x, D_2=y, D_3=z) = P(D_1=x) P(D_2=y) P(D_3=z)
 \]
