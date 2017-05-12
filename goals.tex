@@ -1,17 +1,24 @@
 \section{Goals}
 
 % TODO: explore is vague. Perhaps 'evaluate'. However, also exploring by considering which methods might be useful...
-The goal of this thesis is to explore different possible approaches to automatically extract genealogical information from historical population records, for waypointing or indexing, by learning from previously indexed data. Specifically, we investigate how to extract the main written year(s) in each photographed page by using \textbf{convolutional neural networks} (CNN).
+The goal of this thesis is to explore different possible approaches to automatically extract genealogical information from historical population records, for waypointing or indexing, by learning from previously indexed data. Specifically, we investigate how to extract the main written year(s) in each photographed page by using deep neural networks
+, in particular deep \textbf{convolutional neural networks} (CNN)
+.
 
 We believe that of all genealogical information in a historical document, the year should be the easiest to extract.
 In contrast with personal names, the valid range of years is considerably smaller and years have no spelling variations. Furthermore, the year is often written in a larger size than the rest of the text, which makes it easier to recognize and allows for more aggressive downsampling of the images for faster computation.
 % Years in our documents always consist of four digits
-Hence it forms a suitable task to start with on the road to the long-term goal of a fully automated indexing system.
+Hence, extracting year seems like a suitable starting step towards achieving the long-term goal of a fully automated indexing system.
 
 % If possible, the method should also suggest which part of the image that contains the year.
 
-In order to evaluate the proposed methods, we build a platform independent open-source prototype. The prototype system trains machine learning models which are evaluated by their accuracy.
-Although accuracy is the primary metric, the trained model should be fast enough to classify hundreds of thousands of images within feasible time.
+% In order to evaluate our neural network models, we build a platform independent open-source prototype. The prototype system trains machine learning models which are evaluated by their accuracy.
+
+We train and evaluate our neural network models on a new dataset of Swedish population records.
+% We implement, train and evaluate our proposed neural network models in our platform independent open-source prototype.
+In order for our model to be commercially useful, the accuracy need to be very high while the model should be fast enough to classify hundreds of thousands of images within feasible time.
+% Although accuracy is the primary metric, in order to be commercially useful, the trained model need to be fast enough to classify hundreds of thousands of images within feasible time.
+
 % Although human accuracy is unrealistic, the accuracy should be as high as possible. However, the model should preferably also be fast enough to classify hundreds of thousands of images within reasonable time.
 
 % that automatically extracts high-level information for each photographed page of historical population records. The information under consideration is 1. year, 2. page number and 3. record type, where the record type is one of \{blank, birth, death, marriage\}. Preferably, the system should also suggest which part of the image that contains the year and page number for example by providing a bounding box.
@@ -26,7 +33,8 @@ Although accuracy is the primary metric, the trained model should be fast enough
 
 % TODO verify that this promise is fulfilled!
 An essential property of the desired automated system is to learn from fully indexed collections in order to extract information in other related collections that have not yet been indexed.
-Therefore, we evaluate with how well learning from one dataset generalizes to other datasets, for example other regions and languages.
+Therefore, we evaluate with how well learning from one dataset generalizes to other datasets, in particular to new scribes and regions.
+%for example other regions and languages.
 
 % TODO verify that this promise is fulfilled!
 Finally, we consider how the model could be extended to extract more information and speculate how and whether full automation of indexing can be achieved.
