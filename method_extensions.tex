@@ -1,8 +1,8 @@
 \section{Extensions}
 
-If the problem was simple we would not need to look for alternatives; but as it turns out, the Swedish population dataset is quite challenging.
+% As it turns out, the Swedish population dataset is quite challenging.
 In this section we think about and discuss extensions to the model described above in order to fix various problems.
-As we will see, not all such ideas will work; in fact, some of them can be discarded already in theory. Others, we evaluate later in section \ref{sec:experiments}.
+As we will see, not all such ideas will work; in fact, some of them can be discarded already in theory. Others, we evaluate empirically in section \ref{sec:experiments}.
 
 
 \subsection{Alternative loss functions} \label{ssec:alt_loss}
@@ -22,7 +22,9 @@ The two most promising alternatives, cartesian loss and multi-year loss, are eva
 We could view each year as a disjoint label with nothing in common. In that case the decoder would need to have a readout layer of size $300$, one neuron for each possible year, instead of $3 \times 10$. Then we could simply take the cross-entropy loss on the readout layer directly.
 
 A drawback of disjoint labels is that learning is not reused, training on an image with label $1772$ only benefits recognition of that label.
-If we instead represent labels as a sequence of digits, the example of $1772$ helps in recognizing years that follow any of the patterns 17\_\_, 1\_7\_ and 1\_\_2 where \_ refers to any digit.
+If we instead represent labels as a sequence of digits, the example of $1772$ helps in recognizing years that follow any of the patterns 17xx, 1x7x and 1xx2 where x refers to any digit.
+% TODO: use x_1, x_2, x_3 ?
+
 Another drawback of disjoint labels is that there may be very few training examples for some years, as mentioned in section \ref{sssec:few_labels}.
 
 % However, we wanted the model to learn to recognize individual digits and combine them into sequences.
@@ -36,7 +38,7 @@ Another drawback of disjoint labels is that there may be very few training examp
 % A hybrid between disjoint labels and the three digit decoder
 %
 
-Here we introduce a loss function inspired by disjoint labels but that still let the model reuse learning of individual digits. Above we suggested to sum the cross-entropy for each digit, instead we can compute the cartesian product of the readout layers to make a vector over the supported year range and take the cross-entropy directly on this vector. A comparison between the two loss functions is performed in secion \ref{sssec:ind_digits}.
+Here we introduce a loss function inspired by disjoint labels but that still let the model reuse learning of individual digits. Above we suggested to sum the cross-entropy for each digit; instead we can compute the cartesian product of the readout layers to make a vector over the supported year range and take the cross-entropy directly on this vector. A comparison between the two loss functions is performed in section \ref{sssec:ind_digits}.
 
 
 \subsubsection{Multi-year loss} \label{sssec:alt_multiyear}
@@ -71,9 +73,9 @@ So even though it may make intuitive sense to penalize numeric distance, it is q
 
 Although the second problem would remain, the bias in the distance loss could be alleviated by using another approach:
 %In order to solve the first problem we could suggest another approach:
-instead of minimizing a distance loss, we can maximize a proximity score $S_D$ using a weight function $W$ around the label $y$:
+instead of minimizing a distance loss, we can maximize a proximity score $S$ using a weight function $W$ around the label $y$:
 \[
-S_D(X, y) = \sum_i P(X=x) W(x, y)
+S(X, y) = \sum_x P(X=x) W(x, y)
 \]
 
 Because we want to reward predictions near $y$, we can use a Gaussian function as weight function:
@@ -83,7 +85,7 @@ W(x, y) = \exp \left( \frac{-(y-x)^2}{\sigma^2} \right)
 
 We can then compute the bias in the same way as before, by integrating over a mapped interval $[0,1]$:
 \[
-S_D(U, y) = \int_0^1 P(U=x) W(x, y) dx =
+S(U, y) = \int_0^1 P(U=x) W(x, y) dx =
 \int_{-y}^{1-y} \exp \left( \frac{-x^2}{\sigma^2} \right) dx
 %\frac{\sigma \sqrt{\pi}}{2} \left(
 %\text{erf} \left( \frac{1-y}{\sigma} \right) +
@@ -104,30 +106,36 @@ In this section we suggest two ways of utilizing this contextual information for
 \subsubsection{Auxiliary input}
 
 % This additional information could be taken into account by letting
-One approach would be to let the network have the prediction of the previous page as an auxiliary input to the decoder. However, there are some problems with this. Firstly, it is not clear what the auxiliary input should be for the first page in a book. Secondly, during training we want to draw the images in a random order to prevent overfitting. However, we can not classify the previous image again because we would be missing the auxiliary input of that image. Instead, we could use the predictions from the previous epoch. Then the predictions used for auxiliary input would have been produced by presumably rather different weights than the current version of the decoder employ. We hypothesize that this temporal mismatch between decoder weights would introduce randomness and make learning from the auxiliary input slow and/or unstable.
+% One approach would be to let the network have the prediction of the previous page as an auxiliary input to the decoder.
+One approach would be to let the attention and decoder networks take one auxiliary input from the previous page, for example the decoder's hidden state or the digit predictions. This idea borrows from the RNN decoders by \textcite{machine_translation_attention} and \textcite{AttendAndTell} where the hidden state of the decoder RNN is passed to both the attention model and the RNN itself in the next iteration.
+
+However, there are some problems with auxiliary input from the previous page. Firstly, it is not clear what the auxiliary input should be for the first page in a book but as in previous work we could use the zero vector. Secondly, during training we want to draw the images in a random order to prevent overfitting. However, we can not classify the previous image again because we would be missing the auxiliary input of that image. Instead, we could use the predictions from the previous epoch. Then the predictions used for auxiliary input would have been produced by presumably somewhat different weights than the current weights of the decoder. We hypothesize that this temporal mismatch between decoder weights would make learning from the auxiliary input slow and/or unstable.
+
+If however the network could be trained using auxiliary input, it could increase the models predictive power.
 
 \subsubsection{Post-processing}
 
 Another approach to use the sequential information of books is to post-process the predictions. For example, if the network would suggest the sequence $\langle 1771, 1872, 1773 \rangle$, we could correct it to $\langle 1771, 1772, 1773 \rangle$.
-In section \ref{sec:result_post_process}, we evaluate post-processing using the \textbf{Viterbi algorithm} on the following model
+Below we present a model for post-processing, which we evaluate in section \ref{sec:result_post_process}.
+% post-processing using the \textbf{Viterbi algorithm} on the following model
 % We suggest using  on the following model
-to attempt correcting the predictions.
+% to attempt correcting the predictions.
 
 For each image $t$, we define $z_{tj}$ to be the model's prediction probability that page $t$ has label $j$. We also introduce a jump distribution $Q(j, k)$ for making a transition from label $j$ to label $k$.
 
-With this model, we consider each book to be a sequence of state transitions. A transition at time $t$ from state $j$ to state $k$ is calculated as $z_{tk} Q(j, k)$. We can then apply the Viterbi algorithm using \textbf{Dynamic programming} to find the maximum probability sequence of state transitions.
+With this model, we consider each label to be a state and each book to be a sequence of state transitions. A transition at time $t$ from state $j$ to state $k$ is calculated as $z_{tk} Q(j, k)$. We can then apply the \textbf{Viterbi algorithm} using \textbf{Dynamic programming} to find the maximum probability sequence of state transitions.
 
-We create a matrix $T$ that for each page $t$ contains the maximum probability of a sequence so far. For the first page, we simply take the network predictions: $T[0,j] = z_{0j}$. For every other page, we introduce the following recurrence:
+We create a matrix $T$, so that that for each page $t$ and label $j$, $T[t,j]$ contains the maximum probability of a sequence so far. For the first page, we simply take the network predictions: $T[0,j] = z_{0j}$. For every other page, we use the following recurrence:
 \[
 T[t,j] = z_{tj} \max_k \left\{ T[t-1,k] Q(k, j) \right\}
 \]
 
 After computing the entire matrix $T$, the probability of the most likely sequence is the largest value in the last column of $T$. We can then reproduce the most likely sequence by backtracking.
 
-To make the algorithm run faster, we only allow labels in a smaller interval 1600--1899 instead of the possible output 1000--1999.
+To make the algorithm run faster, we only allow labels in the smaller interval 1600--1899 instead of the possible output 1000--1999.
 
-\paragraph{Jump probability}
-The jump probability $Q(j, k)$ can be found by statistically counting the page transitions in the training data. We simplify the distribution by only taking into account the year difference between $j$ and $k$. In order to handle unseen transitions, we use \textbf{Laplace smoothing} with $\alpha=0.5$. We denote $N(r)$ as the count of year transitions with difference $r$, $N$ to be the total number of transitions and $K$ to be the number of allowed labels.
+\paragraph{Jump distribution}
+The jump distribution for $Q(j, k)$ can be found by statistically counting the page transitions in the training data. We simplify the distribution by only taking into account the year difference between $j$ and $k$. In order to handle unseen transitions, we use \textbf{Laplace smoothing} with $\alpha=0.5$. We denote $N(r)$ as the count of year transitions with difference $r$, $N$ to be the total number of transitions and $K$ to be the number of allowed labels.
 
 \[
 Q(j, k) = Q(k-j) = \frac{N(k-j) + \alpha}{N + \alpha K}
@@ -135,7 +143,10 @@ Q(j, k) = Q(k-j) = \frac{N(k-j) + \alpha}{N + \alpha K}
 
 For images that have multiple years, we uniformly distribute the weight between the possible transitions of the two images. A transition from $[1771, 1772]$ to $[1772, 1773]$ would thus produce the following count: {0: 0.25, 1: 0.5, 2: 0.25}.
 
-\paragraph{Conditional jump probability}
-TODO: write about this.
+\paragraph{Conditional jump distribution}
+One problem with the above jump distribution is that, for our dataset, a vast majority of the page transitions are zero jumps; that is from the same label to itself.
+Because the distribution heavily favors the zero jump, the predictions after post-processing often output the same year for all pages in a book, instead of increasing years as we would expect.
+
+ One idea to fix this is to condition the current transition on the previous transition. The idea is that if the previous transition was a zero jump, we should be more likely to change year now. However, when aggregating the statistics for the Swedish dataset, it turns out our intuition was wrong: if the previous transition was a zero jump, it is even greater probability that the current transition is a zero jump. So a conditional distribution reinforces the problem instead of alleviating it.
 
 % For each image $t$ the network outputs a probability distribution for a three digit sequence $\mathbf{z}_t \in \mathbb{R}^1000$ so that $P(D_1=x, D_2=y, D_3=z) = z_{tj}$.

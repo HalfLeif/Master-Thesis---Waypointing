@@ -24,6 +24,7 @@ In contrast, \textcite{AttendAndTell} run on the entire input image while using 
 
 Another major difference between our work and \cite{AttendAndTell} is that their decoder was sequential so for each iteration it looked at a new part of the image. So even though the decoder only looked at a single place in each iteration, over the output sequence most relevant parts of the image had been covered.
 
+Difference: our attention model has no hidden state as auxiliary input. However, should not need one since always want to see year and nothing else.
 
 \section{Best future approach}
 

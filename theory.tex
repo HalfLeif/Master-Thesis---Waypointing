@@ -317,11 +317,11 @@ This reduces the computation time for training and also increases the precision 
 Besides image classification, attention models have also been highly successful for image captioning \cite{AttendAndTell} and machine translation \cite{machine_translation_attention}.
 
 % \subsection{Details}
-We now describe how the attention model in \cite{AttendAndTell} works in more detail.
+We now describe how the attention model that was introduced by \textcite{machine_translation_attention} works in more detail.
 The goal of the attention model is to produce a vector $\mathbf{z} \in \mathbb{R}^D$ that represents the entire input image by weighing different parts of the output from the encoder CNN.
 
 The encoder output is three-dimensional but can be seen as a grid of $L$ feature vectors. Each feature vector $\mathbf{a_i} \in \mathbb{R}^D$ corresponds to a specific location in the input image. We feed each $\mathbf{a_i}$ to an MLP which produces a scalar $e_i \in \mathbb{R}$. In the paper, the decoder uses an RNN whose hidden state is also used as input to the MLP besides the feature vector $\mathbf{a_i}$.
-The scalar attention weight $\alpha_i$ for each location can then be computed by taking the softmax of $e_i$ over all units:
+The scalar attention weight $\alpha_i$ for each location $i$ can then be computed by taking the softmax of $e_i$ over all locations:
 \[
 \alpha_i = \frac{ \exp(e_i) }{ \sum_{k=1}^L \exp(e_i) }
 \]

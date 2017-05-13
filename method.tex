@@ -7,7 +7,7 @@
 \input{figures/system_overview.tex}
 
 We now describe the different parts of the proposed network. See figure \ref{fig:sys_overview} for an overview of how the different parts of the network interact.
-The network architecture is mainly inspired by the work of \textcite{multidigit_streetview} who successfully detect house numbers in Google Street View and \textcite{AttendAndTell} who introduced the attention mechanism that we use.
+The network architecture is mainly inspired by the work of \textcite{multidigit_streetview} who detected house numbers in Google Street View with very high precision and coverage, \textcite{machine_translation_attention} who introduced the attention mechanism that we use and \textcite{AttendAndTell} who applied the attention mechanism to a CNN encoder.
 
 \subsection{Encoder}
 
@@ -23,7 +23,7 @@ We use a similar beginning of the encoder except that each $5 \times 5$ layer ha
 After each pooling layer, we increase the number of filters in order to maintain a good size for the representation of the input. Per recommendation of \textcite{InceptionV3}, we let the representational size be somewhat larger in the beginning of the network and then slowly decrease. The representation should decrease as the information in the previous layer is abstracted.
 
 %There is a balance between the number of layers in the encoder and the width of each layer.
-In the experience of \textcite{InceptionV3}, a network is the most computationally efficient when the depth and width of a network is kept in balance. Consequently, we experiment with different number of layers and filters for each layer in section \ref{sssec:exp_encoder}.
+In the experience of \textcite{InceptionV3}, a network is the most computationally efficient when the depth and width of a network is kept in balance. Therefore, we experiment with different number of layers and filters per layer. Our experiments with results are presented in section \ref{sssec:exp_encoder}.
 
 % As \textcite{InceptionV3} also recommended, we try to keep a healthy balance between the depth and the width of the network.
 %They suggest that a network is most computationally efficient when
@@ -48,10 +48,11 @@ Another difference is that we use a $1 \times 5$ convolutional layer at the end 
 
 \subsection{Attention model}
 
-Another major difference between our work and \cite{FornesCnnCategorization} is that although we both use variable input size, they use \textbf{spatial pyramid pooling}, while we apply a soft attention model as presented in \cite{AttendAndTell}.
+Another major difference between our work and the work of \textcite{FornesCnnCategorization} is that, although we both use variable input size, they use spatial pyramid pooling, while we apply a soft attention model as presented by \textcite{machine_translation_attention}.
 Like previously mentioned in section \ref{ssec:attention}, the encoder output can be seen as a list of feature vectors $\mathbf{a_i} \in \mathbb{R}^D$, which correspond to different, but overlapping, locations in the input image. The number of produced feature vectors depends on the size of the input image. We will see that this attention model aggregates all feature vectors $\mathbf{a_i}$ into a single fixed size vector $\mathbf{z} \in \mathbb{R}^D$.
 
-The attention model consists of a multilayer perceptron, which for each feature vector $\mathbf{a_i}$ computes a salience score $e_i$:
+The attention model consists of a small multilayer perceptron with a single fully connected hidden layer of 256 neurons with dropout and a readout layer of a single neuron.
+For each feature vector $\mathbf{a_i}$, the MLP computes a salience score $e_i \in \mathbb{R}$:
 \[
 e_i = f_\text{att}(\mathbf{a_i})
 \]
@@ -81,10 +82,10 @@ Because $\mathbf{z}$ is summed over all locations, it does not contain any spati
 Thus, the decoder is invariant to the location of detected objects, just like the attention model.
 
 The proposed decoder MLP consists of an input layer of size $D$, one fully connected layer of $1024$ neurons with dropout and three parallel readout layers $D_1$, $D_2$ and $D_3$. Each of these three readout layers has a size of $10$ neurons and corresponds to a single digit in the range zero to nine.
-Because the years we will extract are all in the range 1627--1890, $3$ digits is more than enough to classify year.
+Because the years we will extract are all in the range 1627--1890, three digits is more than enough to classify year.
 
 We do softmax on each readout layer to get pseudo-probabilities for the digits.
-To compute the probability for a specific 3-digit sequence $\langle x, y, z \rangle$ we simply multiply the probability of each digit:
+To compute the probability for a specific three-digit sequence $\langle x, y, z \rangle$ we simply multiply the probability of each digit:
 \[
 P(D_1=x, D_2=y, D_3=z) = P(D_1=x) P(D_2=y) P(D_3=z)
 \]
@@ -121,7 +122,7 @@ In section \ref{ssec:alt_loss} we present and discuss some alternatives for loss
 
 \subsection{Evaluation}
 
-We evaluate the models on the test set and evaluation set of the Swedish records. Although the models only output a single year per image, we count it as $100\%$ correct if and only if the year with maximum probability is inside the label interval. For example if the label is the inclusive interval $[1771, 1774]$ and the network outputs $1773$, we count it as correct. With this relaxed definition of correctness we calculate the accuracy over the images in the respective dataset.
+We evaluate the models on our two test sets of the Swedish records. Although the models only output a single year per image, we count it as $100\%$ correct if and only if the year with maximum probability is inside the label interval. For example if the label is the inclusive interval 1771 -- 1774 and the network outputs $1773$, we count it as correct. With this relaxed definition of correctness, we calculate the accuracy over the images in the respective dataset.
 
 Another possible metric is measuring the numeric distance between the prediction and the label; in the case of multiple years we choose the closest one. Although we will see that numeric distance is not very useful as a loss function, it can give an indication whether the model can predict the correct decade.
 
