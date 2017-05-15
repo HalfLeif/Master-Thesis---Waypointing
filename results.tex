@@ -142,8 +142,8 @@ In this section we present and discuss our model with variations on the Swedish 
 \subsection{Setup}
  Here we describe the platform on which we evaluated the models.
 
-\subsubsection{Input}
-The images of the Swedish population records had a high resolution so they were down sampled with a ratio of 8. So instead of having a size of $4688 \times 6360$ it was down sampled to $586 \times 795$. Because the images have different sizes, in each batch the images were padded with zeroes to get the same size as the largest image in the batch.
+\subsubsection{Downsampling}
+The images of the Swedish population records had a high resolution so they were downsampled with a ratio of 8. For example instead of having a size of $4688 \times 6360$ an image would have the size to $586 \times 795$. Because the images have different sizes, in each batch the images were padded with zeroes to get the same size as the largest image in the batch.
 
 \subsubsection{Implementation}
 The models were implemented in Tensorflow \cite{Tensorflow}, which is a popular open-sourced machine learning framework. The implementation\footnote{\url{https://github.com/HalfLeif/CNN_doc_extraction}} is freely available on Github.
@@ -154,13 +154,15 @@ We trained the models on 3 threads on a single Intel(R) Core(TM) i7-4770K @ 3.50
 
 \subsubsection{Pre-training}
 
-All experiments in this section start with a pre-trained model already, we refer to this as the \textbf{base model}. The base model used the DEP encoder and was trained using soft attention and cartesian loss for 5 epochs on the noisy MNIST and then for 16 epochs on the Swedish population data. Thus it had an accumulated training time of more than 4,200,000 cpu-seconds.
+All experiments in this section start with a pre-trained model already, we refer to this as the \textbf{base model}. The base model used the DEP encoder and was trained using soft attention and cartesian loss for 5 epochs on the noisy MNIST and then for 16 epochs on the Swedish population data. Thus it had an accumulated training time of more than 4,200,000 cpu-seconds or almost 3 weeks on our hardware.
 % noisy MNIST DEP-5: 41,217 cpusec ?
 % 16 epochs of SweDEP: 264775*16 cpusec = 4,236,400
 % SUM:
 The base model had a test accuracy of $8.39\%$ and an evaluation accuracy of $2.11\%$.
 
-Optimally the model variations should be retrained from scratch, but since they were heavily pre-trained with another configuration, we present our observations as a lower bound to the potential accuracy of each variation.
+Optimally, the model variations should be retrained from scratch but doing so would simply take too long time.
+Instead, we present the observed accuracies as a lower bound to the potential of each observation and as an indication of whether the variation was helpful or not.
+% Since the models were heavily pre-trained with a different configuration, we present our observations as a lower bound to the potential accuracy of each variation.
 
 % that pre-trained on the noisy MNIST for 5 epochs which was then trained on the Swedish population data
 
@@ -173,19 +175,25 @@ We now compare using the independent digit loss presented in section \ref{ssec:m
 % TODO: check in notes for results on MNIST data.
 Training the DEP configuration from scratch on the noisy MNIST data using either loss function gave very similar results although the training time was slightly longer for cartesian loss.
 
-For the Swedish population records, the base model used cartesian loss already. When training one additional epoch using the independent digit loss, the training accuracy dropped from $8.39\%$ to $7.2\%$. However, when training the model for another 6 epochs we reached the accuracy of $8.98\%$.
+For the Swedish population records, the base model used cartesian loss already. When training one additional epoch using the independent digit loss, the training accuracy dropped from $8.39\%$ to $7.2\%$. However, when training the model for another six epochs we reached the accuracy of $8.98\%$.
 
 \subsection{Multi-year vs single-year loss} \label{ssec:result_multiyear}
 
-The independent digit loss presented in section \ref{ssec:method_loss} only used a single year from the label. We suggested another loss function in section \ref{sssec:alt_multiyear} that takes into account the full year interval in the label by averaging the loss over all years in the interval.
+Both the cartesian loss and independent digit loss discussed above only used a single year from the label. We suggested another loss function in section \ref{sssec:alt_multiyear} that takes into account the full year interval in the label by averaging the loss function over all years in the label interval. Now we compare using the multi-year vs the single-year version of independent digit loss.
 
-% When training one additional epoch with the base model
+As mentioned above, when changing the loss function for the base model to single-year independent digit loss for one epoch, the accuracy dropped from $8.39\%$ to $7.2\%$. However, when instead changing it to the multi-year version, the accuracy dropped even further to $7.07\%$. When training the model for another three epochs, the test accuracy increased to $7.58\%$
+
+Although the test accuracy for the multi-year model decreased, the accuracy on the second test set increased from $2.11\%$ to $2.75\%$. This is the best result we have achieved on the second test set, which tests the model on completely new books from other regions.
+
+% TODO: insert table of accuracies on both test sets for different variations. Can use two different tables for single epoch and multi epoch additional training.
 
 \subsection{Soft vs hard attention} \label{sssec:result_attention}
 
 \textbf{TODO}: example image with soft and hard attention. Show both success and failure.
 
 \section{Post-processing} \label{sec:result_post_process}
+
+TODO: figure of log jump distribution.
 
 \section{Best model}
 
