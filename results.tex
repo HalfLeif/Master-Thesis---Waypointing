@@ -187,6 +187,15 @@ Although the test accuracy for the multi-year model decreased, the accuracy on t
 
 % TODO: insert table of accuracies on both test sets for different variations. Can use two different tables for single epoch and multi epoch additional training.
 
+\subsection{Simplifying the training data}
+
+When a page contains multiple valid years, our single-year loss function only rewards finding the highest year and penalizes all other years, including valid ones.
+In our previous experiment, we attacked this problem of miss labeling in our training data by making a loss function that takes into account all the years in the label. In this experiment, we instead try to estimate the impact of miss labeling by only training on images that have a single year in it. Here we again the use single-year independent digit loss function.
+
+After training for one additional epoch beyond the base model, we ...
+% TODO insert accuracy here
+After another five epochs, we reached the highest seen test accuracy of $9.54\%$. On the other hand, the accuracy on the second test set was an all-time low at $1.42\%$.
+
 \subsection{Soft vs hard attention} \label{sssec:result_attention}
 
 \textbf{TODO}: example image with soft and hard attention. Show both success and failure.
