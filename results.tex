@@ -43,21 +43,48 @@ An example image with dot noise and random position can be seen in figure \ref{f
 
 \subsection{Network depth and width} \label{sssec:exp_encoder}
 
+By running a time trace on the training operation, we saw that the majority of the training time was spent on applying and updating the encoder network. In order to reduce training time we performed the following experiments to design a more efficient encoder network while maintaining a good accuracy on the simulation tasks.
+% TODO: insert graph?
+
+% By counting the number of trainable parameters in the model we observed that the majority of parameters are contained by the MLPs in the attention and decoder model.
+
+\subsubsection{Simulations on noise-free data}
+
+Earlier in section \ref{sec:method_architecture} we presented a model architecture that we now refer to as DEP. We will come back to this model soon. In our initial experiments however we used another model for baseline, which we call DE. The DE encoder consisted of four blocks where the first three blocks contained two $3 \times 3$ convolutional layers and one $2 \times 2$ pooling layer. The last block contained a single $1 \times 5$ convolutional layer and one $1 \times 2$ pooling layer.
+The main difference between DE and DEP is that DEP used one additional pooling layer between the two consecutive convolutional layers in the third block.
+% The only difference between DEP and DE is that DEP had one additional pooling layer between two convolutional layers near the end of the encoder.
+We will see that this small difference had a great impact on accuracy and running time.
+
 \input{figures/mnist_models.tex}
 
-In figure \ref{fig:mnist_early_models} we can see the resulting accuracy over training time of some different model configurations.
-All configurations used cartesian loss (defined in section \ref{sssec:cartesian}) and soft attention (see section \ref{sssec:soft_attention}).
-The DE model was used as baseline with an encoder that had 7 layers and an output depth of 256. It is very similar to the DEP encoder illustrated in figure \ref{fig:encoder} except that it used one less pooling layer.
+In figure \ref{fig:mnist_early_models} we can see the resulting accuracy over training time of the different variations of the DE model.
+All configurations used cartesian loss (defined in section \ref{sssec:cartesian}) and soft attention (defined in section \ref{sssec:soft_attention}).
 
-Halving the depth of the decoder from 1024 to 512 (DED) had little impact on this task. Halving the number of filters in every layer (DEL) halved the training time per epoch but also halved the learning rate, so in the end its performance was about the same.
+% For baseline we use a model called DE, which is rather similar to the model presented earlier in section
+
+% The DE model was used as baseline with an encoder that had 7 layers and an output depth of 256. It is very similar to the DEP encoder illustrated in figure \ref{fig:encoder} except that it used one less pooling layer.
+
+The model called DED was the same DE except that the decoder depth was halved from 1024 to 512. In figure \ref{fig:mnist_early_models} we can see that doing so had little impact on the accuracy and training time.
+
+In another experiment, which we refer to as DEL, we halved the depth of every encoder layer. Halving the depth of every encoder layer halves the representational size in the encoder and consequently halves the training time. However, simplifying the encoder like this also seems to have limited its learning capability. In fact, it had about the same accuracy per training time as the DE model.
+
+% When halving the depth of the DE decoder from 1024 to 512, (DED) had little impact on this task.
+% Halving the number of filters in every layer (DEL) halved the training time per epoch but also halved the learning rate, so in the end its performance was about the same.
 
 % The TE model was identical to DE except that it used fewer convolutional layers. More precisely, the DE encoder started with $\langle C,C,P,C,C,P \rangle$ while TE started with $\langle C, P, C, P \rangle$, where $C$ stands for $3 \times 3$ convolution and $P$ stands for $2 \times 2$ max-pooling.
 
-Reducing the number of convolutional layers in the beginning of the encoder (TE) also sped up training time although the accuracy over time was about the same.
+% In both the DE model and the DEP model, the encoder had two consecutive convolutional layers at two places in the beginning of the encoder. These double layers in the DEP model can be seen in figure \ref{fig:encoder}.
+In order to reduce the training time, we experimented with
+simplifying the DE encoder by removing the second convolutional layer in each of the first two blocks. We call this thinner model TE.
+% removing two convolutional layers so that there would be no consecutive convolutional layers. So in the model we call TE, every second layer in the encoder was a max-pool layer.
+Similarly to the model DEL described above, where we simplified the encoder by halving the depth of each layer, both training time and accuracy was reduced. When plotting accuracy against training time in figure \ref{fig:mnist_early_models}, we see that just like DEL, the TE model was comparable to DE.
 
-When adding an additional pooling layer (TEP) to the thinner model (TE), learning increased very rapidly for the first two epochs. However, it started to overfit after hitting $90\%$ accuracy, while the accuracy of the baseline model (DE) continued to rise to $94\%$.
+We also tested a variant to TE where an additional pooling layer was added between the two convolutional layers in the third block. So in this new model, which we call TEP, every second layer is a pooling layer.
+Compared to TE, the TEP model learned much quicker. However, TEP started to overfit after hitting $90\%$ accuracy while the baseline model DE continued to improve until $94\%$.
 
-In summary we can see that models with smaller representational size achieves about the same accuracy given the same amount of training time, although the heavier models seem to have higher potential in the long run. Another observation is that additional pooling can greatly increase the early learning.
+% When adding an additional pooling layer (TEP) to the thinner model (TE), learning increased very rapidly for the first two epochs. However, it started to overfit after hitting $90\%$ accuracy, while the accuracy of the baseline model (DE) continued to rise to $94\%$.
+
+In summary we can see that models with smaller representational size achieves about the same accuracy given the same amount of training time, although the heavier models seem to have higher potential in the long run. Another observation is that additional pooling can greatly increase the learning rate in the beginning of training.
 
 % The learning rate on the simpler four-digit MNIST dataset for different some possible configurations of the encoder.
 
@@ -66,24 +93,26 @@ In summary we can see that models with smaller representational size achieves ab
 % We experimented on various configurations of encoder and decoder depth and width.
 % we found that increasing the width of the decoder's hidden layer from 512 to 1024 had a very small impact on the training time while increasing accuracy. Decreasing the number of layers in the encoder from 7 to 5 decreased the accuracy somewhat but increased training time considerably. Halving the encoder width halved the training time but also decreased accuracy. Adding a pooling layer at the end of the encoder resulted in a higher accuracy after the first epoch and reduced training time. The effect of an extra pooling layer can be seen by comparing the models TE and TEP in figure \ref{fig:mnist_early_models}.
 
-\subsubsection{Wider networks are more robust to noise}
+\subsubsection{Simulations on noisy data}
 
 The best configurations so far were evaluated on the more difficult synthetic dataset with random positions and noise. Figure \ref{fig:mnist_models} contains a comparison between some variations of encoder configurations on the noisy MNIST dataset.
-By comparing this graph to figure \ref{fig:mnist_early_models}, we can see that using larger input images, placing the digits at a random position and adding noise makes the problem much more difficult. Training a single epoch takes almost three times as long and the learning per epoch is reduced.
+By comparing this graph to figure \ref{fig:mnist_early_models}, we can see that using larger input images, placing the digits at a random position and adding noise makes the problem much more difficult. Training a single epoch takes almost three times as long and the increase in accuracy per epoch is reduced considerably.
 %Note that for the same model, we needed to train more than 4 times longer to get the same accuracy as on the simpler synthetic dataset.
 
 The three best configurations (DEP, DEB, DEM) achieved very similar results considering the test accuracy vs training time. These three configurations had the same number of encoder layers but different depth of each layer.
 
-The heaviest encoder (DEP) is illustrated in figure \ref{fig:encoder}.
+The heaviest encoder DEP is illustrated in figure \ref{fig:encoder}.
 Because it had the most number of filters, the training time for each epoch was much longer than for the other two alternatives.
 % For this encoder the representational size of the input decreases exponentially for each pooling layer: 32, 16, 8, 4, 2.
 Since each pooling layer divides the representational size by four and the number of filters in this model doubles after almost every pooling layer, the representational size decreases is halved after most pooling layers.
 
 While the representational size decreases for DEP, as recommended by \textcite{InceptionV3}, the DEM encoder was designed to keep the representational size as constant as possible from the start.
-This was done by reducing the number of filters to a minimal amount, with only 4 filters at the input layer instead of 32.
+This was done by reducing the layer depth to a minimal amount, with only 4 filters at the input layer instead of 32.
 As we can see in figure \ref{fig:mnist_models}, the training time for each epoch was much faster although the actual learning over time was almost the same as for the DEP model.
 
-The third competing encoder (DEB) was a middle ground between DEP and DEM, designed to have a very slowly decreasing representational size.
+The third competing encoder DEB was a middle ground between DEP and DEM, designed to have a very slowly decreasing representational size.
+
+\subsubsection{Wider encoders are more robust to varying input size}
 
 \input{figures/mnist_resilience.tex}
 
@@ -104,14 +133,14 @@ We see that the more filters a model has, the more stable it is to change. Hence
 % keeping the representational size as constant as possible from the start by using fewer filters, in contrast to the advice from \textcite{InceptionV3}.
 
 
-\section{Experiments} \label{sec:experiments}
+\section{Experiments on Swedish population records} \label{sec:experiments}
 
-In this section we present and discuss our model as well as some variations on the Swedish population records.
+In this section we present and discuss our model with variations on the Swedish population records.
 % metrics of different models and training
 % comparisons we made between different models on the Swedish population records.
 
 \subsection{Setup}
-
+ % TODO...
 
 \subsubsection{Input}
 The images of the Swedish population records had a high resolution so they were down sampled with a ratio of 8. So instead of having a size of $4688 \times 6360$ it was down sampled to $586 \times 795$. Because the images have different sizes, in each batch the images were padded with zeroes to get the same size as the largest image in the batch.
