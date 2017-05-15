@@ -202,9 +202,18 @@ After another five epochs, we reached the highest seen test accuracy of $9.54\%$
 
 \section{Post-processing} \label{sec:result_post_process}
 
-\input{figures/jump_log_counts.tex}
 
-In \ref{fig:jump_log_counts} can see that the jump distribution is heavily weighted around 0.
+\input{figures/jump_prob.tex}
+
+% \input{figures/jump_log_counts.tex}
+
+% In \ref{fig:jump_log_counts} can see that the jump distribution is heavily weighted around 0.
+
+The major chunk of the jump probability distribution is illustrated in figure \ref{fig:jump_prob}. We see that most page transitions should either keep the same year or increase by one.
+As described earlier in section \ref{sssec:alt_postproc}, when counting transitions between two pages where both pages have multiple years, we give fractions of count to all combinations of years. This results in the small probabilities for minus one and plus two et cetera, which can be seen in the probability distribution.
+% Because of multi-year labels, we also have small probabilities for minus one and plus two, since we count all combinations of .
+
+It also happens in some books that there is a major leap between two pages as a new section of the book begins. This can be seen in the log counts for the four main collections of the Swedish population records, which is plotted in figure \ref{fig:jump_log_counts}. 
 
 \section{Best model}
 

@@ -113,7 +113,7 @@ However, there are some problems with auxiliary input from the previous page. Fi
 
 If however the network could be trained using auxiliary input, it could increase the models predictive power.
 
-\subsubsection{Post-processing}
+\subsubsection{Post-processing} \label{sssec:alt_postproc}
 
 Another approach to use the sequential information of books is to post-process the predictions. For example, if the network would suggest the sequence $\langle 1771, 1872, 1773 \rangle$, we could correct it to $\langle 1771, 1772, 1773 \rangle$.
 Below we present a model for post-processing, which we evaluate in section \ref{sec:result_post_process}.
@@ -142,6 +142,7 @@ Q(j, k) = Q(k-j) = \frac{N(k-j) + \alpha}{N + \alpha K}
 \]
 
 For images that have multiple years, we uniformly distribute the weight between the possible transitions of the two images. A transition from $[1771, 1772]$ to $[1772, 1773]$ would thus produce the following count: {0: 0.25, 1: 0.5, 2: 0.25}.
+
 
 \paragraph{Conditional jump distribution}
 One problem with the above jump distribution is that, for our dataset, a vast majority of the page transitions are zero jumps; that is from the same label to itself.
