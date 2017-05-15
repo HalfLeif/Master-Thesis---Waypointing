@@ -175,7 +175,7 @@ We now compare using the independent digit loss presented in section \ref{ssec:m
 % TODO: check in notes for results on MNIST data.
 Training the DEP configuration from scratch on the noisy MNIST data using either loss function gave very similar results although the training time was slightly longer for cartesian loss.
 
-For the Swedish population records, the base model used cartesian loss already. When training one additional epoch using the independent digit loss, the training accuracy dropped from $8.39\%$ to $7.2\%$. However, when training the model for another six epochs we reached the accuracy of $8.98\%$.
+For the Swedish population records, the base model used cartesian loss already. When training one additional epoch using the independent digit loss, the test accuracy dropped from $8.39\%$ to $7.2\%$. However, when training the model for another six epochs we reached the test accuracy of $8.98\%$.
 
 \subsection{Multi-year vs single-year loss} \label{ssec:result_multiyear}
 
@@ -202,7 +202,9 @@ After another five epochs, we reached the highest seen test accuracy of $9.54\%$
 
 \section{Post-processing} \label{sec:result_post_process}
 
-TODO: figure of log jump distribution.
+\input{figures/jump_log_counts.tex}
+
+In \ref{fig:jump_log_counts} can see that the jump distribution is heavily weighted around 0.
 
 \section{Best model}
 
