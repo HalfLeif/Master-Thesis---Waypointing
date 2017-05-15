@@ -202,12 +202,16 @@ After another five epochs, we reached the highest seen test accuracy of $9.54\%$
 
 \section{Post-processing} \label{sec:result_post_process}
 
+The best result on the second dataset had an accuracy of $2.75\%$. When running the post-processing on the predictions of this model, the accuracy was increased to $3.58\%$. So even though the original predictions were quite noisy, the post-processing could still use them to boost the accuracy further.
+
+We also tested the post-processing on the indexed part of the Örebro collection. Note that this collection was partitioned for both training and testing, so $90\%$ of the predictions are on training data. One model's accuracy was $14.9\%$ on this collection. Post-processing increased the accuracy to $15.9\%$.
+
+\input{figures/post_process_example.tex}
+
+
+\subsection{Jump distribution}
 
 \input{figures/jump_prob.tex}
-
-% \input{figures/jump_log_counts.tex}
-
-% In \ref{fig:jump_log_counts} can see that the jump distribution is heavily weighted around 0.
 
 The major chunk of the jump probability distribution is illustrated in figure \ref{fig:jump_prob}. We see that most page transitions should either keep the same year or increase by one.
 As described earlier in section \ref{sssec:alt_postproc}, when counting transitions between two pages where both pages have multiple years, we give fractions of count to all combinations of years. This results in the small probabilities for minus one and plus two et cetera, which can be seen in the probability distribution.
