@@ -140,7 +140,7 @@ In this section we present and discuss our model with variations on the Swedish 
 % comparisons we made between different models on the Swedish population records.
 
 \subsection{Setup}
- % TODO...
+ Here we describe the platform on which we evaluated the models.
 
 \subsubsection{Input}
 The images of the Swedish population records had a high resolution so they were down sampled with a ratio of 8. So instead of having a size of $4688 \times 6360$ it was down sampled to $586 \times 795$. Because the images have different sizes, in each batch the images were padded with zeroes to get the same size as the largest image in the batch.
@@ -154,13 +154,13 @@ We trained the models on 3 threads on a single Intel(R) Core(TM) i7-4770K @ 3.50
 
 \subsubsection{Pre-training}
 
-All experiments in this section start with a pre-trained model already, we refer to this as the \textbf{base model}. The base model uses the DEP encoder and was trained using soft attention and cartesian loss for 5 epochs on the noisy MNIST and then for 16 epochs on the Swedish population data. Thus it had an accumulated training time of about 400,000 cpu-seconds.
-% noisy MNIST DEP-5: 41217 cpusec
-% 16 epochs of SweDEP: 22440*16 cpusec
-% SUM: ca 400k cpusec.
+All experiments in this section start with a pre-trained model already, we refer to this as the \textbf{base model}. The base model used the DEP encoder and was trained using soft attention and cartesian loss for 5 epochs on the noisy MNIST and then for 16 epochs on the Swedish population data. Thus it had an accumulated training time of more than 4,200,000 cpu-seconds.
+% noisy MNIST DEP-5: 41,217 cpusec ?
+% 16 epochs of SweDEP: 264775*16 cpusec = 4,236,400
+% SUM:
 The base model had a test accuracy of $8.39\%$ and an evaluation accuracy of $2.11\%$.
 
-Optimally the experiment variations should be retrained from scratch, but since they are heavily pre-trained with another configuration, we present our observations as a lower bound to the potential accuracy of each variation.
+Optimally the model variations should be retrained from scratch, but since they were heavily pre-trained with another configuration, we present our observations as a lower bound to the potential accuracy of each variation.
 
 % that pre-trained on the noisy MNIST for 5 epochs which was then trained on the Swedish population data
 
