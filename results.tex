@@ -192,13 +192,18 @@ Although the test accuracy for the multi-year model decreased, the accuracy on t
 When a page contains multiple valid years, our single-year loss function only rewards finding the highest year and penalizes all other years, including valid ones.
 In our previous experiment, we attacked this problem of miss labeling in our training data by making a loss function that takes into account all the years in the label. In this experiment, we instead try to estimate the impact of miss labeling by only training on images that have a single year in it. Here we again the use single-year independent digit loss function.
 
-After training for one additional epoch beyond the base model, we ...
-% TODO insert accuracy here
+After training for one additional epoch beyond the base model, the test accuracy increased to $8.83\%$.
 After another five epochs, we reached the highest seen test accuracy of $9.54\%$. On the other hand, the accuracy on the second test set was an all-time low at $1.42\%$.
 
 \subsection{Soft vs hard attention} \label{sssec:result_attention}
 
+So far, all reported models have used soft attention. Hard attention uses the same network, the only difference is that instead of doing a weighted sum over the encoded locations, we choose one of them. In previous work, the hard attention has seen the attention weights as a distribution over the location and samples that distribution. In our work however, we simply choose the location with highest attention weight.
+
+When training the DEP model with hard attention from scratch on the noisy MNIST data for one epoch, we only get a test accuracy of $4.4\%$ instead of $17.2\%$.
+
 \textbf{TODO}: example image with soft and hard attention. Show both success and failure.
+
+When training the base model for one epoch with hard attention, the accuracy drops from $8.39\%$ to $2.19\%$.
 
 \section{Post-processing} \label{sec:result_post_process}
 
