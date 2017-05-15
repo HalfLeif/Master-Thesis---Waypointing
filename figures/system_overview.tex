@@ -10,19 +10,19 @@
 % 1, 1, 256
 % 3, 10
 
-    \node (input) at (0,0) {$[1500 \times 900]$};
-    \node (encoded) at (3.5, 0) {$[44 \times 28 \times 256]$};
-    \node (attended) at (6, 0) {$[256]$};
-    \node (decoded) at (8, 0) {$[3 \times 10]$};
+    \node (input) at (0,0) {$[500 \times 700]$};
+    \node (encoded) at (4, 0) {$[28 \times 44 \times 256]$};
+    \node (attended) at (7, 0) {$[256]$};
+    \node (decoded) at (9.5, 0) {$[3 \times 10]$};
 
 %   \pic [fill=cyan, draw=blue] at (-1,0) {annotated cuboid={width=1, height=900, depth=1500}};
 %   \pic [fill=cyan, draw=blue] at (4,-0.5) {annotated cuboid={width=256, height=28, depth=44}};
 %   \pic [fill=cyan, draw=blue] at (7,-0.5) {annotated cuboid={width=256, height=1, depth=1}};
 %   \pic [fill=cyan, draw=blue] at (9,1.5) {annotated cuboid={width=1, height=10, depth=3}};
 
-  \draw [->,very thick] (input) -- node [above] {encode} (encoded);
-  \draw [->,very thick] (encoded) -- node [above] {attend} (attended);
-  \draw [->,very thick] (attended) -- node [above] {decode} (decoded);
+  \draw [->,thick] (input) -- node [above] {encode} (encoded);
+  \draw [->,thick] (encoded) -- node [above] {attend} (attended);
+  \draw [->,thick] (attended) -- node [above] {decode} (decoded);
 
 \end{tikzpicture}
 

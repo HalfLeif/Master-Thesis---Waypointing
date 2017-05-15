@@ -1,11 +1,17 @@
 
-\section{Related work}
+\chapter{Alternative methods}
+% "conventional methods" ?
+\textit{ We have previously described how neural networks, especially convolutional neural networks, can be applied to image classification problem, and by extension, transcription.
+For completeness, we here give a brief overview of some alternative methods for handwriting recognition and transcription that are not used in this thesis.
+In the next chapter we compare our work with other related work as well as methods mentioned in this chapter.
+% TODO: make sure we honor this promise!
+}
 
-In this section we describe traditional methods for related tasks: text recognition and word spotting. In this thesis however, we have chosen to use a different approach based on neural networks, which are discussed in depth in section \ref{sec:networks}.
+% In this section we describe traditional methods for related tasks: text recognition and word spotting. In this thesis however, we have chosen to use a different approach based on neural networks, which are discussed in depth in section \ref{sec:networks}.
 
 %% Rewrite this part, add more recent work, especially in deep learning and CNNs: spatial transformations, visual-semantic alignment etc.
 
-\subsection{Handwritten text recognition}
+\section{Handwritten text recognition} \label{sec:alt_htr}
 
 HTR systems have
 % been employed successfully in industry for
@@ -13,7 +19,7 @@ seen commercial success in
 % been employed with commercial success for
 recognizing postal addresses on letters \cite{lecun_1989, zipcode_system} and reading bank cheques. This has been possible because (1) the text is in a very small domain and (2) these applications have high market value \cite{40_years_HWR}. However, transcribing a natural language in general is still an unsolved problem.
 
-% \paragraph{}
+% \subsubsection{}
 HTR solutions can typically be described by four steps \cite{offline_HWR_CNN}:
 \begin{enumerate}
     \item Pre-processing - each pixel in the image is mapped to either 0 or 1, skew is corrected and noise is removed.
@@ -26,47 +32,52 @@ A comprehensible survey of common techniques for the different steps can be foun
 Previous work include \textbf{Hidden markov models} (HMMs) in combination with neural networks \cite{Offline_HWR_HMM_ANN}.
 More recent approaches include multi-stream HMMs \cite{HWR_multi_stream_HMM_arabic}, HMMs with \textbf{recurrent neural networks} (RNNs) \cite{Offline_HWR_RNN} and deep \textbf{convolutional neural networks} (CNNs) \cite{offline_HWR_CNN}.
 
-\subsubsection{Pre-processing}
+\subsection{Pre-processing}
 
 Pre-processing is commonly used to improve the quality of the input \cite{HWR_survey}. However, successful attempts have been made without pre-processing \cite{FornesCnnCategorization}.
 
-\paragraph{Binarization}
+\subsubsection{Binarization}
 
-First, the pixels are mapped to 0 or 1 depending on whether the gray-scale value of the pixel is above or below some threshold. The simplest is to use a global threshold, often calculated by Otsu's method. Otsu's method looks at the intensity histogram of the image. Assuming that there are two peaks in the histogram, one for background and one for foreground, it attempts to find a balanced threshold between the peaks. If the lighting was uneven at the time of photography, global thresholding does not work very well.
+Binarization maps each pixel to 0 or 1 depending on whether the gray-scale value of the pixel is above or below some threshold.
+Binarizing the image is necessary for some techniques that count black pixels
+% such as projection-based skew detection,
+or use connected components (CCs). A connected component is simply a group of adjacent black pixels surrounded by white pixels in the binarized image.
+
+The simplest is to use a global threshold, often calculated by Otsu's method. Otsu's method looks at the intensity histogram of the image. Assuming that there are two peaks in the histogram, one for background and one for foreground, it attempts to find a balanced threshold between the peaks. If the lighting was uneven at the time of photography, global thresholding does not work very well.
 
 Another approach is to use local or adaptive thresholds, which calculates different thresholds for each pixel depending on the surrounding area. Local thresholds are more successful than global thresholding on low quality images, especially in the presence of noise. There are extensions to Otsu's method to produce local thresholds.
 
 Neural networks have also been used to combine global and local thresholds for binarization.
 
-\paragraph{Skew detection}
+\subsubsection{Skew detection}
 
 Skew, or rotation, in images of text can be detected by computing the horizontal projection for different angles. The horizontal projection counts the number of black pixels per row. The amplitude of the projection is maximized when the image rotation is aligned with the text.
 
-\paragraph{Noise reduction}
+\subsubsection{Noise reduction}
 
 % TODO write something about this after studying about it?
 
 Median filtering...
 
-\paragraph{Line detection}
+\subsubsection{Line detection}
 
 % TODO
 
-\subsubsection{Segmentation}
+\subsection{Segmentation}
 
 Segmentation produces bounding boxes around detected words in the input image to be transcribed. The resulting word images can then be used as input for feature extraction. In order to produce word segments, most methods first segment the text lines.
 
 There are many methods that have been proposed for word image segmentation \cite{HWR_survey, Waterflow2011, Waterflow2015}.
 
-\paragraph{Projections}
+\subsubsection{Projections}
 
 The simplest group of methods is based on projections of the image. For example pixel counting, which cuts the image into line segments on the rows where the number of black pixels is below a threshold. However, this approach assumes the text to be written on straight lines, which is often true for printed text but it does not hold for free-form handwriting. Another problem is if there are multiple lines in the image which are not aligned.
 
-\paragraph{Smearing}
+\subsubsection{Smearing}
 
 Smearing is another group of methods that grows a boundary from each black pixel and groups the black pixels whose boundaries overlap. The water flow algorithm seems promising from this group of methods since it can handle curved text quite well \cite{Waterflow2011, Waterflow2015}.
 
-\paragraph{Graphs}
+\subsubsection{Graphs}
 
 Another successful approach is to represent the connected components in the binarized image as vertices in a weighted graph \cite{GraphSegmentation}.
 % For each pair of connected components we compute a connectivity metric $c$, which is based on the Euclidian distance, and form an edge between the corresponding vertices with weight $c$.
@@ -81,7 +92,7 @@ For each pair of vertices we create an edge, whose weight takes the value of a c
 % The minimum spanning tree for the graph can be computed and cut into subgraphs which become segments. The cutting can be done by using a pre-determined threshold for the connectivity metric.
 The segments are created by cutting the minimum spanning tree of the graph at every edge whose weight is lower than some pre-determined threshold.
 
-\paragraph{Other}
+\subsubsection{Other}
 
 Recursive methods use a reference library of word images.
 The method attempts to find a sequence of segments such that each segment matches some reference image within a pre-defined error threshold.
@@ -92,10 +103,10 @@ Stochastic methods utilize HMMs to ...
 
 
 
-\subsection{Word spotting}
+\section{Word spotting}
 
 % TODO mention alternative approach to aid waypointing by using segmentation free word spotting to compile word image clouds. However, does not help towards automated indexing. Cite Uppsala.
 
-\subsection{Named entity recognition}
+\section{Named entity recognition}
 
-\textbf{Named entity recognition} (NER) ...
+\textbf{Named entity recognition} (NER) ...?

@@ -12,10 +12,10 @@
 \draw [draw=black] (7,1) grid  (10,3);
 
 % ,very thick
-\draw [->] (1.5, 2.5) -- (7.5, 2.5) ;
+\draw [->,thick] (1.5, 2.5) -- (7.5, 2.5) ;
 
 \end{tikzpicture}
 
-\caption{Applying a 3x3 filter to a layer of size 4x5x1. Note how the 3x3 region is reduced to a single unit and how the size of the activation map is decreased after the operation.}
+\caption{Applying a $3 \times 3$ filter to a layer of size $4 \times 5 \times D$. Note how the $3 \times 3 \times D$ region is reduced to a single scalar and how the width and depth are decreased after the operation.}
 \label{fig:filter}
 \end{figure}

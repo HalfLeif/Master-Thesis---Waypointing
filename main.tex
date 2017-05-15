@@ -1,25 +1,7 @@
-\documentclass[a4paper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[english]{babel}
-\usepackage{csquotes}
-\usepackage{hyperref} % For hyperlinks in the PDF
-\usepackage{url}
-\usepackage{amsfonts}
-\usepackage{amsmath}
-\usepackage{tikz}
+\documentclass[12pt,a4paper,twoside,openright]{report}
+\input{settings/settings.tex}
 
-\usepackage{footnote}
-\makesavenoteenv{tabular} % For footnotes inside tabular
-\makesavenoteenv{table}
 
-\usepackage[toc,page]{appendix}
-
-%\usepackage[backend=biber]{biblatex}
-\usepackage[style=authoryear-icomp,
-            urldate=iso8601,
-            maxbibnames=99,
-            maxcitenames=3,
-            backend=biber]{biblatex}
 
 \addbibresource{bibs/classic_htr.bib}
 \addbibresource{bibs/deep_learning.bib}
@@ -27,69 +9,20 @@
 \addbibresource{bibs/familysearch.bib}
 \addbibresource{bibs/references.bib}
 
-\usepackage{graphicx}
-\graphicspath{ {pictures/} }
-
-% http://tex.stackexchange.com/questions/285578/how-to-draw-parallelepiped-and-cube-with-latex
-\usetikzlibrary{quotes,arrows.meta,arrows}
-\tikzset{
-  annotated cuboid/.pic={
-    \tikzset{%
-      every edge quotes/.append style={midway, auto},
-      /cuboid/.cd,
-      #1
-    }
-    \draw [every edge/.append style={pic actions, densely dashed, opacity=.5}, pic actions]
-    (0,0,0) coordinate (o) -- ++(-\cubescale*\cubex,0,0) coordinate (a) -- ++(0,-\cubescale*\cubey,0) coordinate (b) edge coordinate [pos=1] (g) ++(0,0,-\cubescale*\cubez)  -- ++(\cubescale*\cubex,0,0) coordinate (c) -- cycle
-    (o) -- ++(0,0,-\cubescale*\cubez) coordinate (d) -- ++(0,-\cubescale*\cubey,0) coordinate (e) edge (g) -- (c) -- cycle
-    (o) -- (a) -- ++(0,0,-\cubescale*\cubez) coordinate (f) edge (g) -- (d) -- cycle;
-    \path [every edge/.append style={pic actions, |-|}]
-    (b) +(0,-5pt) coordinate (b1) edge ["\cubex \cubeunits"'] (b1 -| c)
-    % (b) +(-5pt,0) coordinate (b2) edge ["\cubey \cubeunits"] (b2 |- a)
-    % (c) +(3.5pt,-3.5pt) coordinate (c2) edge ["\cubez \cubeunits"'] ([xshift=3.5pt,yshift=-3.5pt]e)
-    ;
-  },
-  /cuboid/.search also={/tikz},
-  /cuboid/.cd,
-  width/.store in=\cubex,
-  height/.store in=\cubey,
-  depth/.store in=\cubez,
-  units/.store in=\cubeunits,
-  scale/.store in=\cubescale,
-  width=10,
-  height=10,
-  depth=10,
-  units=,
-  scale=.005,
-}
-
-\renewcommand{\cite}{\parencite}
+% \graphicspath{ {pictures/} }
 
 
-\title{
-{\bf Master Thesis -  \\
-Waypointing of Historical Documents by Deep Learning}\\
-%	\vspace{0.2cm}
-%	\normalsize The Computer Scientist in Society, DAT315 \\
-	\vspace{0.4cm}
-	\normalsize Chalmers University of Technology
-}
-
-
-\author{\normalsize Leif Schelin \\
-	\normalsize 911016-3574 \\
-	\normalsize scleif@student.chalmers.se}
+% \author{\normalsize Leif Schelin \\
+% 	\normalsize 911016-3574 \\
+% 	\normalsize scleif@student.chalmers.se}
 %\date{November 2016}
 
 \begin{document}
 % \tracingall
 
-\maketitle
+% \maketitle
 
-\vspace{4cm}
-
-%\subsection*{Keywords}
-%Deep learning, convolutional neural nets, attention models, handwriting recognition, genealogy.
+% \vspace{4cm}
 
 \newpage
 
@@ -97,30 +30,53 @@ Waypointing of Historical Documents by Deep Learning}\\
 
 % TODO: perhaps make a Glossary? HTR, CNN, indexing etc.
 
-\tableofcontents
+\pagenumbering{roman}
+
+\input{front/titlepage.tex}
+
+\setlength{\parindent}{0em}
+\setlength{\parskip}{0.5em}
+
 \newpage
+\input{front/abstract.tex}
+
+\newpage
+\input{front/acknowledgements.tex}
+
+\newpage
+\input{front/preface.tex}
+
+\newpage
+\tableofcontents
 
 
+% List of figures (add to table of contents)
+\cleardoublepage
+\addcontentsline{toc}{chapter}{\listfigurename}
+\listoffigures
+% List of tables (add to table of contents)
+\cleardoublepage
+\addcontentsline{toc}{chapter}{\listtablename}
+\listoftables
+
+
+\cleardoublepage
+\setcounter{page}{1}
+\pagenumbering{arabic}			% Arabic numbering starting from 1 (one)
+% \setlength{\parskip}{0pt plus 1pt}
+
+\setlength{\parindent}{1em}
 
 % Motivation for the thesis
-\input{abstract.tex}
 \input{introduction.tex}
-\input{ethics.tex}
 
-% What to achieve
-\input{goals.tex}
-\input{delimitation.tex}
-
-% Technical details, perhaps add more sections here
-\input{background_htr.tex}
-\input{background_networks.tex}
 \input{data.tex}
-\input{method.tex}
+\input{theory.tex}
 
-% Outcome
-\input{experiments.tex}
+
+\input{method.tex}
 \input{results.tex}
-\input{future.tex}
+\input{alternative_methods.tex}
 \input{conclusion.tex}
 
 
@@ -129,6 +85,8 @@ Waypointing of Historical Documents by Deep Learning}\\
 %\newpage
 %\addcontentsline{toc}{section}{References}
 
+\cleardoublepage
+% \addcontentsline{toc}{chapter}{Bibliography}
 \printbibliography
 
 
