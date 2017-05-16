@@ -239,3 +239,11 @@ Because the distribution heavily favors the zero jump, the predictions after pos
 \input{figures/model_overview.tex}
 
 TODO: compare metrics and suggest best model. Also show confidence thresholds?
+
+\section{What has the model learned}
+
+% TODO: make sure base2 is defined!
+
+We hypothesized that the network had learned other signals than the handwritten year. To test our hypothesis, we took five images from the main test set and edited them so they no longer contained any handwritten years. When running the base2 model on the five images, the predictions were exactly the same as before. The attention matrix was also almost identical with and without the handwritten year.
+
+Because the network has not seen any of these five images during training, it must have learned to recognize the handwriting of the individual scribe who wrote the book.
