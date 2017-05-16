@@ -244,6 +244,8 @@ TODO: compare metrics and suggest best model. Also show confidence thresholds?
 
 % TODO: make sure base2 is defined!
 
+\input{figures/edited.tex}
+
 We hypothesized that the network had learned other signals than the handwritten year. To test our hypothesis, we took five images from the main test set and edited them so they no longer contained any handwritten years. When running the base2 model on the five images, the predictions were exactly the same as before. The attention matrix was also almost identical with and without the handwritten year.
 
 Because the network has not seen any of these five images during training, it must have learned to recognize the handwriting of the individual scribe who wrote the book.
