@@ -113,7 +113,7 @@ However, there are some problems with auxiliary input from the previous page. Fi
 
 If however the network could be trained using auxiliary input, it could increase the models predictive power.
 
-\subsubsection{Post-processing}
+\subsubsection{Post-processing} \label{sssec:alt_postproc}
 
 Another approach to use the sequential information of books is to post-process the predictions. For example, if the network would suggest the sequence $\langle 1771, 1872, 1773 \rangle$, we could correct it to $\langle 1771, 1772, 1773 \rangle$.
 Below we present a model for post-processing, which we evaluate in section \ref{sec:result_post_process}.
@@ -142,11 +142,3 @@ Q(j, k) = Q(k-j) = \frac{N(k-j) + \alpha}{N + \alpha K}
 \]
 
 For images that have multiple years, we uniformly distribute the weight between the possible transitions of the two images. A transition from $[1771, 1772]$ to $[1772, 1773]$ would thus produce the following count: {0: 0.25, 1: 0.5, 2: 0.25}.
-
-\paragraph{Conditional jump distribution}
-One problem with the above jump distribution is that, for our dataset, a vast majority of the page transitions are zero jumps; that is from the same label to itself.
-Because the distribution heavily favors the zero jump, the predictions after post-processing often output the same year for all pages in a book, instead of increasing years as we would expect.
-
- One idea to fix this is to condition the current transition on the previous transition. The idea is that if the previous transition was a zero jump, we should be more likely to change year now. However, when aggregating the statistics for the Swedish dataset, it turns out our intuition was wrong: if the previous transition was a zero jump, it is even greater probability that the current transition is a zero jump. So a conditional distribution reinforces the problem instead of alleviating it.
-
-% For each image $t$ the network outputs a probability distribution for a three digit sequence $\mathbf{z}_t \in \mathbb{R}^1000$ so that $P(D_1=x, D_2=y, D_3=z) = z_{tj}$.

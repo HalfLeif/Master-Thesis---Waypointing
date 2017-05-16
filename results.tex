@@ -175,7 +175,7 @@ We now compare using the independent digit loss presented in section \ref{ssec:m
 % TODO: check in notes for results on MNIST data.
 Training the DEP configuration from scratch on the noisy MNIST data using either loss function gave very similar results although the training time was slightly longer for cartesian loss.
 
-For the Swedish population records, the base model used cartesian loss already. When training one additional epoch using the independent digit loss, the training accuracy dropped from $8.39\%$ to $7.2\%$. However, when training the model for another six epochs we reached the accuracy of $8.98\%$.
+For the Swedish population records, the base model used cartesian loss already. When training one additional epoch using the independent digit loss, the test accuracy dropped from $8.39\%$ to $7.2\%$. However, when training the model for another six epochs we reached the test accuracy of $8.98\%$.
 
 \subsection{Multi-year vs single-year loss} \label{ssec:result_multiyear}
 
@@ -192,18 +192,50 @@ Although the test accuracy for the multi-year model decreased, the accuracy on t
 When a page contains multiple valid years, our single-year loss function only rewards finding the highest year and penalizes all other years, including valid ones.
 In our previous experiment, we attacked this problem of miss labeling in our training data by making a loss function that takes into account all the years in the label. In this experiment, we instead try to estimate the impact of miss labeling by only training on images that have a single year in it. Here we again the use single-year independent digit loss function.
 
-After training for one additional epoch beyond the base model, we ...
-% TODO insert accuracy here
+After training for one additional epoch beyond the base model, the test accuracy increased to $8.83\%$.
 After another five epochs, we reached the highest seen test accuracy of $9.54\%$. On the other hand, the accuracy on the second test set was an all-time low at $1.42\%$.
 
 \subsection{Soft vs hard attention} \label{sssec:result_attention}
 
+\input{figures/attention_mnist.tex}
+
+So far, all reported models have used soft attention. Hard attention uses the same network, the only difference is that instead of doing a weighted sum over the encoded locations, we choose one of them. In previous work, the hard attention has seen the attention weights as a distribution over the location and samples that distribution. In our work however, we simply choose the location with highest attention weight.
+
+When training the DEP model with hard attention from scratch on the noisy MNIST data for one epoch, we only get a test accuracy of $4.4\%$ instead of $17.2\%$.
+
 \textbf{TODO}: example image with soft and hard attention. Show both success and failure.
+
+When training the base model for one epoch with hard attention, the accuracy drops from $8.39\%$ to $2.19\%$.
 
 \section{Post-processing} \label{sec:result_post_process}
 
-TODO: figure of log jump distribution.
+The best result on the second dataset had an accuracy of $2.75\%$. When running the post-processing on the predictions of this model, the accuracy was increased to $3.58\%$. So even though the original predictions were quite noisy, the post-processing could still use them to boost the accuracy further.
 
-\section{Best model}
+We also tested the post-processing on the indexed part of the Örebro collection. Note that this collection was partitioned for both training and testing, so $90\%$ of the predictions are on training data. One model's accuracy was $14.9\%$ on this collection. Post-processing increased the accuracy to $15.9\%$. The mean distance between the prediction and the label was also reduced from 6 years to 4 years after post-processing.
 
-TODO: compare metrics and suggest best model. Also show confidence thresholds and other metrics.
+\input{figures/post_process_example.tex}
+
+In table \ref{tab:post_process_example} we can see some examples of the post-processing applied to books in the Örebro collection. The post-processed sequence is typically very smooth compared to the raw predictions. Sometimes a single confident but incorrect prediction can start a long sequence of errors. One of the reasons for this is that the jump distribution strongly prefers increasing the year over decreasing the year.
+
+\subsection{Jump distribution}
+
+\input{figures/jump_prob.tex}
+
+The major chunk of the jump probability distribution is illustrated in figure \ref{fig:jump_prob}. We see that most page transitions should either keep the same year or increase by one.
+As described earlier in section \ref{sssec:alt_postproc}, when counting transitions between two pages where both pages have multiple years, we give fractions of count to all combinations of years. This results in the small probabilities for minus one and plus two et cetera, which can be seen in the probability distribution.
+% Because of multi-year labels, we also have small probabilities for minus one and plus two, since we count all combinations of .
+
+It also happens in some books that there is a major leap between two pages as a new section of the book begins. This can be seen in the log counts for the four main collections of the Swedish population records, which is plotted in figure \ref{fig:jump_log_counts}.
+
+\subsection{Conditional jump distribution}
+One problem with the above jump distribution is that, for our dataset, a vast majority of the page transitions are zero jumps; that is from the same label to itself.
+Because the distribution heavily favors the zero jump, the predictions after post-processing often output the same year for all pages in a book, instead of increasing years as we would expect.
+
+ One idea to fix this is to condition the current transition on the previous transition. The idea is that if the previous transition was a zero jump, we should be more likely to change year now. However, when aggregating the statistics for the Swedish dataset, it turns out our intuition was wrong: if the previous transition was a zero jump, it is even greater probability that the current transition is a zero jump. So a conditional distribution reinforces the problem instead of alleviating it.
+
+
+\section{Model comparison}
+
+\input{figures/model_overview.tex}
+
+TODO: compare metrics and suggest best model. Also show confidence thresholds?

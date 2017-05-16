@@ -1,11 +1,8 @@
 
 \section{Related work}
-\textbf{TODO}
-...
-\cite{multidigit_streetview}
 
-...
-\cite{FornesCnnCategorization}
+Our work is inspired by the network architecture used by \textcite{multidigit_streetview} for transcribing house numbers in Google Street View with high accuracy. One difference is that their network outputs a number sequence of up to $N$ digits whereas for us, we fix the output sequence to three digits to represent one year. Another difference is that they use another model to locate, crop out and rescale the numbers in the image, while we let our CNN process the entire input image.
 
-...
-\cite{AttendAndTell}
+In the work of \textcite{FornesCnnCategorization}, they also process civil population records by CNNs, but they use a dataset where all word images are manually segmented. For the Swedish population records however, there is no ground truth for word images so we cannot directly apply that method.
+
+For locating the year on the page, we instead use a soft attention model, as described by \textcite{AttendAndTell}. In their case, they use the attention model recursively on the input image as they output a natural language description, while we only calculate the attention once per image.
