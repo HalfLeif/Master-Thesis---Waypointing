@@ -197,15 +197,18 @@ After another five epochs, we reached the highest seen test accuracy of $9.54\%$
 
 \subsection{Soft vs hard attention} \label{sssec:result_attention}
 
-\input{figures/attention_mnist.tex}
-
 So far, all reported models have used soft attention. Hard attention uses the same network, the only difference is that instead of doing a weighted sum over the encoded locations, we choose one of them. In previous work, the hard attention has seen the attention weights as a distribution over the location and samples that distribution. In our work however, we simply choose the location with highest attention weight.
 
-When training the DEP model with hard attention from scratch on the noisy MNIST data for one epoch, we only get a test accuracy of $4.4\%$ instead of $17.2\%$.
+\input{figures/attention_mnist_graph.tex}
 
-\textbf{TODO}: example image with soft and hard attention. Show both success and failure.
+When training the DEP model with hard attention from scratch on the noisy MNIST data for one epoch, we only got a test accuracy of $4.4\%$ instead of $17.2\%$.
+In figure \ref{fig:attention_mnist_graph} we can see how much quicker the DEP model learns to recognize digit sequences using soft attention.
 
-When training the base model for one epoch with hard attention, the accuracy drops from $8.39\%$ to $2.19\%$.
+\input{figures/attention_mnist.tex}
+
+In figure \ref{fig:attention_mnist} we can see how the soft attention successfully captured the year by putting together information from several locations. In the same figure, the hard attention fails because it can only see some of the digits.
+
+When training the base model for one epoch with hard attention on the Swedish population records, the accuracy dropped from $8.39\%$ to $2.19\%$.
 
 \section{Post-processing} \label{sec:result_post_process}
 
