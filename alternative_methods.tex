@@ -13,7 +13,7 @@ In the next chapter we compare our work with other related work as well as metho
 
 \section{Handwritten text recognition} \label{sec:alt_htr}
 
-HTR systems have
+\textbf{Handwritten text recognition} (HTR) systems have
 % been employed successfully in industry for
 seen commercial success in
 % been employed with commercial success for
@@ -29,12 +29,12 @@ HTR solutions can typically be described by four steps \cite{offline_HWR_CNN}:
 \end{enumerate}
 
 A comprehensible survey of common techniques for the different steps can be found here \cite{HWR_survey}.
-Previous work include \textbf{Hidden markov models} (HMMs) in combination with neural networks \cite{Offline_HWR_HMM_ANN}.
+Previous work on HTR include \textbf{Hidden markov models} (HMMs) in combination with neural networks \cite{Offline_HWR_HMM_ANN}.
 More recent approaches include multi-stream HMMs \cite{HWR_multi_stream_HMM_arabic}, HMMs with \textbf{recurrent neural networks} (RNNs) \cite{Offline_HWR_RNN} and deep \textbf{convolutional neural networks} (CNNs) \cite{offline_HWR_CNN}.
 
 \subsection{Pre-processing}
 
-Pre-processing is commonly used to improve the quality of the input \cite{HWR_survey}. However, successful attempts have been made without pre-processing \cite{FornesCnnCategorization}.
+Pre-processing is commonly used to improve the quality of the input \cite{HWR_survey}. However, successful attempts have been made without pre-processing \cite{FornesCnnCategorization}. We only describe binarization and skew detection but \textbf{noise reduction} and \textbf{line detection} are also common pre-processing tasks.
 
 \subsubsection{Binarization}
 
@@ -51,17 +51,17 @@ Neural networks have also been used to combine global and local thresholds for b
 
 \subsubsection{Skew detection}
 
-Skew, or rotation, in images of text can be detected by computing the horizontal projection for different angles. The horizontal projection counts the number of black pixels per row. The amplitude of the projection is maximized when the image rotation is aligned with the text.
+Skew, or rotation, in images of text can be detected by computing the horizontal projection for different angles. The horizontal projection counts the number of black pixels per row, which requires the above described binarization. The amplitude of the projection is maximized when the image rotation is aligned with the text.
 
-\subsubsection{Noise reduction}
-
-% TODO write something about this after studying about it?
-
-Median filtering...
-
-\subsubsection{Line detection}
-
-% TODO
+% \subsubsection{Noise reduction}
+%
+% % TODO write something about this after studying about it?
+%
+% Median filtering...
+%
+% \subsubsection{Line detection}
+%
+% % TODO
 
 \subsection{Segmentation}
 
@@ -92,21 +92,25 @@ For each pair of vertices we create an edge, whose weight takes the value of a c
 % The minimum spanning tree for the graph can be computed and cut into subgraphs which become segments. The cutting can be done by using a pre-determined threshold for the connectivity metric.
 The segments are created by cutting the minimum spanning tree of the graph at every edge whose weight is lower than some pre-determined threshold.
 
-\subsubsection{Other}
+\subsubsection{Recursive}
 
-Recursive methods use a reference library of word images.
-The method attempts to find a sequence of segments such that each segment matches some reference image within a pre-defined error threshold.
+Yet another approach is recursive methods, which use a reference library of word images.
+Recursive methods attempt to find a sequence of segments such that each segment matches some reference word image within a pre-defined error threshold.
 % attempt to find a sequence of segments so that each segment matches some word image within a certain error threshold.
+One obvious problem is that the method requires a library that contains similar words as in the image. On the one hand, genealogical records use the same words many times like \textquote{born} and \textquote{father}; on the other hand, handwriting has so many variations that it may be difficult to create a sufficiently large library.
+% Since handwriting has so many variations, it may be difficult to create a sufficiently large library.
 
-Stochastic methods utilize HMMs to ...
+
+
+% Stochastic methods utilize HMMs to ...
 % TODO study about stochastic segmentation?
 
 
 
-\section{Word spotting}
-
-% TODO mention alternative approach to aid waypointing by using segmentation free word spotting to compile word image clouds. However, does not help towards automated indexing. Cite Uppsala.
-
-\section{Named entity recognition}
-
-\textbf{Named entity recognition} (NER) ...?
+% \section{Word spotting}
+%
+% % TODO mention alternative approach to aid waypointing by using segmentation free word spotting to compile word image clouds. However, does not help towards automated indexing. Cite Uppsala.
+%
+% \section{Named entity recognition}
+%
+% \textbf{Named entity recognition} (NER) ...?
