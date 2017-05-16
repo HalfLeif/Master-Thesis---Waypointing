@@ -234,6 +234,8 @@ Because the distribution heavily favors the zero jump, the predictions after pos
  One idea to fix this is to condition the current transition on the previous transition. The idea is that if the previous transition was a zero jump, we should be more likely to change year now. However, when aggregating the statistics for the Swedish dataset, it turns out our intuition was wrong: if the previous transition was a zero jump, it is even greater probability that the current transition is a zero jump. So a conditional distribution reinforces the problem instead of alleviating it.
 
 
-\section{Best model}
+\section{Model comparison}
+
+\input{figures/model_overview.tex}
 
 TODO: compare metrics and suggest best model. Also show confidence thresholds and other metrics.
