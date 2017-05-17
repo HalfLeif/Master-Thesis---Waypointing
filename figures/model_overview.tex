@@ -16,7 +16,7 @@
     & 23+4 & 0.0758 & 6 & 11 & 0.410 & 0.0275 & 21 & 29 & 0.130 \\
     +post & 23+4 & & & & & 0.0358 & 18 & 28 & 0.156 \\
     \hline
-    Single & 23+1 & 0.0883 & 6 & 10 & 0.426 & 0.0216 & 25 & 31 & 0.120 \\
+    Simple & 23+1 & 0.0883 & 6 & 10 & 0.426 & 0.0216 & 25 & 31 & 0.120 \\
     & 23+6 & 0.0954 & 6 & 10 & 0.431 & 0.0142 & 26 & 32 & 0.100 \\
     \hline
     Hard & 16+1 & 0.0219 & 20 & 35 & 0.150 & 0.0152 & 32 & 41 & 0.097 \\
@@ -24,8 +24,8 @@
   \end{tabular}
   \caption{For each model, we list for how many epochs it has been trained including pre-training, four metrics on the main test set and four metrics on the second test set for generalization.
   The first metric is accuracy, the second is median distance between prediction and correct label, the third is the mean distance and the last metric is the percentage of predictions that were within 5 years of the correct label.
-  The models are the base model, independent digit loss, multi-year loss, multi-year loss with post-processing, simplified training data and hard attention.
-  Note that the models that are pre-trained with 16 epochs use the base model while the models that are pre-trained with 23 epochs use the base2 model.
+  The models are the Base model, independent digit loss, multi-year loss, multi-year loss with post-processing, simplified training data and hard attention.
+  Note that the models that are pre-trained with 16 epochs use the Base model, while the models that are pre-trained with 23 epochs use the Base2 model.
   }
   \label{tab:model_overview}
 \end{table}

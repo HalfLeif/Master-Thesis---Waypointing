@@ -154,11 +154,11 @@ We trained the models on 3 threads on a single Intel(R) Core(TM) i7-4770K @ 3.50
 
 \subsubsection{Pre-training}
 
-All experiments in this section start with a pre-trained model already. Most of them use a model we refer to as the \textbf{base model}. The base model used the DEP encoder and was trained using soft attention and cartesian loss for 5 epochs on the noisy MNIST and then for 16 epochs on the Swedish population data. Thus it had an accumulated training time of more than 4,200,000 cpu-seconds or almost 3 weeks on our hardware.
+All experiments in this section start with a pre-trained model already. Most of them use a model we refer to as the \textbf{Base model}. The Base model used the DEP encoder and was trained using soft attention and cartesian loss for 5 epochs on the noisy MNIST and then for 16 epochs on the Swedish population data. Thus it had an accumulated training time of more than 4,200,000 cpu-seconds or almost 3 weeks on our hardware.
 % noisy MNIST DEP-5: 41,217 cpusec ?
 % 16 epochs of SweDEP: 264775*16 cpusec = 4,236,400
 % SUM:
-The base model had an accuracy of $8.39\%$ on the main test set and an accuracy of $2.11\%$ on the second test set.
+The Base model had an accuracy of $8.39\%$ on the main test set and an accuracy of $2.11\%$ on the second test set.
 
 Optimally, the model variations should be retrained from scratch but doing so would simply take too long time.
 Instead, we present the observed accuracies as a lower bound to the potential of each observation and as an indication of whether the variation was helpful or not.
@@ -175,13 +175,13 @@ We now compare using the independent digit loss presented in section \ref{ssec:m
 % TODO: check in notes for results on MNIST data.
 Training the DEP configuration from scratch on the noisy MNIST data using either loss function gave very similar results although the training time was slightly longer for cartesian loss.
 
-For the Swedish population records, the base model used cartesian loss already. When training one additional epoch using the independent digit loss, the test accuracy dropped from $8.39\%$ to $7.2\%$. However, when training the model for another six epochs we reached the test accuracy of $8.98\%$. This model we refer to as base2 because some of the following models were trained from this model.
+For the Swedish population records, the Base model used cartesian loss already. When training one additional epoch using the independent digit loss, the test accuracy dropped from $8.39\%$ to $7.2\%$. However, when training the model for another six epochs we reached the test accuracy of $8.98\%$. This model we refer to as  Base2 because some of the following models were trained from this model.
 
 \subsection{Multi-year vs single-year loss} \label{ssec:result_multiyear}
 
 Both the cartesian loss and independent digit loss discussed above only used a single year from the label. We suggested another loss function in section \ref{sssec:alt_multiyear} that takes into account the full year interval in the label by averaging the loss function over all years in the label interval. Now we compare using the multi-year vs the single-year version of independent digit loss.
 
-As mentioned above, when changing the loss function for the base model to single-year independent digit loss for one epoch, the accuracy dropped from $8.39\%$ to $7.2\%$. However, when instead changing it to the multi-year version, the accuracy dropped even further to $7.07\%$. When training with multi-year loss from base2 for four epochs, the test accuracy dropped from $8.98\%$ to $7.58\%$
+As mentioned above, when changing the loss function for the Base model to single-year independent digit loss for one epoch, the accuracy dropped from $8.39\%$ to $7.2\%$. However, when instead changing it to the multi-year version, the accuracy dropped even further to $7.07\%$. When training with multi-year loss from  Base2 for four epochs, the test accuracy dropped from $8.98\%$ to $7.58\%$
 
 Although the test accuracy for the multi-year model decreased, the accuracy on the second test set increased from $2.35\%$ to $2.75\%$. This is the best result we have achieved on the second test set, which tests the model on completely new books from other regions.
 
@@ -194,7 +194,7 @@ One possible cause for this may be that multi-year loss makes the network focus 
 When a page contains multiple valid years, our single-year loss function only rewards finding the highest year and penalizes all other years, including valid ones.
 In our previous experiment, we attacked this problem of miss labeling in our training data by making a loss function that takes into account all the years in the label. In this experiment, we instead try to estimate the impact of miss labeling by only training on images that have a single year in it. Here we again the use single-year independent digit loss function.
 
-After training for one additional epoch beyond the base2 model, the test accuracy dropped from $8.98\%$ to $8.83\%$.
+After training for one additional epoch beyond the  Base2 model, the test accuracy dropped from $8.98\%$ to $8.83\%$.
 After another five epochs, we reached the highest seen test accuracy of $9.54\%$. On the other hand, the accuracy on the second test set was an all-time low at $1.42\%$.
 
 \subsection{Soft vs hard attention} \label{sssec:result_attention}
@@ -213,7 +213,7 @@ In figure \ref{fig:attention_mnist} we can see how the soft attention successful
 \input{figures/attention_dep_T61.tex}
 \input{figures/attention_dep_H5L.tex}
 
-When training the base model for one epoch with hard attention on the Swedish population records, the accuracy dropped from $8.39\%$ to $2.19\%$.
+When training the Base model for one epoch with hard attention on the Swedish population records, the accuracy dropped from $8.39\%$ to $2.19\%$.
 In figure \ref{fig:attention_dep_T61} we see how the soft attention partially focuses on the year and gets the prediction right while the hard attention focus on the place for the image id rather than the year.
 Another example can be seen in figure \ref{fig:attention_dep_H5L} where the year is not written on the page. The soft attention guesses the correct decade by looking at the handwriting all over the page while the hard attention suggests the wrong century.
 
@@ -227,7 +227,7 @@ Even for the simpler problem of noisy MNIST, hard attention failed because it on
 
 The best result on the second dataset had an accuracy of $2.75\%$, using multi-year loss. When running the post-processing on the predictions of this model, the accuracy was increased to $3.58\%$. So even though the original predictions were quite noisy, the post-processing could still use them to boost the accuracy further.
 
-We also tested the post-processing on the indexed part of the Örebro collection. Note that this collection was partitioned for both training and testing, so $90\%$ of the predictions are on training data. The accuracy of base2 was $14.9\%$ on this collection. Post-processing increased the accuracy to $15.9\%$. The mean distance between the prediction and the label was also reduced from 6 years to 4 years after post-processing.
+We also tested the post-processing on the indexed part of the Örebro collection. Note that this collection was partitioned for both training and testing, so $90\%$ of the predictions are on training data. The accuracy of  Base2 was $14.9\%$ on this collection. Post-processing increased the accuracy to $15.9\%$. The mean distance between the prediction and the label was also reduced from 6 years to 4 years after post-processing.
 
 \input{figures/post_process_example.tex}
 
@@ -249,23 +249,43 @@ Because the distribution heavily favors the zero jump, the predictions after pos
 
 One idea to fix this is to condition the current transition on the previous transition. The idea is that if the previous transition was a zero jump, we should be more likely to change year now. However, when aggregating the statistics for the Swedish dataset, it turns out our intuition was wrong: if the previous transition was a zero jump, it is even greater probability that the current transition is a zero jump. So a conditional distribution reinforces the problem instead of alleviating it.
 
-
-\section{Model comparison}
-
-\input{figures/model_overview.tex}
-
-TODO: compare metrics and suggest best model. Also show confidence thresholds?
-
-\section{What has the model learned?}
+\section{What have the models learned?}
 
 \input{figures/attention_dep_9CM6.tex}
 
-In figure \ref{fig:attention_dep_9CM6}, we can see that the base2 model learned to recognize the importance of digits, although in this particular example it payed attention to many irrelevant digits instead of the written years.
+In figure \ref{fig:attention_dep_9CM6}, we can see that the  Base2 model learned to recognize the importance of digits, although in this particular example it payed attention to many irrelevant digits instead of the written years.
 
 \input{figures/edited.tex}
 
-However, we hypothesized that the network had also learned other signals than the written digits. To test our hypothesis, we selected five images from the main test set and edited them so they no longer contained any handwritten years. The base2 model classified two of these five images correctly before editing. When running the model on the five edited images, the predictions were exactly the same as before editing. The attention matrix was also almost identical with and without the handwritten year. One of these five images and the corresponding attention are visualized in figure \ref{fig:edited}.
+However, we hypothesized that the network had also learned to recognize other signals than digits. To test our hypothesis, we selected five images from the main test set and edited them so they no longer contained any handwritten years. The  Base2 model classified two of these five images correctly before editing. When running the model on the five edited images, the predictions were exactly the same as before editing. The attention matrix was also almost identical with and without the handwritten year. One of these five images and the corresponding attention are visualized in figure \ref{fig:edited}.
 
 Because the network has not seen any of these five images during training, it must have learned to recognize the handwriting of the individual scribe who wrote the book. This is likely one of the reasons why the accuracy is so much lower for our second test set, because the model has not been trained to recognize any handwriting from that dataset.
 
 So it appears that at least for some pages, the network makes the right prediction, not because it can read the year digits, but because it recognizes the style of the handwriting. It is not what we intended the network to learn, but it nevertheless shows the potential of deep learning that the models can even learn to recognize handwriting styles.
+
+
+\section{Summary}
+
+We now summarize our findings and compare the different models. Table \ref{tab:model_overview} lists our models and different metrics for the two test sets.
+
+\input{figures/model_overview.tex}
+
+The highest accuracy on the main training set was achieved by the Simple model, which had been trained on the simplified training data without multiple year images.
+Since removing the multiple years helped learning, it is clear that the multiple year labeling makes the problem more difficult.
+% This illustrates how difficult the problem becomes because of the multiple year labels.
+On the other hand, the same model had the lowest accuracy on the second dataset.
+
+One possible explanation for the increased accuracy on the main test set and the decreased accuracy on the second test set is that the Simple model better learned to recognize handwriting. Since the main test set was sampled from the same books as the training set, the handwriting is the same. In contrast, the second test set does not share any scribe in common and hence has different handwriting. The fact that a model can decrease our loss function by recognizing handwriting instead of digits only testify of the difficulty of the task.
+
+There are several possible reasons why the model would think that the background text is more predictive of the year than the digits. Firstly, there are many other digits in the images than years and we give no credit for recognizing other digit sequences, such as dates. Secondly, the year digits are written by so different handwriting styles that it may be difficult to distinguish the year from the text, which is also very varied. After all, most signals for digits would also trigger for some letters.
+Thirdly, the handwriting style may actually differ so much between books and time periods that it is predictive of the decade, or at least the century.
+
+However, for the system to be useful, it should generalize well to new collections, such as the second test set. The model with highest accuracy on the second test set was using multi-year loss and the accuracy could be boosted further by using our method for post-processing.
+Since this model used a new loss function, it is possible that the increased accuracy simply came from reduced overfitting. To know for sure, we would need to retrain the model from scratch, which would take some weeks.
+
+Although we were not able to predict the exact year with high accuracy,
+many of our models could guess the correct decade in the main test set with more than $40\%$ accuracy.
+% most models made many predictions that at least were in the correct decade.
+% one of the models managed to guess the correct decade for $43.6\%$ of the main test set.
+
+Although hard attention did not work very well for us, if the network could successfully identify the places of the year, hard attention would work quite well. One way to achieve this would be to add a separate loss for the attention model based on bounding boxes in the training data. Hard attention would in that case make sure that we actually predict based on the year digits and not on the handwriting style. However, at the moment, there are no such bounding boxes for the Swedish population records.
