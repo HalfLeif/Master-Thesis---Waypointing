@@ -2,12 +2,12 @@
 
 \textit{In this chapter we compare our results to previous work and suggest future research for solving the problem of automated indexing.}
 
-\section{Things we would have done differently}
-\textbf{TODO}: change title of section
-
-Encoder should also be trained using dropout as \textcite{multidigit_streetview}.
-
-Retrain network from start for each experiment, however takes too much time.
+% \section{Things we would have done differently}
+% \textbf{TODO}: change title of section
+%
+% Encoder should also be trained using dropout as \textcite{multidigit_streetview}.
+%
+% Retrain network from start for each experiment, however takes too much time.
 
 
 \section{Our work compared to previous work}
@@ -67,11 +67,11 @@ Secondly, the segmented images would need to be associated with the labels, eith
 For the purpose of making a fully automated indexing system, there are two major approaches to consider. Either one can make a model that exactly transcribes the word images as \textcite{FornesCnnCategorization} and then follow up by a language model, or a model that attempts to directly extract the genealogical information from the word images. The latter may prove difficult as some word images need to be ignored and other information depends on previous words. For example, to correctly extract a birth date, the model would need to remember the month which may have been written several records above.
 A benefit of an extraction model is that it would be trainable from end-to-end. However, it is unclear what would be a suitable loss-function for such a task.
 
-The other approach would however require two datasets that we do not have. An exact transcription system would need to train on word images with corresponding transcriptions, like the Esposalles dataset \cite{esposalles}. However, creating such a dataset of sufficient size seems unfeasible considering the great variation in spelling and handwriting for genealogical documents. The second training set would require a language model that would take the transcriptions as input, understand the relations and then generate the indexed information. Again, training such a language model would require a corresponding dataset in all relevant languages from various centuries, which we do not have.
+The other approach would however require two datasets that we do not have. An exact transcription system would need to train on word images with corresponding transcriptions, like the Esposalles dataset \cite{esposalles}. However, creating such a dataset of sufficient size seems infeasible considering the great variation in spelling and handwriting for genealogical documents. We also observe that the Esposalles dataset was originally intended to grow to cover more books, but after several years it is covers only a few pages. The second training set would require a language model that would take the transcriptions as input, understand the relations and then generate the indexed information. Again, training such a language model would require a corresponding dataset in all relevant languages from various centuries, which we do not have.
 
 In conclusion, the most feasible approach for making a fully automated indexing system seems to be to train a model for segmentation on the Esposalles dataset \cite{esposalles} and then make an end-to-end system for information extraction that would use the indexed information directly as labels. Although, this is a difficult task, it seems more feasible than manually creating the necessary datasets for exact transcription and language modeling.
 
-For future information extraction systems that would attempt to latently associating labels with word images, this thesis provides a baseline on the Swedish population records dataset for extracting the main year.
+For future information extraction systems that would attempt to latently associating indexed information with word images, this thesis provides a baseline on the Swedish population records dataset for extracting the main years.
 
 % On the other hand, given the scope of our long-term goal, it is infeasible to produce a sufficiently large dataset for training a model that exactly transcribes each word.
 
