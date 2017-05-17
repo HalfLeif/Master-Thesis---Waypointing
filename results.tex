@@ -258,9 +258,13 @@ TODO: compare metrics and suggest best model. Also show confidence thresholds?
 
 \section{What has the model learned?}
 
+\input{figures/attention_dep_9CM6.tex}
+
+In figure \ref{fig:attention_dep_9CM6}, we can see that the base2 model learned to recognize the importance of digits, although in this particular example it payed attention to many irrelevant digits instead of the written years.
+
 \input{figures/edited.tex}
 
-We hypothesized that the network had learned other signals than the handwritten year. To test our hypothesis, we took five images from the main test set and edited them so they no longer contained any handwritten years. When running the base2 model on the five images, the predictions were exactly the same as before. The attention matrix was also almost identical with and without the handwritten year. One of these five images and the corresponding attention are visualized in figure \ref{fig:edited}.
+However, we hypothesized that the network had also learned other signals than the written digits. To test our hypothesis, we selected five images from the main test set and edited them so they no longer contained any handwritten years. The base2 model classified two of these five images correctly before editing. When running the model on the five edited images, the predictions were exactly the same as before editing. The attention matrix was also almost identical with and without the handwritten year. One of these five images and the corresponding attention are visualized in figure \ref{fig:edited}.
 
 Because the network has not seen any of these five images during training, it must have learned to recognize the handwriting of the individual scribe who wrote the book. This is likely one of the reasons why the accuracy is so much lower for our second test set, because the model has not been trained to recognize any handwriting from that dataset.
 
