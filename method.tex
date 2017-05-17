@@ -1,6 +1,6 @@
 \chapter{Method}
 
-\textit{TODO...}
+\textit{In this chapter we first introduce our suggested model and then introduce some additional ideas that may improve our model. The suggested model and some of our ideas are evaluated in the next chapter.}
 
 \section{Network architecture} \label{sec:method_architecture}
 
@@ -102,7 +102,7 @@ One way to achieve this is to simply select one of the multiple years in an imag
 
 Instead, we label each image with a tuple of the smallest and the largest year present in the image. This representation has the benefit of having a fixed size independently of how many years are in the image. Furthermore, the entire sequence of years is represented. The only information that is lost is the occasional gap in year sequences. Such gaps are often very small and also quite rare in the Swedish dataset so we assume ignoring them has a negligible effect on training and evaluation.
 
-% TODO find gap example, how does that image look like? Does it contain the year anyway although it is not written in the label? Exactly how rare is it?
+% find gap example?, how does that image look like? Does it contain the year anyway although it is not written in the label? Exactly how rare is it?
 
 %Although it is not optimal, we currently train the network using one year as label for each image.
 

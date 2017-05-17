@@ -217,8 +217,6 @@ The precision measures the quality of the predictions that were higher than the 
 % Out of the non-discarded predictions, the precision is the percentage of correct predictions.
 
 Recall on the other hand measures how many correct predictions were discarded due to low confidence. Instead of measuring recall, we can use \textbf{coverage}, which is simply the percentage of predictions whose confidence was above the threshold $\tau$.
-% TODO: is it really?
-% More precisely, recall is the number of correct predictions that were not discarded divided by the total number of correct predictions.
 
 In order to compare models, we can then plot precision vs recall or coverage for different values of $\tau$. For $\tau=0$, the precision is the same as accuracy and the coverage is $100\%$. For $\tau=1.0$, everything is discarded so the precision is $100\%$ but the coverage is $0\%$.
 
@@ -406,4 +404,4 @@ However, because the last network layers are fully connected, they can only hand
 
 % \subsection{Residual networks}
 
-% TODO cite Microsoft ResNet for architecture of Residual modules. There are also residual networks of residual networks.
+% cite Microsoft ResNet for architecture of Residual modules. There are also residual networks of residual networks.

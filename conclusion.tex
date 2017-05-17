@@ -19,16 +19,7 @@ One of the challenges in classifying year for a page is the sheer size of the pa
 One benefit of using an attention model is that the system is trainable from end-to-end.
 However, as we have seen in our results, the attention model does not always learn to focus on the things we intend it to.
 
-
-
-% Also in the work of \textcite{FornesCnnCategorization}, they did not run the transcription model on the entire input but
-
-% In previous work of transcribing civil population records, \textcite{FornesCnnCategorization} only
-
 \textcite{FornesCnnCategorization} who worked on automatic transcription of civil population records also ran their models on small word images compared to the entire pages. In this case, they made no automatic system for segmenting the images but manually created a small dataset of word images with corresponding transcriptions \cite{esposalles}.
-
-% Also in the case of \cite{}, they use word images as input.
-% \textbf{TODO}...
 
 In contrast, for the task of image captioning, both \textcite{AttendAndTell} and \textcite{VisualSemanticAlignment} run their CNNs directly on large images. Both use some kind of alignment model, R-CNN or attention, for associating labels without location to some part of the image.
 

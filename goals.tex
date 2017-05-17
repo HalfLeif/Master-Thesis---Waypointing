@@ -1,7 +1,6 @@
 \section{Goals}
 
-% TODO: explore is vague. Perhaps 'evaluate'. However, also exploring by considering which methods might be useful...
-The goal of this thesis is to explore different possible approaches to automatically extract genealogical information from historical population records, for waypointing or indexing, by learning from previously indexed data. Specifically, we investigate how to extract the main written year(s) in each photographed page by using deep neural networks, in particular deep \textbf{convolutional neural networks} (CNN).
+The goal of this thesis is to explore different approaches to automatically extract genealogical information from historical population records, for waypointing or indexing, by learning from previously indexed data. Specifically, we investigate how to extract the main written year(s) in each photographed page by using deep neural networks, in particular deep \textbf{convolutional neural networks} (CNN).
 
 We believe that of all genealogical information in a historical document, the year should be the easiest to extract.
 In contrast with personal names, the valid range of years is considerably smaller and years have no spelling variations. Furthermore, the year is often written in a larger size than the rest of the text, which makes it easier to recognize and allows for more aggressive downsampling of the images for faster computation.
@@ -29,12 +28,10 @@ In order for our model to be commercially useful, the accuracy need to be very h
 
 %A perfect classification is unrealistic so the resulting groupings of images will need some manual inspection before publication. However, it should be sufficient to check some of the pages in a group instead of going through every page. Thus the manual workload should be significantly decreased. If the precision of the system is too low, correcting errors would be equally troublesome as doing the waypointing manually. Thus, the precision of the classification should be as high as possible.
 
-% TODO verify that this promise is fulfilled!
 An essential property of the desired automated system is to learn from fully indexed collections in order to extract information in other related collections that have not yet been indexed.
 Therefore, we evaluate with how well learning from one dataset generalizes to other datasets, in particular to new scribes and regions.
 %for example other regions and languages.
 
-% TODO verify that this promise is fulfilled!
-Finally, we consider how the model could be extended to extract more information and speculate how and whether full automation of indexing can be achieved.
+% Finally, we consider how the model could be extended to extract more information and speculate how and whether full automation of indexing can be achieved.
 
 % Even if the trained model does not achieve wanted precision, the thesis is still valuable as an exploration of different techniques for approaching the long-term goal of automated indexing.
