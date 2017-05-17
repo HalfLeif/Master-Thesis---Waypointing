@@ -185,7 +185,9 @@ As mentioned above, when changing the loss function for the base model to single
 
 Although the test accuracy for the multi-year model decreased, the accuracy on the second test set increased from $2.35\%$ to $2.75\%$. This is the best result we have achieved on the second test set, which tests the model on completely new books from other regions.
 
-% TODO: insert table of accuracies on both test sets for different variations. Can use two different tables for single epoch and multi epoch additional training.
+In conclusion, the multi-year loss decreased the accuracy on the main test set but improved the model's ability to generalize to new collections.
+One possible cause for this may be that multi-year loss makes the network focus more on the handwritten digits instead of the handwriting. However, when comparing the attention for the two models on the same images they look quite similar.
+
 
 \subsection{Simplifying the training data}
 
