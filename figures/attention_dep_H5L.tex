@@ -1,0 +1,23 @@
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[c]{1.0\textwidth}
+        \centering    \includegraphics[scale=0.29]{resources/SWE_attention/S3HY-DRC3-H5L.jpg}
+        \caption{The correct year is 1814, although the year is actually not written in the page but inferred from previous pages.}
+    \end{subfigure}
+    
+    \vspace{1em}
+    
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[scale=1.0]{resources/SWE_attention/SoftAtt/att_S3HY-DRC3-H5L.jpg}
+        \caption{The base model classifies the image as 1811 by looking at the handwriting.}
+    \end{subfigure} \quad %
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering    \includegraphics[scale=1.0]{resources/SWE_attention/HardAtt/att_S3HY-DRC3-H5L.jpg}
+        \caption{The hard attention model predicts the page as 1760.}
+    \end{subfigure}
+    
+    \caption{An image from the main test collection. The page comes from the book Axberg C:5 in the Örebro collection.}
+    \label{fig:attention_dep_H5L}
+\end{figure}
