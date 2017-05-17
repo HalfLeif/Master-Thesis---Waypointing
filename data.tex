@@ -21,7 +21,8 @@ We also initialize our experiments on the Swedish population records by a model 
 
 The Street View House Numbers (SVHN) dataset consists of about 200,000 images of house numbers taken from Google Street View \cite{SVHN}. The dataset both contains original images of the house numbers as well as cropped and rescaled images for each digit. This dataset was used by \textcite{multidigit_streetview} to train models for transcribing a much larger dataset with millions of images. They could transcribe $83\%$ of the bigger dataset at $99\%$ accuracy.
 
-\section{Datasets for historical handwriting recognition}
+\newpage
+\section{Transcribed historical documents}
 
 % TODO: line segmented not explained...
 There are several publicly available databases of historical documents \cite{esposalles}: the George Washington, Parzival, Saint Gall, RODRIGO and GERMANA databases. The images are line segmented, that is the image has been divided into smaller segments so that each segment correspond to one line of text. The handwritten text on the line images has been transcribed.
@@ -80,7 +81,7 @@ It is likely that the system would learn to recognize the printed template and h
 The last collection contains more than 10,000 pages with records of baptisms, burials and marriages from French parishes between 1533-1906. Some of the pages contain printed templates but the majority seems to be free-form handwriting.
 From manually inspecting these images, we conclude that many of them do not contain a written year anywhere on the page. These are problems that a future automated extraction system would need to handle, for this thesis however we settle for another dataset that seems somewhat easier.
 
-
+\newpage
 \section{Swedish population records}
 
 \input{figures/collections}
@@ -112,6 +113,7 @@ Each event of baptism, burial or marriage is stored as a record organized in the
 The images are highly compressed using lossy compression. The compression has resulted in many visible artifacts on pixel-level, which could affect recognition negatively. Each image has a different size although the majority are about $5700 \times 4500$ pixels. There are also outliers with sizes like $7262 \times 5907$ pixels and $1885 \times 5110$ pixels. We think the varying image sizes is a result of cropping the image to fit the book in the photograph.
 Since different books have different proportions, the aspect ratio of the images differs somewhat although it is often close to $1.25$:$1$.
 
+\newpage
 \subsection{Page structure}
 
 Most images consist of two pages, which are always handwritten. Sometimes the pages have pre-printed headers and vertical lines for columns, other times they are entirely free-form.
