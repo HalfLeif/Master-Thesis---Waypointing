@@ -1,6 +1,6 @@
 \chapter{Data}
 
-\textit{In this chapter we describe several potential datasets for digit recognition and hand-writing transcription. We use a more difficult version of the first dataset, MNIST, as a synthetic dataset for simulations. The real dataset for our task consist of the Swedish population records that are described in detail at the end of this chapter.}
+\textit{In this chapter we describe several potential datasets for digit recognition and hand-writing transcription. We use a more difficult version of the first dataset, MNIST, as a synthetic dataset for simulations. The real dataset for our primary task consist of the Swedish population records that are described in detail at the end of this chapter.}
 
 % Here we describe some existing datasets for historical handwriting recognition and information extraction. We also consider their usefulness in regard to the thesis.
 
@@ -29,7 +29,6 @@ There are several publicly available databases of historical documents \cite{esp
 
 Typically these datasets contain long documents of continuous text that differ significantly from civil population records, which are more structured and repetitive. Furthermore, each of these listed databases are written by one or two scribes, while we aim at understanding the handwriting of many scribes, which is necessary for indexing.
 %They consist of long texts written by one or two scribes. In contrast, civil population records are typically written by many different scribes. Furthermore, civil population records are often structured, for example with columns and repetitive sentences.
-% TODO add citations for each mentioned data set?
 
 \section{Esposalles}
 The Esposalles dataset consists of book indices and historical marriage licenses from the Cathedral of Barcelona \cite{esposalles}.
@@ -106,7 +105,7 @@ The double work and review process increases the quality and consistency of the 
 % Thus, the indexed information maintains a high quality even though it is not performed by professionals.
 
 The extracted information is stored in the compressed GedcomX\footnote{\url{http://www.gedcomx.org/About.html}} format which has been developed specifically for genealogical information.
-Each event of baptism, burial or marriage is stored as a record organized in the above mentioned six collections. Within a collection, the records do not seem to be stored in any particular order. Each record however contains information about which image it belongs to as well as some meta-information about the book the record comes from.
+Each event of baptism, burial or marriage is stored as a record organized in the above mentioned six collections. Within a collection, the records do not seem to be stored in any particular order. Each record however contains information about which image it belongs to as well as some meta-information about the book the record comes from. The year labels can be extracted by our open-sourced implementation\footnote{\url{https://github.com/HalfLeif/GedcomXExtract}} available at Github.
 
 \subsection{Varying image size}
 

@@ -1,5 +1,7 @@
 \chapter{Conclusion}
 
+\textit{In this chapter we compare our results to previous work and suggest future research for solving the problem of automated indexing.}
+
 \section{Things we would have done differently}
 \textbf{TODO}: change title of section
 
@@ -12,37 +14,76 @@ Retrain network from start for each experiment, however takes too much time.
 
 % A great advantage of the
 
-One of the greatest challenges in classifying year for a page is the sheer size of the page. Large images take a long time to process and they also contain a lot of other information. When recognizing house numbers from Google Street View, \textcite{multidigit_streetview} first made an automated system that cropped out the part of the image containing numbers as a fixed size $128 \times 128$ region. In our thesis, the attention model would be the corresponding mechanism for choosing a subregion in the image. However, the attention model requires the encoder CNN to run on the entire image, which increases running time.
-% TODO: verify if attention model learned to recognize handwriting or not!
-% In our model, the attention also learned to recognize other features than digits
+One of the challenges in classifying year for a page is the sheer size of the page. Downsampling reduces the size of the image but also makes recognition more difficult as the resolution decreases. Large images take a long time to process and they may also contain much unrelated information. When recognizing house numbers from Google Street View, \textcite{multidigit_streetview} first made an automated system that cropped out the part of the image containing house numbers as a fixed size $128 \times 128$ region, which was then fed to their CNN for classification. In our thesis, the attention model would be the corresponding mechanism for choosing a subregion in the image. However, the attention model requires the encoder CNN to run on the entire image, which increases running time.
+One benefit of using an attention model is that the system is trainable from end-to-end.
+However, as we have seen in our results, the attention model does not always learn to focus on the things we intend it to.
 
-Also in the case of \cite{FornesCnnCategorization}, they use word images as input.
-\textbf{TODO}...
 
-In contrast, \textcite{AttendAndTell} run on the entire input image while using attention to find the elements of interest. However, they do not transcribe any text but rather recognize objects in the image in order to generate new text. Hard attention, where the decoder only uses a single output unit from the encoder, worked rather well for object recognition but not so well for transcription. We conclude that a decoder can recognize objects without seeing them entirely, for example a leg might be enough to recognize a cat but a decoder can not guess the correct sequence of digits if it can only see the first two digits out of four.
+
+% Also in the work of \textcite{FornesCnnCategorization}, they did not run the transcription model on the entire input but
+
+% In previous work of transcribing civil population records, \textcite{FornesCnnCategorization} only
+
+\textcite{FornesCnnCategorization} who worked on automatic transcription of civil population records also ran their models on small word images compared to the entire pages. In this case, they made no automatic system for segmenting the images but manually created a small dataset of word images with corresponding transcriptions \cite{esposalles}.
+
+% Also in the case of \cite{}, they use word images as input.
+% \textbf{TODO}...
+
+In contrast, for the task of image captioning, both \textcite{AttendAndTell} and \textcite{VisualSemanticAlignment} run their CNNs directly on large images. Both use some kind of alignment model, R-CNN or attention, for associating labels without location to some part of the image.
+
+However, \textcite{AttendAndTell} use a model pre-trained on ImageNet, which contains millions of labeled images. This means that their encoder was already good at recognizing various animals and objects necessary for generating a descriptive caption. \textcite{VisualSemanticAlignment} on the other hand employ a hard-coded algorithm for finding regions that are most probable to contain an object of interest, which in handwriting recognition most closely would correspond to segmentation.
+In our work, we pre-trained our model on the noisy MNIST, but it appears that the handwriting in MNIST is too different compared to Swedish handwriting during the 18th and 19th century to make any significant impact.
+
+Another difficulty we face is that in order to correctly classify a year, the model must pay attention to all digits in the year. However, in object recognition and image captioning, focusing on a leg might still be sufficient to recognize a cate.
+
+Furthermore, the model of \textcite{AttendAndTell} revisits the image in each iteration as it generates new words for the caption. The hidden state of the decoder is fed as auxiliary input, so that the attention model will focus on new parts of the image. Thus, if the model would focus on the wrong thing to start with, it can still remedy the situation in later iterations.
+In our model, we only generate a single year so we only allow the model to look once at each image. Although it is conceivable to make a recurrent decoder for our task, it would significantly complicate the model.
+
+% In conclusion, our task is very difficult since the images are large and they contain much unrelated information which look very similar to the relevant signals.
+
+% Compared to our task, there are however some major differences.
+% Firstly, image captioning do not transcribe information in the image but generate a descriptive text, which typically involves recognizing objects in the image.
+% their model was pretrained on ImageNet, which contains several million images.
+
+% In contrast, \textcite{AttendAndTell} run on the entire input image while using attention to find the elements of interest. However, they do not transcribe any text but rather recognize objects in the image in order to generate new text. Hard attention, where the decoder only uses a single output unit from the encoder, worked rather well for object recognition but not so well for transcription. We conclude that a decoder can recognize objects without seeing them entirely, for example a leg might be enough to recognize a cat but a decoder can not guess the correct sequence of digits if it can only see the first two digits out of four.
 % A key difference is that one output unit can recognize as an object without seeing it entirely, a piece of fur can be enough to recognize a cat while for transcription we need the network to consider the entire sequence.
 
-Another major difference between our work and \cite{AttendAndTell} is that their decoder was sequential so for each iteration it looked at a new part of the image. So even though the decoder only looked at a single place in each iteration, over the output sequence most relevant parts of the image had been covered.
+% Another major difference between our work and \cite{AttendAndTell} is that their decoder was sequential so for each iteration it looked at a new part of the image. So even though the decoder only looked at a single place in each iteration, over the output sequence most relevant parts of the image had been covered.
 
-Difference: our attention model has no hidden state as auxiliary input. However, should not need one since always want to see year and nothing else.
+% Difference: our attention model has no hidden state as auxiliary input. However, should not need one since always want to see year and nothing else.
 
-\section{Best future approach}
+\section{Future work}
 
-Thus it seems that attention mechanisms after running on the entire image is less suitable for information extraction and transcription than for object recognition and caption generation. Instead, it seems that the traditional approach of segmenting the page image to word images is still the best way to go. However, there are two major challenges with segmentation.
+From our findings, it seems that attention mechanisms after running on the entire image is less suitable for information extraction and transcription than for object recognition and caption generation.
+Running on entire input images with only loose labels is too slow and the model learns to recognize other features than intended, since the background text is to difficult to distinguish from the years and too seemingly predictive to ignore.
+Instead, it seems that the conventional approach of segmenting the page image to word images is the best way to go. However, there are two major challenges with segmentation.
 
-Firstly, the words have to be segmented correctly. This has proven to be a challenging problem in itself although the Esposalles dataset \cite{esposalles} can be very useful for training and evaluating segmentation models for population records.
+Firstly, the words have to be segmented correctly. This has proven to be a challenging problem in itself and much research has been spent on finding good methods of segmenting handwritten text. For evaluating the segmentation methods, the Esposalles dataset \cite{esposalles} can prove very useful since it contains bounding boxes of word images in civil population records.
 
-Secondly, it is not clear how the transcription model could be trained using the indexed data. The problem lies in how to associate the extracted information with the segmented word images. It would likely take much manual work to create a trainable dataset, but there are two approaches to this. (1) the entire text could be transcribed exactly as in the case of \cite{esposalles}. Doing so would be useful if the final system has separate models for transcription and named entity recognition.
-(2) each piece of extracted information could be associated with a word image. That would mean that some word images have no label and should be ignored although they may actually contain information.
+Secondly, the segmented images would need to be associated with the labels, either manually in the dataset as by \textcite{esposalles} or latently during training.
+\textcite{VisualSemanticAlignment} successfully found alignment between weak labels and explicit regions in their dataset. However, as we have seen in this thesis, latently associating the label with a region in the input may lead to unexpected results. On the other hand, manually segmenting and transcribing hundreds of thousands of images of population records is a daunting task.
+ % Perhaps this can be done latently as by \textcite{VisualSemanticAlignment} or manually as by \textcite{esposalles}.
 
-Whichever approach is taken between exact transcription plus NER and information extraction, the end-to-end system must eventually learn which information is relevant and which is not.
-For indexing purposes, we are only interested in the date, location, person, age and close relatives. Ignored information include baptism witnesses and summaries of life stories upon death.
+For the purpose of making a fully automated indexing system, there are two major approaches to consider. Either one can make a model that exactly transcribes the word images as \textcite{FornesCnnCategorization} and then follow up by a language model, or a model that attempts to directly extract the genealogical information from the word images. The latter may prove difficult as some word images need to be ignored and other information depends on previous words. For example, to correctly extract a birth date, the model would need to remember the month which may have been written several records above.
+A benefit of an extraction model is that it would be trainable from end-to-end. However, it is unclear what would be a suitable loss-function for such a task.
+
+The other approach would however require two datasets that we do not have. An exact transcription system would need to train on word images with corresponding transcriptions, like the Esposalles dataset \cite{esposalles}. However, creating such a dataset of sufficient size seems unfeasible considering the great variation in spelling and handwriting for genealogical documents. The second training set would require a language model that would take the transcriptions as input, understand the relations and then generate the indexed information. Again, training such a language model would require a corresponding dataset in all relevant languages from various centuries, which we do not have.
+
+In conclusion, the most feasible approach for making a fully automated indexing system seems to be to train a model for segmentation on the Esposalles dataset \cite{esposalles} and then make an end-to-end system for information extraction that would use the indexed information directly as labels. Although, this is a difficult task, it seems more feasible than manually creating the necessary datasets for exact transcription and language modeling.
+
+For future information extraction systems that would attempt to latently associating labels with word images, this thesis provides a baseline on the Swedish population records dataset for extracting the main year.
+
+% On the other hand, given the scope of our long-term goal, it is infeasible to produce a sufficiently large dataset for training a model that exactly transcribes each word.
+
+% On the other hand, a model for extract transcription seems unprobable as it would require considerable
+
+% On the other hand, a model for exact transcription would require a much more detailed dataset than we have available and
+
+% Secondly, it is not clear how the transcription or extraction model could be trained using the indexed data. The primary problem lies in how to associate the extracted information with the segmented word images. It would likely take much manual work to create a trainable dataset, but there are two approaches to this. 1. The entire text could be transcribed exactly as in the case of \cite{esposalles}. Doing so would be useful if the final system has separate models for transcription and named entity recognition.
+% 2. Each piece of extracted information could be associated with a word image. That would mean that some word images have no label and should be ignored although they may actually contain information.
+
+% Whichever approach is taken between exact transcription followed by language model and direct information extraction, the end-to-end system must learn which information is relevant and which is not.
+% For indexing purposes, we are only interested in the date, location, person, age and close relatives. Ignored information include baptism witnesses and summaries of life stories upon death.
 % For example, baptism witnesses consist of many names but not much useful information for genealogical research.
 
 % Since the indexed data is not a transcription of text but rather extracted information, several word images could contribute to a single piece of information.
-
-...
-
-Can use batch normalization instead of dropout.
-
-Can use visual-semantic alignment (R-CNN) instead of attention model?
