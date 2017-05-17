@@ -210,6 +210,8 @@ In figure \ref{fig:attention_mnist} we can see how the soft attention successful
 
 When training the base model for one epoch with hard attention on the Swedish population records, the accuracy dropped from $8.39\%$ to $2.19\%$.
 
+\input{figures/attention_dep_T61.tex}
+
 \section{Post-processing} \label{sec:result_post_process}
 
 The best result on the second dataset had an accuracy of $2.75\%$, using multi-year loss. When running the post-processing on the predictions of this model, the accuracy was increased to $3.58\%$. So even though the original predictions were quite noisy, the post-processing could still use them to boost the accuracy further.
