@@ -12,7 +12,8 @@
 
 \section{Our work compared to previous work}
 
-% A great advantage of the
+For only helping waypointing, we could produce image-based word-clouds to summarize books as performed on historical documents by \textcite{ImageCloud}. Another possible approach for alleviating waypointing would be to use word spotting, which allows searching over images for either a query string or a query image \textcite{WordSpotting}.
+In this thesis, however we want to find the relevant information from every page and we want to output transcribed text instead of images. Applying word spotting by query string on separately on every page would work in theory but this requires a dataset of transcribed word images for training which we do not have.
 
 One of the challenges in classifying year for a page is the sheer size of the page. Downsampling reduces the size of the image but also makes recognition more difficult as the resolution decreases. Large images take a long time to process and they may also contain much unrelated information. When recognizing house numbers from Google Street View, \textcite{multidigit_streetview} first made an automated system that cropped out the part of the image containing house numbers as a fixed size $128 \times 128$ region, which was then fed to their CNN for classification. In our thesis, the attention model would be the corresponding mechanism for choosing a subregion in the image. However, the attention model requires the encoder CNN to run on the entire image, which increases running time.
 One benefit of using an attention model is that the system is trainable from end-to-end.
