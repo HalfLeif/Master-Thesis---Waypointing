@@ -390,7 +390,7 @@ The original R-CNN method works by proposing 2000 regions in the image that are 
 
 Since many regions overlap, it is unnecessary to compute the convolutions for them independently \cite{FastRCNN}. Instead the entire input image is processed through the CNN once and the feature vector of each region is extracted from the resulting activation map. After this improvement, the bottleneck is selecting the regions \cite{FasterRCNN}. By making a neural network to select regions from the activation map instead of from the image, the computation speed can be significantly reduced. However, this requires the training data to contain bounding boxes for the objects to detect.
 
-For the case of image captioning, the correspondences between words and regions in the image is unknown so this relationship is modeled by latent variables \cite{VisualSemanticAlignment}.
+For the case of image captioning, the correspondences between words and regions in the image is unknown so this relationship is modeled by latent variables \cite{VisualSemanticAlignment}. Because the true association between labels and regions is unknown we say that these labels are weak.
 
 \subsection{Spatial transformer networks}
 
