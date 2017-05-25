@@ -24,7 +24,10 @@ The Street View House Numbers (SVHN) dataset consists of about 200,000 images of
 \newpage
 \section{Transcribed historical documents}
 
-There are several publicly available databases of historical documents \cite{esposalles}: the George Washington, Parzival, Saint Gall, RODRIGO and GERMANA databases. The images are line segmented, that is the image has been divided into smaller segments so that each segment correspond to one line of text. The handwritten text on the line images has been transcribed.
+There are several publicly available databases of historical documents \cite{esposalles}: the George Washington, Parzival, Saint Gall, RODRIGO and GERMANA databases.
+The page images have been segmented into line images, so that each line image contains one line of text.
+% The images are line segmented, that is the image has been divided into smaller segments so that each segment corresponds to one line of text.
+The handwritten text on the line images has been transcribed.
 % Several data of historical documents have been line segmented and transcribed for public use
 
 Typically these datasets contain long documents of continuous text that differ significantly from civil population records, which are more structured and repetitive. Furthermore, each of these listed databases are written by one or two scribes, while we aim at understanding the handwriting of many scribes, which is necessary for indexing.
@@ -60,7 +63,7 @@ Specifically for this thesis, we intend to classify years in a much larger range
 
 \section{IRIS}
 
-While the Esposalles dataset focus on individual words transcribed by experts, the IRIS dataset contain record information extracted by volunteers in FamilySearch's indexing program \cite{Iris}.
+While the Esposalles dataset focuses on individual words transcribed by experts, the IRIS dataset contains record information extracted by volunteers in FamilySearch's indexing program \cite{Iris}.
 Thus the extracted information does not contain exact transcriptions of the text but rather the most important semantic contents.
 For examples, the indexer may have expanded abbreviations, replaced dittos with their intended values and ignored information that was deemed genealogically irrelevant.
 % For example, abbreviations may have been expanded, dittos replaced by their intended values and information that was deemed genealogically irrelevant has been ignored.
@@ -161,5 +164,8 @@ The two smallest collections (Kalmar and Västernorrland) were reserved entirely
 
 \subsection{Label density} \label{sssec:few_labels}
 
+\input{figures/label_counts.tex}
+
+The distribution of images over labels is illustrated in figure \ref{fig:label_counts}. Some pages contain several years, especially from earlier years. To avoid bias in the counting, we distribute a weight of one for each page image evenly to all labels for that page.
+
 Some labels occur very few times in the dataset. Although the labels span from 1607 to 1890, the majority of images lie between 1690 and 1861, with very few examples outside. Each year occurs in 147 images on average and few of the labels have more than 300 examples in the combined training and test data.
-In this counting, we give each image a weight of one, so for multiyear images, we increment the count for each year in the label by a fraction of one.
