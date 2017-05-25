@@ -241,6 +241,8 @@ The major chunk of the jump probability distribution is illustrated in figure \r
 As described earlier in section \ref{sssec:alt_postproc}, when counting transitions between two pages where both pages have multiple years, we give fractions of count to all combinations of years. This results in the small probabilities for minus one and plus two et cetera, which can be seen in the probability distribution.
 % Because of multi-year labels, we also have small probabilities for minus one and plus two, since we count all combinations of .
 
+\input{figures/jump_log_counts.tex}
+
 It also happens in some books that there is a major leap between two pages as a new section of the book begins. This can be seen in the log counts for the four main collections of the Swedish population records, which is plotted in figure \ref{fig:jump_log_counts}.
 
 \subsection{Conditional jump distribution}
@@ -259,9 +261,9 @@ In figure \ref{fig:attention_dep_9CM6}, we can see that the  Base2 model learned
 
 However, we hypothesized that the network had also learned to recognize other signals than digits. To test our hypothesis, we selected five images from the main test set and edited them so they no longer contained any handwritten years. The  Base2 model classified two of these five images correctly before editing. When running the model on the five edited images, the predictions were exactly the same as before editing. The attention matrix was also almost identical with and without the handwritten year. One of these five images and the corresponding attention are visualized in figure \ref{fig:edited}.
 
-Because the network has not seen any of these five images during training, it must have learned to recognize the handwriting of the individual scribe who wrote the book. This is likely one of the reasons why the accuracy is so much lower for our second test set, because the model has not been trained to recognize any handwriting from that dataset.
+Because the network has not seen any of these five images during training, it appears to have learned to recognize the handwriting of the individual scribe who wrote the book. This is likely one of the reasons why the accuracy is so much lower for our second test set, because the model has not been trained to recognize any handwriting from that dataset.
 
-So it appears that at least for some pages, the network makes the right prediction, not because it can read the year digits, but because it recognizes the style of the handwriting. It is not what we intended the network to learn, but it nevertheless shows the potential of deep learning that the models can even learn to recognize handwriting styles.
+So it seems that at least for some pages, the network makes the right prediction, not because it can read the year digits, but because it recognizes the style of the handwriting. It is not what we intended the network to learn, but it nevertheless shows the potential of deep learning that the models can even learn to recognize handwriting styles.
 
 \newpage
 \section{Summary}
