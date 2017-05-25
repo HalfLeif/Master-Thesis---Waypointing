@@ -61,6 +61,8 @@ e_i = f_\text{att}(\mathbf{a_i})
 
 Note that this MLP does not have access to any information about the corresponding location of $\mathbf{a_i}$, thus the network must learn to recognize important parts by looking at the encoded features alone instead of learning to always look at a certain position in the input image. This is especially important for population records, where the relevant information can be in different locations depending on scribe and time period.
 
+It would certainly be possible to add the coordinates of the feature vector as an auxiliary input to the attention model, which would bias the attention towards common page structures in the training set. We leave to future work to evaluate whether that additional information leads to better generalization.
+
 % We normalize the $e_i$ into $\alpha_i$ by computing the softmax.
 % We normalize the $e_i$ by softmax and call the corresponding values attentions
 
