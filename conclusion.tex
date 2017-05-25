@@ -12,7 +12,7 @@
 
 \section{Our work compared to previous work}
 
-For only helping waypointing, we could produce image-based word-clouds to summarize books as performed on historical documents by \textcite{ImageCloud}. Another possible approach for alleviating waypointing would be to use word spotting, which allows searching over images for either a query string or a query image \cite{WordSpotting}.
+For only helping waypointing, we could produce image-based word clouds to summarize books as performed on historical documents by \textcite{ImageCloud}. Another possible approach for alleviating waypointing would be to use word spotting, which allows searching over images for either a query string or a query image \cite{WordSpotting}.
 In this thesis, however we want to find the relevant information from every page and we want to output transcribed text instead of images. Applying word spotting by query string on separately on every page would work in theory but this requires a dataset of transcribed word images for training which we do not have.
 
 One of the challenges in classifying year for a page is the sheer size of the page. Downsampling reduces the size of the image but also makes recognition more difficult as the resolution decreases. Large images take a long time to process and they may also contain much unrelated information. When recognizing house numbers from Google Street View, \textcite{multidigit_streetview} first made an automated system that cropped out the part of the image containing house numbers as a fixed size $128 \times 128$ region, which was then fed to their CNN for classification. In our thesis, the attention model would be the corresponding mechanism for choosing a subregion in the image. However, the attention model requires the encoder CNN to run on the entire image, which increases running time.
@@ -47,7 +47,7 @@ In our model, we only generate a single year so we only allow the model to look 
 \section{Future work}
 
 From our findings, it seems that attention mechanisms after running on the entire image is less suitable for information extraction and transcription than for object recognition and caption generation.
-Running on entire input images with only loose labels is too slow and the model learns to recognize other features than intended, since the background text is to difficult to distinguish from the years and too seemingly predictive to ignore.
+Running on entire input images with only loose labels is too slow and the model learns to recognize other features than intended, since the background text is too difficult to distinguish from the years and too seemingly predictive to ignore.
 Instead, it seems that the conventional approach of segmenting the page image to word images is the best way to go. However, there are two major challenges with segmentation.
 
 Firstly, the words have to be segmented correctly. This has proven to be a challenging problem in itself and much research has been spent on finding good methods of segmenting handwritten text. For evaluating the segmentation methods, the Esposalles dataset \cite{esposalles} can prove very useful since it contains bounding boxes of word images in civil population records.
@@ -61,7 +61,7 @@ A benefit of an extraction model is that it would be trainable from end-to-end. 
 
 The other approach would however require two datasets that we do not have. An exact transcription system would need to train on word images with corresponding transcriptions, like the Esposalles dataset \cite{esposalles}. However, creating such a dataset of sufficient size seems infeasible considering the great variation in spelling and handwriting for genealogical documents. We also observe that the Esposalles dataset was originally intended to grow to cover more books, but after several years it is covers only a few pages. The second training set would require a language model that would take the transcriptions as input, understand the relations and then generate the indexed information. Again, training such a language model would require a corresponding dataset in all relevant languages from various centuries, which we do not have.
 
-In conclusion, the most feasible approach for making a fully automated indexing system seems to be to train a model for segmentation on the Esposalles dataset \cite{esposalles} and then make an end-to-end system for information extraction that would use the indexed information directly as labels. Although, this is a difficult task, it seems more feasible than manually creating the necessary datasets for exact transcription and language modeling.
+In conclusion, the most feasible approach for making a fully automated indexing system seems to be to train a model for segmentation on the Esposalles dataset \cite{esposalles} and then make an end-to-end system for information extraction that would use the indexed information directly as labels. Although this is a difficult task, it seems more feasible than manually creating the necessary datasets for exact transcription and language modeling.
 
 For future information extraction systems that would attempt to latently associating indexed information with word images, this thesis provides a baseline on the Swedish population records dataset for extracting the main years.
 

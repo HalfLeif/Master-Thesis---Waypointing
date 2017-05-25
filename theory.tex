@@ -349,7 +349,8 @@ If the CC has a high confidence in classification it is removed, otherwise it is
 
 More recently, deep neural networks have achieved state-of-the-art in multi-digit recognition in street view images \cite{multidigit_streetview}. Instead of handling localization, segmentation and classification as separate tasks, they solve all of them using a single CNN with 11 layers. The output is modeled as a sequence $S$ of digits with a maximum length $N$. The sequence $S$ consists of a random variable $L=n$ for the length of the sequence and $n$ variables $S_i$, one for each digit. In order to handle images without numbers $L$ is allowed to have the value zero and in order to handle longer sequences than $N$, $L$ has a special value \textquote{greater than $N$}. For an input image $X$, the system can be trained by maximizing $\log P(S \mid X)$.
 % TODO use \argmax
-Classification is similarly done by $\text{arg\,max}_S P(S \mid X)$.
+Classification is similarly done by $\argmax_S P(S \mid X)$.
+% Classification is similarly done by $\text{arg\,max}_S P(S \mid X)$.
 Because each variable has a very small domain, they can be implemented with independent softmax outputs.
 Although this model works well for digit recognition of short sequences $N \leq 5$ as well as \textbf{optical character recognition} (OCR) in CAPTCHAs, the authors speculate that the method is not suitable for long or unbounded sequences.
 
