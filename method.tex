@@ -9,6 +9,8 @@
 We now describe the different parts of the proposed network. See figure \ref{fig:sys_overview} for an overview of how the different parts of the network interact.
 The network architecture is mainly inspired by the work of \textcite{multidigit_streetview} who detected house numbers in Google Street View with very high precision and coverage, \textcite{machine_translation_attention} who introduced the attention mechanism that we use and \textcite{AttendAndTell} who applied the attention mechanism to a CNN encoder.
 
+Every layer in our network, except the decoder output, uses ReLU for activation.
+
 \subsection{Encoder}
 
 \input{figures/encoder.tex}
