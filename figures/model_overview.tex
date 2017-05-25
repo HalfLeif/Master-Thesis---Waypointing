@@ -25,7 +25,7 @@
     \hline
   \end{tabular}
   \caption{For each model, we list for how many epochs it has been trained including pre-training, four metrics on the main test set and four metrics on the second test set for generalization.
-  The first metric is accuracy, the second is median distance between prediction and correct label, the third is the mean distance and the last metric is the percentage of predictions that were within 5 years of the correct label.
+  The first metric is accuracy, the second is median distance between prediction and correct label, the third is the mean distance and the last metric is the percentage of predictions that were less than 5 years wrong from the correct label.
   The models are the Base model, independent digit loss, multi-year loss, multi-year loss with post-processing, simplified training data and hard attention.
   Note that the models that are pre-trained with 16 epochs use the Base model, while the models that are pre-trained with 23 epochs use the Base2 model.
   }

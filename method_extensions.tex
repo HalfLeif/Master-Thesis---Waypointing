@@ -122,7 +122,7 @@ Below we present a model for post-processing, which we evaluate in section \ref{
 
 For each image $t$, we define $z_{tj}$ to be the model's prediction probability that page $t$ has label $j$. We also introduce a jump distribution $Q(j, k)$ for making a transition from label $j$ to label $k$.
 
-With this model, we consider each label to be a state and each book to be a sequence of state transitions. A transition at time $t$ from state $j$ to state $k$ is calculated as $z_{tk} Q(j, k)$. We can then apply the \textbf{Viterbi algorithm} using \textbf{Dynamic programming} to find the maximum probability sequence of state transitions.
+With this model, we consider each label to be a state and each book to be a sequence of state transitions. A transition at time $t$ from state $j$ to state $k$ is calculated as $z_{tk} Q(j, k)$. We can then apply the \textbf{Viterbi algorithm} using \textbf{dynamic programming} to find the maximum probability sequence of state transitions.
 
 We create a matrix $T$, so that that for each page $t$ and label $j$, $T[t,j]$ contains the maximum probability of a sequence so far. For the first page, we simply take the network predictions: $T[0,j] = z_{0j}$. For every other page, we use the following recurrence:
 \[

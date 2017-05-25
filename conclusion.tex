@@ -46,8 +46,10 @@ In our model, we only generate a single year so we only allow the model to look 
 
 \section{Future work}
 
-From our findings, it seems that attention mechanisms after running on the entire image is less suitable for information extraction and transcription than for object recognition and caption generation.
-Running on entire input images with only loose labels is too slow and the model learns to recognize other features than intended, since the background text is too difficult to distinguish from the years and too seemingly predictive to ignore.
+From our findings, it seems that attention mechanisms after running on the entire image is less suitable for information extraction and transcription than for object recognition and caption generation. In our training, we did not see any overfitting yet so there may be more potential for these methods by training longer and on better hardware.
+
+Another future approach could be to incorporate spatial transformer modules in the network, as presented by \textcite{SpatialTransformerNetworks}.
+However, running on entire input images with only loose labels is slow and the model learns to recognize other features than intended, since the background text is too difficult to distinguish from the years and too seemingly predictive to ignore.
 Instead, it seems that the conventional approach of segmenting the page image to word images is the best way to go. However, there are two major challenges with segmentation.
 
 Firstly, the words have to be segmented correctly. This has proven to be a challenging problem in itself and much research has been spent on finding good methods of segmenting handwritten text. For evaluating the segmentation methods, the Esposalles dataset \cite{esposalles} can prove very useful since it contains bounding boxes of word images in civil population records.
