@@ -10,7 +10,7 @@ designing future encoder-decoder networks.
 
 \section{Simulations on synthetic data} \label{sec:simulations}
 
-Since the images of the Swedish records are so large, we decided to create a simpler and faster dataset so we could quickly iterate on the network architecture. Here we describe the synthetic dataset we created as well as some observations from altering the network configuration.
+Since the images of the Swedish records are so large, we decided to create a simpler dataset, which would be faster to train on, so we could quickly iterate on the network architecture. Here we describe the synthetic dataset we created as well as some observations from altering the network configuration.
 
 \subsection{Four-digit MNIST}
 
@@ -22,7 +22,7 @@ Each image was a concatenation of four independently randomly selected digit ima
 % which is very much smaller than the images of the Swedish records.
 Because the images were so small, it took a much shorter time to train and evaluate different models on the synthetic dataset than on the Swedish population records, whose images were very large.
 
-Several models performed very well on this task, one of them achieving $94\%$ accuracy after 10,500 cpu-seconds of training. These models are discussed further in section \ref{sssec:exp_encoder}.
+Several models performed very well on this task, one of them achieving $94\%$ accuracy after 10,500 CPU seconds of training. These models are discussed further in section \ref{sssec:exp_encoder}.
 
 \subsection{Noisy MNIST}
 
@@ -154,14 +154,14 @@ We trained the models on 3 threads on a single Intel(R) Core(TM) i7-4770K @ 3.50
 
 \subsubsection{Pre-training}
 
-All experiments in this section start with a pre-trained model already. Most of them use a model we refer to as the \textbf{Base model}. The Base model used the DEP encoder and was trained using soft attention and cartesian loss for 5 epochs on the noisy MNIST and then for 16 epochs on the Swedish population data. Thus it had an accumulated training time of more than 4,200,000 cpu-seconds or almost 3 weeks on our hardware.
+All experiments in this section start with a pre-trained model already. Most of them use a model we refer to as the \textbf{Base model}. The Base model used the DEP encoder and was trained using soft attention and cartesian loss for 5 epochs on the noisy MNIST and then for 16 epochs on the Swedish population data. Thus it had an accumulated training time of more than 4,200,000 cpu-seconds or more than 2 weeks on our hardware.
 % noisy MNIST DEP-5: 41,217 cpusec ?
 % 16 epochs of SweDEP: 264775*16 cpusec = 4,236,400
 % SUM:
 The Base model had an accuracy of $8.39\%$ on the main test set and an accuracy of $2.11\%$ on the second test set.
 
 Optimally, the model variations should be retrained from scratch but doing so would simply take too long time.
-Instead, we present the observed accuracies as a lower bound to the potential of each observation and as an indication of whether the variation was helpful or not.
+Instead, we present the observed accuracies as an indication of whether the variation was helpful or not.
 % Since the models were heavily pre-trained with a different configuration, we present our observations as a lower bound to the potential accuracy of each variation.
 
 % that pre-trained on the noisy MNIST for 5 epochs which was then trained on the Swedish population data
