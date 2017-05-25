@@ -37,7 +37,7 @@ Another drawback of disjoint labels is that there may be very few training examp
 % A hybrid between disjoint labels and the three digit decoder
 %
 
-Here we introduce a loss function inspired by disjoint labels but that still let the model reuse learning of individual digits. Above we suggested to sum the cross-entropy for each digit; instead we can compute the cartesian product of the readout layers to make a vector over the supported year range and take the cross-entropy directly on this vector. A comparison between the two loss functions is performed in section \ref{sssec:ind_digits}.
+Here we introduce a loss function inspired by disjoint labels but lets the model reuse learning of individual digits. Above we suggested to sum the cross-entropy for each digit; instead we can compute the cartesian product of the readout layers to make a vector over the supported year range and take the cross-entropy directly on this vector. A comparison between the two loss functions is performed in section \ref{sssec:ind_digits}.
 
 
 \subsubsection{Multi-year loss} \label{sssec:alt_multiyear}
@@ -47,7 +47,7 @@ In section \ref{ssec:result_multiyear} we compare using this multi-year loss aga
 
 \subsubsection{Distance loss}
 
-Sometimes the network makes predictions that are very far away from the correct year, for example $1774$ instead of $1661$. Although we want to get the exact year, $1662$ could be considered a much better suggestion than $1861$. Cross-entropy penalizes each different digit but not the numeric distance, so $1662$ and $1861$ would get the same penalty, because in both cases, two digits are wrong.
+Sometimes the network makes predictions that are very far away from the correct year, for example $1861$ instead of $1661$. Although we want to get the exact year, $1662$ could be considered a much better suggestion than $1861$. Cross-entropy penalizes each different digit but not the numeric distance, so $1662$ and $1861$ would get the same penalty, because in both cases, exactly one digit is wrong.
 
 One intuitive loss for distance would be squared distance. For a single year label $y$, and a probability distribution $P(X=x)$ over the years we add a distance loss $L_D$ in addition to the cross-entropy:
 \[
@@ -140,4 +140,6 @@ The jump distribution for $Q(j, k)$ can be found by statistically counting the p
 Q(j, k) = Q(k-j) = \frac{N(k-j) + \alpha}{N + \alpha K}
 \]
 
-For images that have multiple years, we uniformly distribute the weight between the possible transitions of the two images. A transition from $[1771, 1772]$ to $[1772, 1773]$ would thus produce the following count: {0: 0.25, 1: 0.5, 2: 0.25}.
+For images that have multiple years, we uniformly distribute the weight between the possible transitions of the two images. A transition from $[1771, 1772]$ to $[1772, 1773]$ would thus produce the following count: \{0: 0.25, 1: 0.5, 2: 0.25\}.
+
+% TODO check new page

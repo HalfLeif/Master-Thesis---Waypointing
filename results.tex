@@ -71,12 +71,12 @@ In another experiment, which we refer to as DEL, we halved the depth of every en
 % When halving the depth of the DE decoder from 1024 to 512, (DED) had little impact on this task.
 % Halving the number of filters in every layer (DEL) halved the training time per epoch but also halved the learning rate, so in the end its performance was about the same.
 
-% The TE model was identical to DE except that it used fewer convolutional layers. More precisely, the DE encoder started with $\langle C,C,P,C,C,P \rangle$ while TE started with $\langle C, P, C, P \rangle$, where $C$ stands for $3 \times 3$ convolution and $P$ stands for $2 \times 2$ max-pooling.
+% The TE model was identical to DE except that it used fewer convolutional layers. More precisely, the DE encoder started with $\langle C,C,P,C,C,P \rangle$ while TE started with $\langle C, P, C, P \rangle$, where $C$ stands for $3 \times 3$ convolution and $P$ stands for $2 \times 2$ max pooling.
 
 % In both the DE model and the DEP model, the encoder had two consecutive convolutional layers at two places in the beginning of the encoder. These double layers in the DEP model can be seen in figure \ref{fig:encoder}.
 In order to reduce the training time, we experimented with
 simplifying the DE encoder by removing the second convolutional layer in each of the first two blocks. We call this thinner model TE.
-% removing two convolutional layers so that there would be no consecutive convolutional layers. So in the model we call TE, every second layer in the encoder was a max-pool layer.
+% removing two convolutional layers so that there would be no consecutive convolutional layers. So in the model we call TE, every second layer in the encoder was a max pool layer.
 Similarly to the model DEL described above, where we simplified the encoder by halving the depth of each layer, both training time and accuracy was reduced. When plotting accuracy against training time in figure \ref{fig:mnist_early_models}, we see that just like DEL, the TE model was comparable to DE.
 
 We also tested a variant to TE where an additional pooling layer was added between the two convolutional layers in the third block. So in this new model, which we call TEP, every second layer is a pooling layer.

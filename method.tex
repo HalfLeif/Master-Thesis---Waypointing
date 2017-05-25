@@ -62,8 +62,7 @@ Note that this MLP does not have access to any information about the correspondi
 % We normalize the $e_i$ into $\alpha_i$ by computing the softmax.
 % We normalize the $e_i$ by softmax and call the corresponding values attentions
 
-We denote the softmax of $e_i$ as attentions $\alpha_i$, which sums to one by definition of softmax.
-%We compute the softmax of $e_i$ as $\alpha_i$, which sums to one per definition.
+We denote the softmax of $e_i$ as attentions $\alpha_i$, which sum to one by definition of softmax.
 We then use the attentions $\alpha_i$ as weights over the feature vectors:
 \[
 \mathbf{z} = \sum_{k=1}^L \alpha_i \mathbf{a_i}
