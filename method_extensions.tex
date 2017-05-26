@@ -63,8 +63,6 @@ L_D(U, y) = \int_0^1 (x-y)^2 P(U=x) dx = \frac{1}{3} + y(1-y)
 
 Thus we see that for the above definition of $L_D$, there is a strong bias for labels close to the center of the range. Likewise, a network trained with this distance loss becomes strongly biased to suggesting years closer to the middle of the output range.
 
-% TODO mention in Experiments/Results? No.
-
 The second problem with this distance loss is that even for a perfect network, there will be considerable predictions far away from the true label because we multiply the probability distributions for the digits independently. That is, if the network is $100\%$ certain that the last two digits should be $3, 4$ and the correct label is $1834$, we will still get strong signals for $1734$ and $1634$, although they have a great numeric distance to the correct label.
 So even though it may make intuitive sense to penalize numeric distance, it is questionable whether it in the end would benefit learning.
 

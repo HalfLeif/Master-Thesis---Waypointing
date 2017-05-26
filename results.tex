@@ -3,9 +3,7 @@
 \textit{
 In the previous chapter we described our main model and training procedure as well as some alternatives.
 In this chapter we describe the numerical results of our implementation of the main model on two datasets, one synthetic dataset created from MNIST and the much more difficult Swedish population records. We also perform several experiments where we change the model configuration or training procedure and observe the effect on either or both datasets.
-Hopefully, our observations can be instrumental in
-% TODO: instrumental? Rephrase?
-designing future encoder-decoder networks.
+Hopefully, our observations can be instructive in designing future encoder-decoder networks.
 }
 
 \section{Simulations on synthetic data} \label{sec:simulations}
@@ -44,7 +42,6 @@ An example image with dot noise and random position can be seen in figure \ref{f
 \subsection{Network depth and width} \label{sssec:exp_encoder}
 
 By running a time trace on the training operation, we saw that the majority of the training time was spent on applying and updating the encoder network. In order to reduce training time we performed the following experiments to design a more efficient encoder network while maintaining a good accuracy on the simulation tasks.
-% TODO: insert graph?
 
 % By counting the number of trainable parameters in the model we observed that the majority of parameters are contained by the MLPs in the attention and decoder model.
 
@@ -172,7 +169,6 @@ Instead, we present the observed accuracies as an indication of whether the vari
 \subsection{Independent digits vs cartesian loss} \label{sssec:ind_digits}
 
 We now compare using the independent digit loss presented in section \ref{ssec:method_loss} against the cartesian loss introduced in section \ref{sssec:cartesian}.
-% TODO: check in notes for results on MNIST data.
 Training the DEP configuration from scratch on the noisy MNIST data using either loss function gave very similar results although the training time was slightly longer for cartesian loss.
 
 For the Swedish population records, the Base model used cartesian loss already. When training one additional epoch using the independent digit loss, the test accuracy dropped from $8.39\%$ to $7.2\%$. However, when training the model for another six epochs we reached the test accuracy of $8.98\%$. This model we refer to as  Base2 because some of the following models were trained from this model.

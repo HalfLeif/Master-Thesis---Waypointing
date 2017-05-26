@@ -93,6 +93,7 @@ By stopping the training when overfitting on the test data occurs, it is possibl
 One of the reasons why neural networks have recently achieved state-of-the-art in so many tasks is the use of very deep networks, that is networks with many layers.
 % TODO add citation
 The more layers, the more complex tasks can be learned. To the surprise of many, computers recently even outperformed humans in the complex game of Go \cite{AlphaGo, AlphaGoTuringTest}.
+% TODO: mention Ke Jie as well as Lee Sedol?
 
 The large number of parameters in deep networks is both a strength and a weakness since it requires a large amount of training data as well as considerable computation power. More parameters can also memorize more and thus make the network more prone to overfitting \cite{AlexNet}.
 
@@ -206,8 +207,6 @@ Pre-training, especially \textbf{greedy supervised pre-training}, can also refer
 
 \subsection{Confidence thresholding}
 
-% TODO: why cited as I. J. Goodfellow and not just Goodfellow? Fix...
-
 Certain tasks, like automatic house number transcriptions in Google Street View, require the model to have a very high accuracy to be useful \cite{multidigit_streetview}.
 For these instances, the model should output a \textbf{confidence} for its classification. If the confidence is higher than some pre-determined threshold $\tau$, we keep the prediction; otherwise we ignore the prediction and conclude that the model is not sure about that example.
 % In order to increase the accuracy, the predictions that have a confidence lower than some threshold $\tau$ may be discarded.
@@ -224,8 +223,6 @@ Both machine translation and image captioning used to be solved by solving each 
 \section{Convolutional neural networks}
 
 Since the publication of the AlexNet in 2012 \cite{AlexNet}, CNNs have gained large attention in computer vision for achieving state-of-the-art in various tasks such as object-detection, segmentation, video classification and object tracking \cite{InceptionV3}.
-
-% TODO add citations
 
 Each layer in a CNN consists of a two-dimensional grid of vectors, which we will refer to as \textbf{units}. Throughout the network, each unit will correspond to different regions in the input image. Sometimes we will refer to this grid as a three-dimensional tensor where the depth is the size of the vectors. The \textbf{representational size} of a layer is simply the product of its height, width and depth.
 
@@ -301,8 +298,6 @@ One can pad each activation map with zeroes to instead maintain the same size, w
 \label{ssec:attention}
 % Since waypointing only needs high-level information in a limited domain, complete transcription is unnecessary. Instead we can use recent advances in image classification.
 
-% TODO write this part again in more detail, especially after spending more time with the literature here.
-
 In contrast to CNNs, the human eye does not process the entire scene with equal precision but focuses on the most relevant parts \cite{DeepMindAttention}.
 Similarly, we can let the system pay \textbf{attention} to a small part of the image at a time and successively increase the system's understanding of the image.
 By choosing good locations for our attention, the important parts of the image are captured while the irrelevant parts are ignored.
@@ -348,7 +343,6 @@ If the CC has a high confidence in classification it is removed, otherwise it is
 % TODO merge places about SVHN...
 
 More recently, deep neural networks have achieved state-of-the-art in multi-digit recognition in street view images \cite{multidigit_streetview}. Instead of handling localization, segmentation and classification as separate tasks, they solve all of them using a single CNN with 11 layers. The output is modeled as a sequence $S$ of digits with a maximum length $N$. The sequence $S$ consists of a random variable $L=n$ for the length of the sequence and $n$ variables $S_i$, one for each digit. In order to handle images without numbers $L$ is allowed to have the value zero and in order to handle longer sequences than $N$, $L$ has a special value \textquote{greater than $N$}. For an input image $X$, the system can be trained by maximizing $\log P(S \mid X)$.
-% TODO use \argmax
 Classification is similarly done by $\argmax_S P(S \mid X)$.
 % Classification is similarly done by $\text{arg\,max}_S P(S \mid X)$.
 Because each variable has a very small domain, they can be implemented with independent softmax outputs.
