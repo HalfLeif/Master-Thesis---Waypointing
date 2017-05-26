@@ -85,7 +85,7 @@ This phenomenon is knows as \textbf{overfitting} and can constitute a large prob
 
 By stopping the training when overfitting on the test data occurs, it is possible to indirectly overfit the test data. Therefore, one can instead divide the original dataset into three disjoint sets and use the third part to evaluate the final accuracy.
 
-
+\newpage
 \section{Methods for deep neural networks}
 % Very powerful, see for example AlphaGo
 % Many parameters, needs lot of data
@@ -294,6 +294,7 @@ The performance of CNNs typically increases with greater width and depth, but it
 Applying a $3 \times 3$ filter to an input image of size $10 \times 10$ will output an image of size $8 \times 8$ since there are only 8 positions in a single row where the filter can fit. For deep networks, this shrinking might cause the final representation to become too narrow.
 One can pad each activation map with zeroes to instead maintain the same size, which solves the problem at little additional computional cost.
 
+\newpage
 \section{Attention models}
 \label{ssec:attention}
 % Since waypointing only needs high-level information in a limited domain, complete transcription is unnecessary. Instead we can use recent advances in image classification.
@@ -324,7 +325,7 @@ By definition, the attention weights sum to one. A \textbf{soft attention} model
 \subsection{Hard attention}
 A \textbf{hard attention} model instead interprets the ${\alpha_i}$ as a probability distribution over locations $i$. By sampling this distribution, $\mathbf{z}$ is chosen to be the sampled unit $\mathbf{a_i}$, ignoring the rest of the image.
 
-
+\newpage
 \section{CNNs in multi-digit recognition}
 
 CNNs have not only been successful at image classification in general, but also specifically at detecting digits in images.

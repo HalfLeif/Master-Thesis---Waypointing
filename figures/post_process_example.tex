@@ -30,7 +30,6 @@
     \hline
 \end{tabular}
 \caption{The post-processing can correct one of the pages to 1769. Although 1771 is not correct for the last page in the example, it is still closer to the true value than the prediction 1777.
-The pages are an extract from the book Asker C:2.
 }
 \end{subtable}
 
@@ -47,15 +46,14 @@ The pages are an extract from the book Asker C:2.
     1795 & 1798 & 1797 \\
     1798 & 1798 & 1797, 1798 \\
     1798 & 1798 & 1798 \\
-    \textbf{1805} & 1808 & 1798 \\
+    1805 & \textbf{1808} & 1798 \\
     1798 & 1808 & 1798 \\
     \hline
 \end{tabular}
 \caption{
 The network makes a confident but incorrect prediction that the century digit should be 8 and the decade digit 0. The incorrect prediction makes the post-processing prefer 1808 over the true value of 1798.
-The pages are an extract from the book Asker C:3.
 }
 \end{subtable}
-\caption{Two examples of post-processing. In the column to the left is the prediction made by the model, the middle column contains the updated prediction after post-processing and the rightmost column contains the true label.}
+\caption{Two examples of post-processing. In the column to the left is the prediction made by the model, the middle column contains the updated prediction after post-processing and the rightmost column contains the true label. The first example comes from the book Asker C:2 and the second from Asker C:3, both from the Örebro collection.}
 \label{tab:post_process_example}
 \end{table}

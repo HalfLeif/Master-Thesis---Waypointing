@@ -20,7 +20,8 @@ Each image was a concatenation of four independently randomly selected digit ima
 % which is very much smaller than the images of the Swedish records.
 Because the images were so small, it took a much shorter time to train and evaluate different models on the synthetic dataset than on the Swedish population records, whose images were very large.
 
-Several models performed very well on this task, one of them achieving $94\%$ accuracy after 10,500 CPU seconds of training. These models are discussed further in section \ref{sssec:exp_encoder}.
+Several models reached high accuracy on this task within short training time.
+We present and discuss these results in section \ref{sssec:exp_encoder}.
 
 \subsection{Noisy MNIST}
 
@@ -197,6 +198,8 @@ After another five epochs, we reached the highest seen test accuracy of $9.54\%$
 
 So far, all reported models have used soft attention. Hard attention uses the same network, the only difference is that instead of doing a weighted sum over the encoded locations, we choose one of them. In previous work, the hard attention has seen the attention weights as a distribution over the location and samples that distribution. In our work however, we simply choose the location with highest attention weight.
 
+\subsubsection{Hard attention on noisy MNIST}
+
 \input{figures/attention_mnist_graph.tex}
 
 When training the DEP model with hard attention from scratch on the noisy MNIST data for one epoch, we only got a test accuracy of $4.4\%$ instead of $17.2\%$.
@@ -209,6 +212,8 @@ In figure \ref{fig:attention_mnist} we can see how the soft attention successful
 \input{figures/attention_dep_T61.tex}
 \input{figures/attention_dep_H5L.tex}
 
+\subsubsection{Hard attention on Swedish population records}
+
 When training the Base model for one epoch with hard attention on the Swedish population records, the accuracy dropped from $8.39\%$ to $2.19\%$.
 In figure \ref{fig:attention_dep_T61} we see how the soft attention partially focuses on the year and gets the prediction right while the hard attention focus on the place for the image id rather than the year.
 Another example can be seen in figure \ref{fig:attention_dep_H5L} where the year is not written on the page. The soft attention guesses the correct decade by looking at the handwriting all over the page while the hard attention suggests the wrong century.
@@ -217,7 +222,6 @@ In conclusion, we see that the models with soft attention use information from a
 However, the single location chosen by the hard attention model does not contain enough information for making a good prediction.
 
 Even for the simpler problem of noisy MNIST, hard attention failed because it only captured part of the digit sequence. Soft attention on the other hand could reconstruct the digit sequence by choosing multiple close locations.
-
 
 \section{Post-processing} \label{sec:result_post_process}
 
